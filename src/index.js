@@ -25,7 +25,7 @@ const router = createBrowserRouter([
     element: <Detail />
   },
   {
-    path: '/book/:Id/:start/:end',
+    path: '/book/:Id/:start/:end/:cam',
     element: <ProtectedRoute element={<Payment />} />,
   }
 ]);

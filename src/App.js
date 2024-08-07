@@ -1,5 +1,5 @@
-import { Route, Routes, Link } from 'react-router-dom';
-import { useEffect, useState, useRef } from 'react';
+import { Route, Routes, Link } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
 
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -10,26 +10,27 @@ export default function App({ handleChange, SetStartDate, SetEndDate }) {
   const [startDate, setStartDate] = useState(ref.current.startDate);
   const [endDate, setEndDate] = useState(ref.current.endDate);
   const [numcat, setNumcat] = useState(ref.current.numcat);
+  const [check, setCheck] = useState(false);
 
   const handlePageChange = (e) => {
     handleChange({ startDate, endDate, numcat });
-  }
+  };
 
   const handleHome = (e) => {
     handleChange(e);
-  }
+  };
 
   const Logout = () => {
     localStorage.removeItem("data");
     setData(null);
-  }
+  };
 
   useEffect(() => {
     const get_res = localStorage.getItem("data");
     if (get_res) {
       const result = JSON.parse(get_res);
       setData(result);
-      console.log(result);
+      // console.log(result);
     }
   }, []);
 
@@ -54,10 +55,16 @@ export default function App({ handleChange, SetStartDate, SetEndDate }) {
     <div className="App">
       <div className="Time">
         <Link to="/">
-          <button onClick={() => { handleHome(0) }}>Home</button>
+          <button
+            onClick={() => {
+              handleHome(0);
+            }}
+          >
+            Home
+          </button>
         </Link>
         <div>
-          <DatePicker   
+          <DatePicker
             showIcon
             selected={startDate}
             dateFormat="dd/MM/yyyy"
@@ -88,12 +95,18 @@ export default function App({ handleChange, SetStartDate, SetEndDate }) {
           <button onClick={handlePageChange}>ค้นหา</button>
         </div>
         <div>
-          {data ? (
+          {data != null ? (
             <>
               <p>{data.first_name}</p>
-              <Link to="/">
-                <button onClick={Logout}>Logout</button>
-              </Link>
+              {data.first_name ? (
+                <Link to="/">
+                  <button onClick={Logout}>Logout</button>
+                </Link>
+              ) : (
+                <Link to="/login">
+                  <button>Login</button>
+                </Link>
+              )}
             </>
           ) : (
             <Link to="/login">

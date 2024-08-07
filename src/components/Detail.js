@@ -11,6 +11,8 @@ export default function Detail() {
     const [startDate, setStartDate] =  useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
     const [numcat, setNumcat] = useState(1);
+    const [check_cam, setCheck_cam] = useState(false);
+    const [camera, setCamera] = useState(false);
 
     
 
@@ -20,13 +22,43 @@ export default function Detail() {
 
     useEffect(() => {
         handleget();
-        
-        console.log(Id);
-        console.log(start);
-        console.log(end);
-        setStartDate(start);
-        setEndDate(end);
+        let start_ts = new Date(start);
+        let end_ts = new Date(end);
+        setStartDate(start_ts.toJSON());
+        setEndDate(end_ts.toJSON());
+        handleCam(start_ts.toJSON(), end_ts.toJSON());
     }, []);
+
+    const handleCam = async (ste,ete) => {
+        try {
+            let email = JSON.parse(localStorage.getItem("data")).email;
+            let newdata = {
+                "email":email, 
+                "cin": ste,
+                "cout": ete,
+                "booking": Id
+              };
+            //   console.log(newdata);
+            const response = await fetch(`http://localhost:8700/check_cam`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(newdata),
+            });
+            const result = await response.json();
+            // console.log("result",result);
+            if(result.arr3.length>0){
+                setCheck_cam(true);
+            }else{
+                setCheck_cam(false);
+            }
+
+        }catch (err) {
+            // console.log(err);
+            setCheck_cam(false);
+        }
+    }
 
     const handleget = async () => {
         try {
@@ -37,7 +69,6 @@ export default function Detail() {
             setData(result);
 
         } catch (err) {
-
             console.log("An error occurred. Please try again.");
         }
     };
@@ -70,8 +101,15 @@ export default function Detail() {
     const handleTimeChange = (e) => {
         if(e!=0){
             handlefind(e);
+            let start_ts = new Date(e.startDate);
+            let end_ts = new Date(e.endDate);
+            setStartDate(start_ts.toJSON());
+            setEndDate(end_ts.toJSON());
+            handleCam(start_ts.toJSON(), end_ts.toJSON());
+            // console.log("start",start_ts.toJSON());
+            // console.log("end",end_ts.toJSON());
         }else{
-            handleget();
+            handleget();            
         }
     }
 
@@ -94,10 +132,25 @@ export default function Detail() {
                 </li>
 
                 <li>
-                    <input type="checkbox" id="camera" name="camera" value="camera" />
-                    <label for="camera"> เปิดใช้งานกล้อง</label>
+                    {check_cam && (
+                       <>
+                        <input type="checkbox" id="camera" name="camera" value="camera" onChange={
+                            (e) => {
+                                setCamera(e.target.checked);
+                                // console.log(e.target.checked);
+                            }
+                        }/>
+                        <label for="camera"> เปิดใช้งานกล้อง</label>
+                       </>
+                    )}
+                {!check_cam && (
+                       <>
+                        {/* <input type="checkbox" id="camera" name="camera" value="camera" /> */}
+                        <label for="camera"> กล้องไม่พร้อมใช้งาน</label>
+                       </>
+                    )}
                 </li>
-                <li> <Link to={`/book/${data._id}/${startDate}/${endDate}`}><button>Book Now</button></Link>
+                <li> <Link to={`/book/${data._id}/${startDate}/${endDate}/${camera}`}><button>Book Now</button></Link>
                     
                 </li>
                 <li>
