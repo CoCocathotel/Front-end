@@ -1,10 +1,14 @@
 import { Route, Routes, Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import App from '../App';
-
+ 
 export default function Dashboard() {
 
+    const ref = useRef({ startDate: new Date(), endDate: new Date(), numcat: 1 });
     const [data, setData] = useState([]);
+    const [startDate, setStartDate] = useState(ref.current.startDate);
+    const [endDate, setEndDate] = useState(ref.current.endDate);
+    const [numcat, setNumcat] = useState(ref.current.numcat);
 
     const handlefind = async (e) => {
         try {
@@ -32,9 +36,8 @@ export default function Dashboard() {
 
     const handleTimeChange = (e) => {
         if (e != 0) {
-            console.log("startDate", e.startDate);
-            console.log("endDate", e.endDate);
-            console.log("numcat", e.numcat);
+            setStartDate(e.startDate);
+            setEndDate(e.endDate);
             handlefind(e);
         } else {
             handleget();
@@ -53,13 +56,9 @@ export default function Dashboard() {
         }
     }
 
-    useEffect(() => {
-        // handleget();
-    }, []);
-
     return (
         <>
-            <App handleChange={(e) => handleTimeChange(e)} />
+            <App handleChange={(e) => handleTimeChange(e)} SetStartDate={startDate} SetEndDate={endDate} />
             {data && data.length > 0 ? (
                 data.map((item, index) => (
                     <div key={index}>
@@ -77,7 +76,7 @@ export default function Dashboard() {
                             <p>{item.type}</p>
                             <p>{item.description}</p>
 
-                            <Link to={`/detail/${item._id}`}>ดูรายละเอียดห้อง</Link>
+                            <Link to={`/detail/${item._id}/${startDate}/${endDate}`}>ดูรายละเอียดห้อง</Link>
                         </div>
                     </div>
                 ))

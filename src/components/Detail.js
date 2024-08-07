@@ -2,11 +2,17 @@ import '../App.css';
 import { Route, Routes, Link, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import App from '../App';
-
+  
 export default function Detail() {
+    const { Id, start, end } = useParams();
+
     const [data, setData] = useState([]);
     const [error, setError] = useState("");
-    const { Id } = useParams();
+    const [startDate, setStartDate] =  useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+    const [numcat, setNumcat] = useState(1);
+
+    
 
     const handleImageError = (e) => {
         e.target.src = "placeholder-image-url";
@@ -14,6 +20,12 @@ export default function Detail() {
 
     useEffect(() => {
         handleget();
+        
+        console.log(Id);
+        console.log(start);
+        console.log(end);
+        setStartDate(start);
+        setEndDate(end);
     }, []);
 
     const handleget = async () => {
@@ -22,7 +34,6 @@ export default function Detail() {
                 method: "GET",
             });
             const result = await response.json();
-            // console.log(result);
             setData(result);
 
         } catch (err) {
@@ -32,7 +43,6 @@ export default function Detail() {
     };
 
     const handlefind = async (e) => {
-        console.log(data.name);
         try {
             const response = await fetch(`http://localhost:8700/find_room/${data.name}`, {
                 method: "POST",
@@ -46,8 +56,6 @@ export default function Detail() {
                 }),
             });
             const result = await response.json();
-            // setData(result);
-            console.log(result);
             if (result.err) {
                 setError(result.err);
             } else {
@@ -61,9 +69,6 @@ export default function Detail() {
 
     const handleTimeChange = (e) => {
         if(e!=0){
-            console.log("startDate", e.startDate);
-            console.log("endDate", e.endDate);
-            console.log("numcat", e.numcat);
             handlefind(e);
         }else{
             handleget();
@@ -73,7 +78,7 @@ export default function Detail() {
 
     return (
         <div className="App">
-            <App handleChange={(e) => handleTimeChange(e)} />
+           <App handleChange={(e) => handleTimeChange(e)} SetStartDate={startDate} SetEndDate={endDate} />
             <h1>Item</h1>
             {error && <h1>{error}</h1>}
             {!error && <ul className="home_space">
@@ -92,8 +97,8 @@ export default function Detail() {
                     <input type="checkbox" id="camera" name="camera" value="camera" />
                     <label for="camera"> เปิดใช้งานกล้อง</label>
                 </li>
-                <li>
-                    <button>ทำการจอง</button>
+                <li> <Link to={`/book/${data._id}/${startDate}/${endDate}`}><button>Book Now</button></Link>
+                    
                 </li>
                 <li>
                     <div className="before_image_room">

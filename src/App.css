@@ -47,6 +47,17 @@
   
 }
 
+.pay_final{
+   justify-content: space-around;
+  align-items: center;
+}
+.pay_final1{
+  display: flex;
+  padding: 40px;
+  margin:  10px;
+  
+  align-items: center;
+}
 
 @keyframes App-logo-spin {
   from {
