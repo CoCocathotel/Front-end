@@ -23,6 +23,7 @@ export default function Dashboard() {
       });
       const result = await response.json();
       setData(result);
+      console.log(result);
     } catch (err) {
       console.log("An error occurred. Please try again.");
     }

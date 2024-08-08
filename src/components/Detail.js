@@ -47,8 +47,8 @@ export default function Detail() {
                 body: JSON.stringify(newdata),
             });
             const result = await response.json();
-            // console.log("result",result);
-            if(result.arr3.length>0){
+            console.log(result.message);
+            if(result.message ==""){
                 setCheck_cam(true);
             }else{
                 setCheck_cam(false);
