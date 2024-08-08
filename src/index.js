@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Detail from './components/Detail';
 import Login from './components/Login';
-import Dashboard from './components/Dashboard';
+import Home from './component/Home';
 import Payment from './components/Payment';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -13,21 +13,8 @@ const router = createBrowserRouter([
   {
     path: '/',
     // element: <ProtectedRoute element={<Dashboard />} />,
-    element : <Dashboard />
+    element : <Home />
   },
-  {
-    path: '/login',
-    element: <Login />,
-  },
-  {
-    path: '/detail/:Id/:start/:end',
-    // element: <ProtectedRoute element={<Detail />} />,
-    element: <Detail />
-  },
-  {
-    path: '/book/:Id/:start/:end/:cam',
-    element: <ProtectedRoute element={<Payment />} />,
-  }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
