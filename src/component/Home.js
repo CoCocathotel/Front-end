@@ -11,7 +11,7 @@ export default function Dashboard() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    axios.get("http://localhost:8700/v1/room").then((res) => {
+    axios.get("https://co-cocat-backend-theta.vercel.app/v1/room").then((res) => {
       setData(res.data.body);
       setLoading(false);
       console.log(res.data.body);

@@ -56,7 +56,7 @@ export default function Detail() {
  
   const getRoom = async () => {
     try {
-      const response = await axios.get(`http://localhost:8700/v1/room/${Type}`);
+      const response = await axios.get(`https://co-cocat-backend-theta.vercel.app/v1/room/${Type}`);
       setLoading(false);
       setError(null);
       setData(response.data.body[0]);
@@ -84,7 +84,7 @@ export default function Detail() {
 
     console.log(item);
 
-    const response = await fetch(`http://localhost:8700/v1/book_room   `, {
+    const response = await fetch(`https://co-cocat-backend-theta.vercel.app/v1/book_room   `, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
