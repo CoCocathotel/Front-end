@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import Detail from './components/Detail';
+import Detail from './component/Detail';
 import Login from './components/Login';
 import Home from './component/Home';
 import Payment from './components/Payment';
@@ -15,6 +15,10 @@ const router = createBrowserRouter([
     // element: <ProtectedRoute element={<Dashboard />} />,
     element : <Home />
   },
+  {
+    path: 'detail/:Type',
+    element: <Detail />
+  }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
