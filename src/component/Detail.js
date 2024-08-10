@@ -29,6 +29,11 @@ export default function Detail() {
   const [nunmcat, setNumcat] = useState(
     parseInt(JSON.parse(localStorage.getItem("number_of_cats")) || 1)
   );
+  
+  const [numcamera, setNumcamera] = useState(
+    parseInt(JSON.parse(localStorage.getItem("number_of_cameras")) || 0)
+  );
+  
   const [totalday, setTotalday] = useState(
     Math.abs(new Date(endDate) - new Date(startDate)) / 86400000
   );
@@ -39,6 +44,7 @@ export default function Detail() {
     let end = localStorage.getItem("endDate");
     let numcat = parseInt(JSON.parse(localStorage.getItem("number_of_cats")));
     let totalday = Math.abs(new Date(end) - new Date(start)) / 86400000;
+    let numcamera = parseInt(JSON.parse(localStorage.getItem("number_of_cameras")));
 
     let getdata =  getRoom();
   
@@ -49,6 +55,8 @@ export default function Detail() {
         setEndDate(end);
         setNumcat(numcat);
         setTotalday(totalday);
+        setNumcamera(numcamera);
+
         }
      
   }, []);
@@ -56,7 +64,7 @@ export default function Detail() {
  
   const getRoom = async () => {
     try {
-      const response = await axios.get(`https://co-cocat-backend-theta.vercel.app/v1/room/${Type}`);
+      const response = await axios.get(`http://localhost:8700/v1/room/${Type}`);
       setLoading(false);
       setError(null);
       setData(response.data.body[0]);
@@ -84,7 +92,7 @@ export default function Detail() {
 
     console.log(item);
 
-    const response = await fetch(`https://co-cocat-backend-theta.vercel.app/v1/book_room   `, {
+    const response = await fetch(`http://localhost:8700/v1/book_room   `, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -114,6 +122,7 @@ export default function Detail() {
       <p> ขนาด : {data.size} เมตร </p>
       <p> จำนวนแมว : {data.number_of_cats} สูงสุด</p>
       <p> ราคา : {data.price} บาท </p>
+      <p> ราตาทั้งหมด : {data.price*totalday}</p>
       <p> ห้องที่ว่าง {data.number_of_rooms} ห้อง </p>
       <p> จำนวนกล้อง : {data.cameras}</p>
       <p> คำอธิบาย : {data.description}</p>

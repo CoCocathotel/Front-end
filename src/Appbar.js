@@ -9,11 +9,14 @@ dayjs.extend(customParseFormat);
 
 const { RangePicker } = DatePicker;
 const dateFormat = "YYYY-MM-DD";
-const timezone = 'Asia/Bangkok';
+const timezone = "Asia/Bangkok";
 
-export default function Appbar() {
-  const [nunmcat, setNumcat] = useState(
+export default function Appbar({handleAppbar}) {
+  const [numcat, setNumcat] = useState(
     parseInt(JSON.parse(localStorage.getItem("number_of_cats"))) || 1
+  );
+  const [numcamera, setNumcamera] = useState(
+    parseInt(JSON.parse(localStorage.getItem("number_of_cameras"))) || 0
   );
   const [startDate, setStartDate] = useState(
     localStorage.getItem("startDate") || moment.tz(timezone).format()
@@ -25,30 +28,53 @@ export default function Appbar() {
   tomorrow.setDate(today.getDate() + 1);
 
   const [endDate, setEndDate] = useState(
-    localStorage.getItem("endDate") || moment.tz(timezone).add(1, 'day').format());
-
+    localStorage.getItem("endDate") ||
+      moment.tz(timezone).add(1, "day").format()
+  );
+  const handlePageChange = (e) => {
+    handleAppbar({ startDate, endDate, numcat, numcamera });
+  };
   const savetolocal = (start, end) => {
     localStorage.setItem("startDate", start);
     localStorage.setItem("endDate", end);
   };
   const savetolocal_numcat = (numcat) => {
-    localStorage.setItem("number_of_cats", JSON.stringify(nunmcat));
+    localStorage.setItem("number_of_cats", JSON.stringify(numcat));
   };
+
+  const savetolocal_numcamera = (numcamera) => {
+    localStorage.setItem("number_of_cameras", JSON.stringify(numcamera));
+  };
+
+  const Increment_cam = () => {
+    setNumcamera(numcamera + 1);
+  };
+
+  const Decreaments_cam = () => {
+    if (numcamera <= 0) {
+      setNumcamera(0);
+    } else {
+      setNumcamera(numcamera - 1);
+    }
+  };
+
   const Increment = () => {
-    setNumcat(nunmcat + 1);
+    setNumcat(numcat + 1);
   };
   const Decreaments = () => {
-    if (nunmcat <= 1) {
+    if (numcat <= 1) {
       setNumcat(1);
     } else {
-      setNumcat(nunmcat - 1);
+      setNumcat(numcat - 1);
     }
   };
 
   useEffect(() => {
-    savetolocal_numcat(nunmcat);
+    savetolocal_numcat(numcat);
     savetolocal(startDate, endDate);
-  }, [nunmcat, startDate, endDate]);
+    savetolocal_numcamera(numcamera);
+    handlePageChange();
+  }, [numcamera, numcat, startDate, endDate]);
 
   return (
     <div>
@@ -73,13 +99,21 @@ export default function Appbar() {
         />
       </Space>
 
-      <input
+      จำนวนแมว : <input
         type="text"
-        value={nunmcat}
+        value={numcat}
         onChange={(e) => setNumcat(e.target.value)}
       />
       <button onClick={Decreaments}>-</button>
       <button onClick={Increment}>+</button>
+
+      จำนวนกล้อง : <input
+        type="text"
+        value={numcamera}
+        onChange={(e) => setNumcamera(e.target.value)}
+      />
+      <button onClick={Decreaments_cam}>-</button>
+      <button onClick={Increment_cam}>+</button>
     </div>
   );
 }

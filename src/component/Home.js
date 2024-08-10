@@ -9,14 +9,29 @@ export default function Dashboard() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [numcat, setNumcat] = useState(1);
+  const [numcamera, setNumcamera] = useState(0);
 
   useEffect(() => {
-    axios.get("https://co-cocat-backend-theta.vercel.app/v1/room").then((res) => {
+    fetchData();
+  }, []);
+
+  // useEffect(() => {
+  //   let num_cat = parseInt(JSON.parse(localStorage.getItem("number_of_cats")));
+  //   let num_camera = parseInt(JSON.parse(localStorage.getItem("number_of_cameras")));
+  //   setNumcat(num_cat);
+  //   setNumcamera(num_camera);
+
+  // },[numcat, numcamera]);
+
+
+  const fetchData = async () => {
+    axios.get("http://localhost:8700/v1/room").then((res) => {
       setData(res.data.body);
       setLoading(false);
       console.log(res.data.body);
     });
-  }, []);
+  };
 
   const saveToLocalStorage = (index) => {
     localStorage.setItem("data", JSON.stringify(data[index]));
@@ -26,14 +41,26 @@ export default function Dashboard() {
     
   };
 
+  const handleTimeChange = (e) => {
+    setNumcat(e.numcat);
+    setNumcamera(e.numcamera);
+    console.log(e);
+  }
+
 
   return (
     <>
-    <Appbar />
+    <Appbar 
+      handleAppbar={(e) => handleTimeChange(e)}   
+    />
       <h1>Dashboard</h1>
+      {/* {numcamera}
+      {numcat} */}
       {data.map((item, index) => (
         <div key={index}>
           <h2>{item.room_name}</h2>
+          {numcamera > item.cameras*(Math.ceil((numcat)/item.number_of_cats)) ? <p> จำนวนกล้องไม่เพียงพอ </p> : <p>สามารถใช้กล้องได้มากสุด {item.cameras} ตัว ต่อ 1 ห้อง</p>}
+          {numcat > item.number_of_cats*item.number_of_rooms ? <p> ต้องการ {Math.ceil((numcat)/item.number_of_cats)} ห้อง แต่เหลือเพียง {item.number_of_rooms} ห้องว่าง</p>: ""}
           <p> ประเภท : {item.type}</p>
           <p> ขนาด : {item.size} เมตร </p>
           <p> จำนวนแมว : {item.number_of_cats} สูงสุด</p>
@@ -58,6 +85,9 @@ export default function Dashboard() {
               height={200}
             />
           ))}
+
+
+        
           <div>
             <Link to={`/detail/${item.type}`}>
               <button onClick={()=>{saveToLocalStorage(index)}}>จองที่พัก</button>{" "}
