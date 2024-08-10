@@ -4,6 +4,7 @@ import { DatePicker, Space } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import moment from "moment-timezone";
+import "./App.css";
 
 dayjs.extend(customParseFormat);
 
@@ -11,7 +12,7 @@ const { RangePicker } = DatePicker;
 const dateFormat = "YYYY-MM-DD";
 const timezone = "Asia/Bangkok";
 
-export default function Appbar({handleAppbar}) {
+export default function Appbar({ handleAppbar }) {
   const [numcat, setNumcat] = useState(
     parseInt(JSON.parse(localStorage.getItem("number_of_cats"))) || 1
   );
@@ -29,7 +30,7 @@ export default function Appbar({handleAppbar}) {
 
   const [endDate, setEndDate] = useState(
     localStorage.getItem("endDate") ||
-      moment.tz(timezone).add(1, "day").format()
+    moment.tz(timezone).add(1, "day").format()
   );
   const handlePageChange = (e) => {
     handleAppbar({ startDate, endDate, numcat, numcamera });
@@ -77,7 +78,7 @@ export default function Appbar({handleAppbar}) {
   }, [numcamera, numcat, startDate, endDate]);
 
   return (
-    <div>
+    <div className="app-bar">
       <Space direction="vertical" size={12}>
         <RangePicker
           picker="date"
@@ -99,21 +100,25 @@ export default function Appbar({handleAppbar}) {
         />
       </Space>
 
-      จำนวนแมว : <input
+      <div className="font-text">
+        
+      จำนวนแมว : <input className="input-primary"
         type="text"
         value={numcat}
         onChange={(e) => setNumcat(e.target.value)}
       />
-      <button onClick={Decreaments}>-</button>
-      <button onClick={Increment}>+</button>
+      <button className="btn-primary2" onClick={Decreaments}>-</button>
+      <button  className="btn-primary2"onClick={Increment}>+</button>
 
-      จำนวนกล้อง : <input
+      จำนวนกล้อง : <input className="input-primary"
         type="text"
         value={numcamera}
         onChange={(e) => setNumcamera(e.target.value)}
       />
-      <button onClick={Decreaments_cam}>-</button>
-      <button onClick={Increment_cam}>+</button>
+      <button className="btn-primary2" onClick={Decreaments_cam}>-</button>
+      <button className="btn-primary2" onClick={Increment_cam}>+</button>
+      </div>
+
     </div>
   );
 }
