@@ -30,7 +30,7 @@ export default function Appbar({ handleAppbar }) {
 
   const [endDate, setEndDate] = useState(
     localStorage.getItem("endDate") ||
-    moment.tz(timezone).add(1, "day").format()
+      moment.tz(timezone).add(1, "day").format()
   );
   const handlePageChange = (e) => {
     handleAppbar({ startDate, endDate, numcat, numcamera });
@@ -100,25 +100,41 @@ export default function Appbar({ handleAppbar }) {
         />
       </Space>
 
-      <div className="font-text">
-        
-      จำนวนแมว : <input className="input-primary"
-        type="text"
-        value={numcat}
-        onChange={(e) => setNumcat(e.target.value)}
-      />
-      <button className="btn-primary2" onClick={Decreaments}>-</button>
-      <button  className="btn-primary2"onClick={Increment}>+</button>
+      <div className=" font-text ">
+        <div className="box-space">
+        <p > แมว </p>
+          <input
+            className="input-primary"
+            type="text"
+            // width = "10px"
 
-      จำนวนกล้อง : <input className="input-primary"
-        type="text"
-        value={numcamera}
-        onChange={(e) => setNumcamera(e.target.value)}
-      />
-      <button className="btn-primary2" onClick={Decreaments_cam}>-</button>
-      <button className="btn-primary2" onClick={Increment_cam}>+</button>
+            value={numcat}
+            onChange={(e) => setNumcat(e.target.value)}
+          />
+          <button className="btn-primary2" onClick={Decreaments}>
+            -
+          </button>
+          <button className="btn-primary2" onClick={Increment}>
+            +
+          </button>
+        </div>
+
+        <div className="box-space">
+          <p> กล้อง</p>
+          <input
+            className="input-primary"
+            type="text"
+            value={numcamera}
+            onChange={(e) => setNumcamera(e.target.value)}
+          />
+          <button className="btn-primary2" onClick={Decreaments_cam}>
+            -
+          </button>
+          <button className="btn-primary2" onClick={Increment_cam}>
+            +
+          </button>
+        </div>
       </div>
-
     </div>
   );
 }
