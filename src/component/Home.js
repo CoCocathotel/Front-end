@@ -19,7 +19,18 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchData();
+    production_check();
   }, []);
+
+  let production_check = () =>{
+    let __DEV__ = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1");
+
+    if(__DEV__){
+      console.log("is dev");
+    }else{
+      console.log("is not dev");
+    }
+  }
 
   useEffect(() => {
     let overlaping = booking.filter(({ check_in_date, check_out_date }) => {
