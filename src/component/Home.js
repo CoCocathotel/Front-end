@@ -67,7 +67,7 @@ export default function Dashboard() {
   const handleCloseLogin = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user-provider");
-    window.location.reload();
+    // window.location.reload();
     navigate("/login");
     setAnchorEl(null);
   };
