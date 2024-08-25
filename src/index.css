@@ -2,9 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
-.btn-primary {
-  @apply py-2 px-4 bg-blue-500 text-white font-semibold rounded-sm shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75;
+.btn-primary3 {
+  @apply py-2 px-4 bg-gray-400 text-white font-semibold rounded-xl shadow-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-75;
 }
+
+.btn-primary {
+  @apply py-2 px-4 bg-blue-500 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75;
+}
+
 
 .btn-primary2 {
   @apply py-2 px-4 bg-blue-500 text-white font-semibold rounded-sm shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75 ;
@@ -19,7 +24,7 @@
 }
 
 .app-bar {
-  @apply text-white font-semibold py-2 px-4 shadow-md align-middle justify-center flex space-x-20 h-40 items-center;
+  @apply text-white font-semibold py-2 px-4 shadow-md align-middle justify-center flex space-x-20 h-20 items-center;
 }
 
 .font-text {
@@ -30,11 +35,19 @@
   @apply space-x-1 flex justify-center items-center;
 }
 
+.sticky {
+  /* transition: all 0.3s ease-in-out; */
+}
+
 .conten-left{
-  @apply  flex py-7 px-4 m-0 justify-start items-center align-middle w-full h-full space-x-20
+  @apply  flex py-7 px-4 m-0 justify-start items-center align-middle w-full h-full space-x-20;
 }
 .content{
-  @apply w-9/12	 py-1 px-2 mr-0 shadow-md align-middle justify-center items-center bg-white;
+  @apply w-9/12 py-1 px-2 mr-0 shadow-md align-middle justify-center items-center bg-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-100;
+}
+
+.content2{
+  @apply w-1/4 h-auto py-1 px-2 mr-0 shadow-md align-middle justify-center items-center bg-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-100;
 }
 .content-out{
   @apply  flex py-7 px-4 m-0  justify-center items-center align-middle w-full h-full space-x-20;

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import Detail from './component/Detail';
-import Login from './components/Login';
+import Login from './component/Login';
 import Home from './component/Home';
 import Payment from './components/Payment';
 import reportWebVitals from './reportWebVitals';
@@ -18,6 +18,10 @@ const router = createBrowserRouter([
   {
     path: 'detail/:Type',
     element: <Detail />
+  },
+  {
+    path: '/login',
+    element: <Login />
   }
 ]);
 

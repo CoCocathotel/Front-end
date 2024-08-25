@@ -4,6 +4,7 @@ import { DatePicker, Space } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import moment from "moment-timezone";
+import Logo from "./cococat-hotel.png";
 import "./App.css";
 
 dayjs.extend(customParseFormat);
@@ -78,69 +79,71 @@ export default function Appbar({ handleAppbar }) {
   }, [numcamera, numcat, startDate, endDate]);
 
   return (
-    <div className="app-bar">
-      <Space direction="vertical" size={12}>
-        <RangePicker
-          picker="date"
-          defaultValue={[
-            dayjs(startDate, dateFormat),
-            dayjs(endDate, dateFormat),
-          ]}
-          onChange={(date, dateString) => {
-            setStartDate(dateString[0]);
-            setEndDate(dateString[1]);
-          }}
-          onFocus={(_, info) => {
-            // console.log("Focus:", info.range);
-          }}
-          onBlur={(_, info) => {
-            // console.log("Blur:", info.range);
-          }}
-        />
-      </Space>
+    <div className="">
 
-      <div className=" font-text ">
-        <div className="box-space">
-          <p> แมว </p>
-          <input
-            className="input-primary"
-            type="text"
-            // width = "10px"
-
-            value={numcat}
-            onChange={(e) => setNumcat(e.target.value)}
+      <div className="app-bar">
+        <Space direction="vertical" size={12}>
+          <RangePicker
+            picker="date"
+            defaultValue={[
+              dayjs(startDate, dateFormat),
+              dayjs(endDate, dateFormat),
+            ]}
+            onChange={(date, dateString) => {
+              setStartDate(dateString[0]);
+              setEndDate(dateString[1]);
+            }}
+            onFocus={(_, info) => {
+              // console.log("Focus:", info.range);
+            }}
+            onBlur={(_, info) => {
+              // console.log("Blur:", info.range);
+            }}
           />
-          <button className="btn-primary2" onClick={Decreaments}>
-            -
-          </button>
-          <button className="btn-primary2" onClick={Increment}>
-            +
-          </button>
+        </Space>
+
+        <div className=" font-text ">
+          <div className="box-space">
+            <p> แมว </p>
+            <input
+              className="input-primary"
+              type="text"
+              // width = "10px"
+
+              value={numcat}
+              onChange={(e) => setNumcat(e.target.value)}
+            />
+            <button className="btn-primary2" onClick={Decreaments}>
+              -
+            </button>
+            <button className="btn-primary2" onClick={Increment}>
+              +
+            </button>
+          </div>
+
+          <div className="box-space">
+            <p> กล้อง</p>
+            <input
+              className="input-primary"
+              type="text"
+              value={numcamera}
+              onChange={(e) => setNumcamera(e.target.value)}
+            />
+            <button className="btn-primary2" onClick={Decreaments_cam}>
+              -
+            </button>
+            <button className="btn-primary2" onClick={Increment_cam}>
+              +
+            </button>
+          </div>
         </div>
 
-        <div className="box-space">
-          <p> กล้อง</p>
-          <input
-            className="input-primary"
-            type="text"
-            value={numcamera}
-            onChange={(e) => setNumcamera(e.target.value)}
-          />
-          <button className="btn-primary2" onClick={Decreaments_cam}>
-            -
-          </button>
-          <button className="btn-primary2" onClick={Increment_cam}>
-            +
-          </button>
-        </div>
-      </div>
-    
         {/* refrest api button  */}
 
         <button className="btn-primary" onClick={handlePageChange}>
           ค้นหา
         </button>
-   
+      </div>
     </div>
   );
 }

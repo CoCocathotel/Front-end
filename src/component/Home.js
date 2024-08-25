@@ -1,13 +1,40 @@
-import { Route, Routes, Link } from "react-router-dom";
+import { Route, Routes, Link, json} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import Logo from "../cococat-hotel.png";
 
 import LoadingSpinner from "./Loading";
 
+import * as React from "react";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
+import Box from "@mui/material/Box";
+import Avatar from "@mui/material/Avatar";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
+import PersonAdd from "@mui/icons-material/PersonAdd";
+import Settings from "@mui/icons-material/Settings";
+import Logout from "@mui/icons-material/Logout";
+import SendIcon from '@mui/icons-material/Send';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+
+// icons-material/PersonAdd
+// icons-material/Settings
+// mui/icons-material/Logout
+
 import Appbar from "../Appbar";
 import "../App.css";
+import { bottomNavigationActionClasses } from "@mui/material";
 
 export default function Dashboard() {
+  const navigate = useNavigate();
   // axios fetch data
   const [data, setData] = useState([]);
   const [booking, setBooking] = useState([]);
@@ -21,8 +48,31 @@ export default function Dashboard() {
   const [err_check, setErr_check] = useState(true);
   const [url, setURL] = useState("");
 
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user-provider");
+    window.location.reload();
+    setAnchorEl(null);
+  };
+
+  const handleClose= () => {
+    setAnchorEl(null);
+  };
+
+  const handleCloseLogin = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user-provider");
+    window.location.reload();
+    navigate("/login");
+    setAnchorEl(null);
+  };
+
   useEffect(() => {
-    // production_check();
     fetchData();
   }, []);
 
@@ -30,12 +80,11 @@ export default function Dashboard() {
     const isDevelopment =
       window.location.origin.includes("localhost") ||
       window.location.origin.includes("127.0.0.1");
-  
-    return isDevelopment ? "http://localhost:8700" : "https://co-cocat-backend-theta.vercel.app";
-  }
-  
 
-  
+    return isDevelopment
+      ? "http://localhost:8700"
+      : "https://co-cocat-backend-theta.vercel.app";
+  }
 
   useEffect(() => {
     let overlaping = booking.filter(({ check_in_date, check_out_date }) => {
@@ -96,10 +145,10 @@ export default function Dashboard() {
 
     console.log(production_check());
 
-    axios.get(production_check()+"/v1/room").then((res) => {
+    axios.get(production_check() + "/v1/room").then((res) => {
       setData(res.data.body.room);
       setBooking(res.data.body.booking);
-      
+
       setTimeout(() => {
         setLoading(false);
       }, 2000);
@@ -120,9 +169,9 @@ export default function Dashboard() {
     setEndDate(e.endDate);
     // console.log("ok ok ok");
 
-    // show circle loading 2 sec 
-    fetchData();
-    production_check();
+    // show circle loading 2 sec
+    // fetchData();
+    // production_check();
     // console.log(e);
   };
   const checkroom = (room_name) => {
@@ -142,7 +191,210 @@ export default function Dashboard() {
         </>
       ) : (
         <>
-          <div className=""></div>
+          <div className="sticky top-0 bg-white z-50">
+            <div className="grid grid-cols-5 gap-1 p-4">
+              <img
+                className="ml-24"
+                src={Logo}
+                alt="logo"
+                width={80}
+                height={80}
+              />
+              <button className="text-gray-600 hover:text-blue-500">
+                Home
+              </button>
+              <button className="text-gray-600 hover:text-blue-500">
+                Booking
+              </button>
+              <button className="text-gray-600 hover:text-blue-500">
+                About Us
+              </button>
+              {localStorage.getItem("token") ? (
+                <>
+                  {/* <button
+                  className="ext-gray-600 hover:text-blue-500"
+                  onClick={() => {
+                    localStorage.removeItem("token");
+                    window.location.reload();
+                  }}
+                >
+                  Logout {" "} {JSON.parse(localStorage.getItem("user-provider")).email}
+                </button> */}
+                  <React.Fragment>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        textAlign: "center",
+                      }}
+                    >
+                      {/* <Typography sx={{ minWidth: 100 }}>Contact</Typography>
+                      <Typography sx={{ minWidth: 100 }}>Profile</Typography> */}
+                      <Tooltip title="Account settings">
+                        <IconButton
+                          onClick={handleClick}
+                          size="small"
+                          sx={{ ml: 2 }}
+                          aria-controls={open ? "account-menu" : undefined}
+                          aria-haspopup="true"
+                          aria-expanded={open ? "true" : undefined}
+                        >
+                          <Avatar sx={{ width: 32, height: 32 }}>
+                            {JSON.parse(
+                              localStorage.getItem("user-provider")
+                            ).email[0].toUpperCase()}
+                          </Avatar>
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                    <Menu
+                      anchorEl={anchorEl}
+                      id="account-menu"
+                      open={open}
+                      onClose={()=>{}}
+                      onClick={()=>{}}
+                      PaperProps={{
+                        elevation: 0,
+                        sx: {
+                          overflow: "visible",
+                          filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                          mt: 1.5,
+                          "& .MuiAvatar-root": {
+                            width: 32,
+                            height: 32,
+                            ml: -0.5,
+                            mr: 1,
+                          },
+                          "&::before": {
+                            content: '""',
+                            display: "block",
+                            position: "absolute",
+                            top: 0,
+                            right: 14,
+                            width: 10,
+                            height: 10,
+                            bgcolor: "background.paper",
+                            transform: "translateY(-50%) rotate(45deg)",
+                            zIndex: 0,
+                          },
+                        },
+                      }}
+                      transformOrigin={{ horizontal: "right", vertical: "top" }}
+                      anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                    >
+                      <MenuItem onClick={handleClose}>
+                        <Avatar /> {JSON.parse(localStorage.getItem("user-provider")).first_name} {JSON.parse(localStorage.getItem("user-provider")).last_name}
+                      </MenuItem>
+                      <MenuItem onClick={handleClose}>
+                        <Avatar /> {JSON.parse(localStorage.getItem("user-provider")).email}
+                      </MenuItem>
+                      <Divider />
+                    
+            
+                      <MenuItem onClick={handleCloseLogout}>
+                        <ListItemIcon>
+                          <Logout fontSize="small" />
+                        </ListItemIcon>
+                        Logout
+                      </MenuItem>
+                    </Menu>
+                  </React.Fragment>
+                </>
+              ) : (
+                <React.Fragment>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      textAlign: "center",
+                    }}
+                  >
+                    {/* <Typography sx={{ minWidth: 100 }}>Contact</Typography>
+                  <Typography sx={{ minWidth: 100 }}>Profile</Typography> */}
+                    <Tooltip title="Account settings">
+                      <IconButton
+                        onClick={handleClick}
+                        size="small"
+                        sx={{ ml: 2 }}
+                        aria-controls={open ? "account-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? "true" : undefined}
+                      >
+                        <Avatar sx={{ width: 32, height: 32 }}>
+                          
+                        </Avatar>
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                  <Menu
+                    anchorEl={anchorEl}
+                    id="account-menu"
+                    open={open}
+                    onClose={handleClose}
+                    onClick={handleClose}
+                    PaperProps={{
+                      elevation: 0,
+                      sx: {
+                        overflow: "visible",
+                        filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                        mt: 1.5,
+                        "& .MuiAvatar-root": {
+                          width: 32,
+                          height: 32,
+                          ml: -0.5,
+                          mr: 1,
+                        },
+                        "&::before": {
+                          content: '""',
+                          display: "block",
+                          position: "absolute",
+                          top: 0,
+                          right: 14,
+                          width: 10,
+                          height: 10,
+                          bgcolor: "background.paper",
+                          transform: "translateY(-50%) rotate(45deg)",
+                          zIndex: 0,
+                        },
+                      },
+                    }}
+                    transformOrigin={{ horizontal: "right", vertical: "top" }}
+                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                  >
+                    {/* <MenuItem onClick={handleClose}>
+                    <Avatar /> History
+                  </MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <Settings /> Password
+                  </MenuItem>
+                  <Divider />
+                   */}
+
+                    {/* <MenuItem onClick={handleClose}>
+                    <ListItemIcon>
+                      <PersonAdd fontSize="small" />
+                    </ListItemIcon>
+                    Add another account
+                  </MenuItem> */}
+                    {/* <MenuItem onClick={handleClose}>
+                    <ListItemIcon>
+                      <Settings fontSize="small" />
+                    </ListItemIcon>
+                    Settings
+                  </MenuItem> */}
+                    <MenuItem onClick={handleCloseLogin}>
+                      <ListItemIcon>
+                        <Logout fontSize="small" />
+                      </ListItemIcon>
+                      Login
+                    </MenuItem>
+                  </Menu>
+                </React.Fragment>
+              )}
+            </div>
+          </div>
+
+          <hr />
           <Appbar handleAppbar={(e) => handleTimeChange(e)} />
 
           {/* <h1>Dashboard</h1> */}
@@ -153,7 +405,7 @@ export default function Dashboard() {
                 <div className="content">
                   <div className="conten-left">
                     <img
-                      className="w-60  bg-blue-100"
+                      className="bg-blue-100"
                       key={index}
                       src={
                         "https://szrepoqlfkcnlfdeicse.supabase.co/storage/v1/object/public/rooms/" +
@@ -162,26 +414,16 @@ export default function Dashboard() {
                         item.image[0]
                       }
                       alt={item.type}
-                      width={200}
-                      height={200}
+                      width={150}
+                      height={150}
                     />
 
                     <div className="content-label">
-                      {/* {numcamera > item.cameras * (Math.ceil((numcat) / item.number_of_cats)) ? <p> จำนวนกล้องไม่เพียงพอ </p> : numcamera > 0 ?  <p>สามารถใช้กล้องได้มากสุด {item.cameras} ตัว ต่อ 1 ห้อง</p> : ""} */}
-                      {/* {numcat > item.number_of_cats * item.number_of_rooms ? <p> ต้องการ {Math.ceil((numcat) / item.number_of_cats)} ห้อง แต่เหลือเพียง {item.number_of_rooms} ห้องว่าง</p> : ""} */}
-                      {/* <p> ประเภท : {item.type}</p> */}
                       <h2 className="text-xl">{item.room_name}</h2>
-                      {/* <p>{">"} ขนาด : {item.optional_services} เมตร </p> */}
+                      <p>จำนวนกล้อง : {item.cameras}</p>
+                      <p>จำนวนแมว : {item.number_of_cats} สูงสุด</p>
+
                       <p>
-                        {">"} จำนวนกล้อง : {item.cameras}
-                      </p>
-                      <p>
-                        {">"} จำนวนแมว : {item.number_of_cats} สูงสุด
-                      </p>
-                      {/* <p>{">"} ราคา : {item.price} บาท </p> */}
-                      {/* <p> ห้องทั้งหมด {item.number_of_rooms} ห้อง </p> */}
-                      <p>
-                        {"> "}
                         {checkroom(item.room_name) >= 0
                           ? `ห้องที่สามารถจองได้ : ${
                               item.number_of_rooms -
@@ -193,12 +435,10 @@ export default function Dashboard() {
                             }`
                           : `ห้องที่สามารถจองได้ : ${item.number_of_rooms}`}{" "}
                       </p>
-                      <p>
-                        {">"} คำอธิบาย : {item.description}
-                      </p>
-                      {/* <p> เวลาเริ่มเช็คอิน : จาก: 08:00 ถึง เวลาเช็คเอาท์ : 17:00</p> */}
+                      <p>คำอธิบาย : {item.description}</p>
                     </div>
-                    <div className="py-20 px-10 text-center ">
+
+                    <div className="py-10 px-10 text-center ">
                       <p>{item.price} บาท /คืน</p>
 
                       {numcamera >
@@ -208,7 +448,7 @@ export default function Dashboard() {
                         item.number_of_cats *
                           (item.number_of_rooms - checkroom(item.room_name)) ||
                         numcat > item.number_of_cats * item.number_of_rooms) ? (
-                        <button className="btn-primary">
+                        <button className="btn-primary3">
                           {"จำนวนกล้องไม่เพียงพอและ " +
                             `ต้องการ ${Math.ceil(
                               numcat / item.number_of_cats
@@ -228,7 +468,7 @@ export default function Dashboard() {
                             (item.number_of_rooms -
                               checkroom(item.room_name)) ||
                         numcat > item.number_of_cats * item.number_of_rooms ? (
-                        <button className="btn-primary">{` ต้องการ ${Math.ceil(
+                        <button className="btn-primary3">{` ต้องการ ${Math.ceil(
                           numcat / item.number_of_cats
                         )} ห้อง แต่เหลือเพียง ${
                           item.number_of_rooms - checkroom(item.room_name)
@@ -242,7 +482,7 @@ export default function Dashboard() {
                       ) : numcamera >
                         item.cameras *
                           Math.ceil(numcat / item.number_of_cats) ? (
-                        <button className="btn-primary">
+                        <button className="btn-primary3">
                           จำนวนกล้องไม่เพียงพอ
                         </button>
                       ) : (
