@@ -2,8 +2,11 @@ import { Route, Routes, Link } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 
+import LoadingSpinner from "./Loading";
+
 import Appbar from "../Appbar";
 import "../App.css";
+
 export default function Dashboard() {
   // axios fetch data
   const [data, setData] = useState([]);
@@ -16,21 +19,23 @@ export default function Dashboard() {
   const [endDate, setEndDate] = useState(new Date());
   const [room_overlap, setRoom_overlap] = useState([]);
   const [err_check, setErr_check] = useState(true);
+  const [url, setURL] = useState("");
 
   useEffect(() => {
+    // production_check();
     fetchData();
-    production_check();
   }, []);
 
-  let production_check = () =>{
-    let __DEV__ = window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1");
-
-    if(__DEV__){
-      console.log("is dev");
-    }else{
-      console.log("is not dev");
-    }
+  function production_check() {
+    const isDevelopment =
+      window.location.origin.includes("localhost") ||
+      window.location.origin.includes("127.0.0.1");
+  
+    return isDevelopment ? "http://localhost:8700" : "https://co-cocat-backend-theta.vercel.app";
   }
+  
+
+  
 
   useEffect(() => {
     let overlaping = booking.filter(({ check_in_date, check_out_date }) => {
@@ -62,17 +67,19 @@ export default function Dashboard() {
     let room_overlap = overlaping.reduce((acc, item) => {
       let found = acc.find((room) => room.room_name === item.room_name);
       if (found) {
-        found.len_room += 1;
+        found.len_room += item.total_rooms;
+        // console.log(item.total_rooms);
       } else {
         acc.push({
           room_name: item.room_name,
-          len_room: 1,
+          len_room: item.total_rooms,
         });
       }
       return acc;
     }, []);
 
     setRoom_overlap(room_overlap);
+    // console.log(room_overlap);
     //  console.log(room_overlap);
   }, [booking, data, numcat, numcamera, startDate, endDate]);
 
@@ -85,12 +92,17 @@ export default function Dashboard() {
   // },[numcat, numcamera]);
 
   const fetchData = async () => {
-    axios.get("http://localhost:8700/v1/room").then((res) => {
+    let link = "http://localhost:8700/v1/room";
+
+    // console.log(production_check());
+
+    axios.get(production_check()+"/v1/room").then((res) => {
       setData(res.data.body.room);
       setBooking(res.data.body.booking);
-      console.log(res.data.body.room);
-      console.log(res.data.body.booking);
-      setLoading(false);
+      
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
     });
   };
 
@@ -106,6 +118,11 @@ export default function Dashboard() {
     setNumcamera(e.numcamera);
     setStartDate(e.startDate);
     setEndDate(e.endDate);
+    // console.log("ok ok ok");
+
+    // show circle loading 2 sec 
+    fetchData();
+    production_check();
     // console.log(e);
   };
   const checkroom = (room_name) => {
@@ -118,151 +135,136 @@ export default function Dashboard() {
   };
 
   return (
-    <>
-      <div className=""></div>
-      <Appbar handleAppbar={(e) => handleTimeChange(e)} />
+    <div>
+      {loading ? (
+        <>
+          <LoadingSpinner />
+        </>
+      ) : (
+        <>
+          <div className=""></div>
+          <Appbar handleAppbar={(e) => handleTimeChange(e)} />
 
-      {/* <h1>Dashboard</h1> */}
+          {/* <h1>Dashboard</h1> */}
 
-      {data.map((item, index) => (
-        <div key={index}>
-          <div className="content-out">
-            <div className="content">
-              <div className="conten-left">
-                <img
-                  className="w-60  bg-blue-100"
-                  key={index}
-                  src={
-                    "https://szrepoqlfkcnlfdeicse.supabase.co/storage/v1/object/public/rooms/" +
-                    item.type +
-                    "/" +
-                    item.image[0]
-                  }
-                  alt={item.type}
-                  width={200}
-                  height={200}
-                />
+          {data.map((item, index) => (
+            <div key={index}>
+              <div className="content-out">
+                <div className="content">
+                  <div className="conten-left">
+                    <img
+                      className="w-60  bg-blue-100"
+                      key={index}
+                      src={
+                        "https://szrepoqlfkcnlfdeicse.supabase.co/storage/v1/object/public/rooms/" +
+                        item.type +
+                        "/" +
+                        item.image[0]
+                      }
+                      alt={item.type}
+                      width={200}
+                      height={200}
+                    />
 
-                <div className="content-label">
-                  {/* {numcamera > item.cameras * (Math.ceil((numcat) / item.number_of_cats)) ? <p> จำนวนกล้องไม่เพียงพอ </p> : numcamera > 0 ?  <p>สามารถใช้กล้องได้มากสุด {item.cameras} ตัว ต่อ 1 ห้อง</p> : ""} */}
-                  {/* {numcat > item.number_of_cats * item.number_of_rooms ? <p> ต้องการ {Math.ceil((numcat) / item.number_of_cats)} ห้อง แต่เหลือเพียง {item.number_of_rooms} ห้องว่าง</p> : ""} */}
-                  {/* <p> ประเภท : {item.type}</p> */}
-                  <h2 className="text-xl">{item.room_name}</h2>
-                  {/* <p>{">"} ขนาด : {item.optional_services} เมตร </p> */}
-                  <p>
-                    {">"} จำนวนกล้อง : {item.cameras}
-                  </p>
-                  <p>
-                    {">"} จำนวนแมว : {item.number_of_cats} สูงสุด
-                  </p>
-                  {/* <p>{">"} ราคา : {item.price} บาท </p> */}
-                  {/* <p> ห้องทั้งหมด {item.number_of_rooms} ห้อง </p> */}
-                  <p>
-                    {"> "}
-                    {checkroom(item.room_name) >= 0
-                      ? `ห้องที่สามารถจองได้ : ${
-                          item.number_of_rooms - checkroom(item.room_name)
-                        }`
-                      : `ห้องที่สามารถจองได้ : ${item.number_of_rooms}`}{" "}
-                  </p>
-                  <p>
-                    {">"} คำอธิบาย : {item.description}
-                  </p>
-                  {/* <p> เวลาเริ่มเช็คอิน : จาก: 08:00 ถึง เวลาเช็คเอาท์ : 17:00</p> */}
-                </div>
-                <div className="py-20 px-10 text-center ">
-                  <p>{item.price} บาท /คืน</p>
+                    <div className="content-label">
+                      {/* {numcamera > item.cameras * (Math.ceil((numcat) / item.number_of_cats)) ? <p> จำนวนกล้องไม่เพียงพอ </p> : numcamera > 0 ?  <p>สามารถใช้กล้องได้มากสุด {item.cameras} ตัว ต่อ 1 ห้อง</p> : ""} */}
+                      {/* {numcat > item.number_of_cats * item.number_of_rooms ? <p> ต้องการ {Math.ceil((numcat) / item.number_of_cats)} ห้อง แต่เหลือเพียง {item.number_of_rooms} ห้องว่าง</p> : ""} */}
+                      {/* <p> ประเภท : {item.type}</p> */}
+                      <h2 className="text-xl">{item.room_name}</h2>
+                      {/* <p>{">"} ขนาด : {item.optional_services} เมตร </p> */}
+                      <p>
+                        {">"} จำนวนกล้อง : {item.cameras}
+                      </p>
+                      <p>
+                        {">"} จำนวนแมว : {item.number_of_cats} สูงสุด
+                      </p>
+                      {/* <p>{">"} ราคา : {item.price} บาท </p> */}
+                      {/* <p> ห้องทั้งหมด {item.number_of_rooms} ห้อง </p> */}
+                      <p>
+                        {"> "}
+                        {checkroom(item.room_name) >= 0
+                          ? `ห้องที่สามารถจองได้ : ${
+                              item.number_of_rooms -
+                                checkroom(item.room_name) >=
+                              0
+                                ? item.number_of_rooms -
+                                  checkroom(item.room_name)
+                                : 0
+                            }`
+                          : `ห้องที่สามารถจองได้ : ${item.number_of_rooms}`}{" "}
+                      </p>
+                      <p>
+                        {">"} คำอธิบาย : {item.description}
+                      </p>
+                      {/* <p> เวลาเริ่มเช็คอิน : จาก: 08:00 ถึง เวลาเช็คเอาท์ : 17:00</p> */}
+                    </div>
+                    <div className="py-20 px-10 text-center ">
+                      <p>{item.price} บาท /คืน</p>
 
-                  {numcamera >
-                    item.cameras * Math.ceil(numcat / item.number_of_cats) &&
-                  (numcat >
-                    item.number_of_cats *
-                      (item.number_of_rooms - checkroom(item.room_name)) ||
-                    numcat > item.number_of_cats * item.number_of_rooms) ? (
-                    <button className="btn-primary">
-                      {"จำนวนกล้องไม่เพียงพอและ " +
-                        `ต้องการ ${Math.ceil(
+                      {numcamera >
+                        item.cameras *
+                          Math.ceil(numcat / item.number_of_cats) &&
+                      (numcat >
+                        item.number_of_cats *
+                          (item.number_of_rooms - checkroom(item.room_name)) ||
+                        numcat > item.number_of_cats * item.number_of_rooms) ? (
+                        <button className="btn-primary">
+                          {"จำนวนกล้องไม่เพียงพอและ " +
+                            `ต้องการ ${Math.ceil(
+                              numcat / item.number_of_cats
+                            )} ห้อง เหลือเพียง  ${
+                              item.number_of_rooms - checkroom(item.room_name)
+                                ? item.number_of_rooms -
+                                    checkroom(item.room_name) >=
+                                  0
+                                  ? item.number_of_rooms -
+                                    checkroom(item.room_name)
+                                  : 0
+                                : item.number_of_rooms
+                            } ห้องว่าง `}
+                        </button>
+                      ) : numcat >
+                          item.number_of_cats *
+                            (item.number_of_rooms -
+                              checkroom(item.room_name)) ||
+                        numcat > item.number_of_cats * item.number_of_rooms ? (
+                        <button className="btn-primary">{` ต้องการ ${Math.ceil(
                           numcat / item.number_of_cats
-                        )} ห้อง แต่เหลือเพียง  ${
+                        )} ห้อง แต่เหลือเพียง ${
                           item.number_of_rooms - checkroom(item.room_name)
-                            ? item.number_of_rooms - checkroom(item.room_name)
+                            ? item.number_of_rooms -
+                                checkroom(item.room_name) >=
+                              0
+                              ? item.number_of_rooms - checkroom(item.room_name)
+                              : 0
                             : item.number_of_rooms
-                        } ห้องว่าง `}
-                    </button>
-                  ) : numcat >
-                      item.number_of_cats *
-                        (item.number_of_rooms - checkroom(item.room_name)) ||
-                    numcat > item.number_of_cats * item.number_of_rooms ? (
-                    <button className="btn-primary">{` ต้องการ ${Math.ceil(
-                      numcat / item.number_of_cats
-                    )} ห้อง แต่เหลือเพียง ${
-                      item.number_of_rooms - checkroom(item.room_name)
-                        ? item.number_of_rooms - checkroom(item.room_name)
-                        : item.number_of_rooms
-                    } ห้องว่าง `}</button>
-                  ) : numcamera >
-                    item.cameras * Math.ceil(numcat / item.number_of_cats) ? (
-                    <button className="btn-primary">
-                      จำนวนกล้องไม่เพียงพอ
-                    </button>
-                  ) : (
-                    <Link to={`/detail/${item.type}`}>
-                      <button
-                        className="btn-primary"
-                        onClick={() => {
-                          saveToLocalStorage(index);
-                        }}
-                      >
-                        จองที่พัก
-                      </button>{" "}
-                    </Link>
-                  )}
+                        } ห้องว่าง `}</button>
+                      ) : numcamera >
+                        item.cameras *
+                          Math.ceil(numcat / item.number_of_cats) ? (
+                        <button className="btn-primary">
+                          จำนวนกล้องไม่เพียงพอ
+                        </button>
+                      ) : (
+                        <Link to={`/detail/${item.type}`}>
+                          <button
+                            className="btn-primary"
+                            onClick={() => {
+                              saveToLocalStorage(index);
+                            }}
+                          >
+                            จองที่พัก
+                          </button>{" "}
+                        </Link>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
-              {/* <div className="py-20 px-10 ">
-              {numcamera > item.cameras * Math.ceil(numcat / item.number_of_cats) &&
-              (numcat > item.number_of_cats * (item.number_of_rooms -  checkroom(item.room_name)) ||
-               numcat > item.number_of_cats * item.number_of_rooms) ? (
-                <button className="btn-primary">
-                  {"จำนวนกล้องไม่เพียงพอและ " +
-                    `ต้องการ ${Math.ceil(
-                      numcat / item.number_of_cats
-                    )} ห้อง แต่เหลือเพียง  ${
-                      item.number_of_rooms - checkroom(item.room_name)
-                        ? item.number_of_rooms - checkroom(item.room_name)
-                        : item.number_of_rooms
-                    } ห้องว่าง `}
-                </button>
-              ) : numcat > item.number_of_cats * (item.number_of_rooms - checkroom(item.room_name) )||
-                numcat > item.number_of_cats * item.number_of_rooms ? (
-                <button className="btn-primary">{` ต้องการ ${Math.ceil(
-                  numcat / item.number_of_cats
-                )} ห้อง แต่เหลือเพียง ${
-                  item.number_of_rooms - checkroom(item.room_name)
-                    ? item.number_of_rooms - checkroom(item.room_name)
-                    : item.number_of_rooms
-                } ห้องว่าง `}</button>
-              ) : numcamera >
-                item.cameras * Math.ceil(numcat / item.number_of_cats) ? (
-                <button className="btn-primary">จำนวนกล้องไม่เพียงพอ</button>
-              ) : (
-                <Link to={`/detail/${item.type}`}>
-                  <button
-                    className="btn-primary"
-                    onClick={() => {
-                      saveToLocalStorage(index);
-                    }}
-                  >
-                    จองที่พัก
-                  </button>{" "}
-                </Link>
-              )}
-            </div> */}
             </div>
-          </div>
-        </div>
-      ))}
-    </>
+          ))}
+        </>
+      )}
+    </div>
   );
 }
-<></>;

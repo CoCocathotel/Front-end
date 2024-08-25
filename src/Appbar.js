@@ -87,7 +87,6 @@ export default function Appbar({ handleAppbar }) {
             dayjs(endDate, dateFormat),
           ]}
           onChange={(date, dateString) => {
-            // parse datestring to date
             setStartDate(dateString[0]);
             setEndDate(dateString[1]);
           }}
@@ -102,7 +101,7 @@ export default function Appbar({ handleAppbar }) {
 
       <div className=" font-text ">
         <div className="box-space">
-        <p > แมว </p>
+          <p> แมว </p>
           <input
             className="input-primary"
             type="text"
@@ -135,6 +134,13 @@ export default function Appbar({ handleAppbar }) {
           </button>
         </div>
       </div>
+    
+        {/* refrest api button  */}
+
+        <button className="btn-primary" onClick={handlePageChange}>
+          ค้นหา
+        </button>
+   
     </div>
   );
 }
