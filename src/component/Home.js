@@ -92,9 +92,9 @@ export default function Dashboard() {
   // },[numcat, numcamera]);
 
   const fetchData = async () => {
-    let link = "http://localhost:8700/v1/room";
+    // let link = "http://localhost:8700/v1/room";
 
-    // console.log(production_check());
+    console.log(production_check());
 
     axios.get(production_check()+"/v1/room").then((res) => {
       setData(res.data.body.room);
