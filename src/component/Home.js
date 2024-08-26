@@ -1,11 +1,9 @@
-import { Route, Routes, Link, json} from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
-import { useEffect, useState, useRef } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
 import Logo from "../cococat-hotel.png";
-
+import Img_bg from "../cococat_preview.jpg";
 import LoadingSpinner from "./Loading";
+import Appbar from "../Appbar";
 
 import * as React from "react";
 import Button from "@mui/material/Button";
@@ -22,31 +20,25 @@ import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import SendIcon from '@mui/icons-material/Send';
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import SendIcon from "@mui/icons-material/Send";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 
-// icons-material/PersonAdd
-// icons-material/Settings
-// mui/icons-material/Logout
-
-import Appbar from "../Appbar";
-import "../App.css";
-import { bottomNavigationActionClasses } from "@mui/material";
-
-export default function Dashboard() {
+export default function Home() {
   const navigate = useNavigate();
-  // axios fetch data
-  const [data, setData] = useState([]);
-  const [booking, setBooking] = useState([]);
+
+  const images = [Img_bg, Img_bg, Img_bg];
+
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
+    }, 3000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [numcat, setNumcat] = useState(1);
-  const [numcamera, setNumcamera] = useState(0);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [room_overlap, setRoom_overlap] = useState([]);
-  const [err_check, setErr_check] = useState(true);
-  const [url, setURL] = useState("");
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -60,7 +52,7 @@ export default function Dashboard() {
     setAnchorEl(null);
   };
 
-  const handleClose= () => {
+  const handleClose = () => {
     setAnchorEl(null);
   };
 
@@ -73,124 +65,19 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    fetchData();
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   }, []);
 
-  function production_check() {
-    const isDevelopment =
-      window.location.origin.includes("localhost") ||
-      window.location.origin.includes("127.0.0.1");
-
-    return isDevelopment
-      ? "http://localhost:8700"
-      : "https://co-cocat-backend-theta.vercel.app";
-  }
-
-  useEffect(() => {
-    let overlaping = booking.filter(({ check_in_date, check_out_date }) => {
-      const checkIn = new Date(check_in_date);
-      const checkOut = new Date(check_out_date);
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      return (
-        (data.room_name === booking.room_name &&
-          start >= checkIn &&
-          start <= checkOut &&
-          end >= checkIn &&
-          end <= checkOut) ||
-        (start <= checkIn &&
-          start <= checkOut &&
-          end >= checkIn &&
-          end <= checkOut) ||
-        (start >= checkIn &&
-          start <= checkOut &&
-          end >= checkIn &&
-          end >= checkOut) ||
-        (start <= checkIn &&
-          start <= checkOut &&
-          end >= checkIn &&
-          end >= checkOut)
-      );
-    });
-
-    let room_overlap = overlaping.reduce((acc, item) => {
-      let found = acc.find((room) => room.room_name === item.room_name);
-      if (found) {
-        found.len_room += item.total_rooms;
-        // console.log(item.total_rooms);
-      } else {
-        acc.push({
-          room_name: item.room_name,
-          len_room: item.total_rooms,
-        });
-      }
-      return acc;
-    }, []);
-
-    setRoom_overlap(room_overlap);
-    // console.log(room_overlap);
-    //  console.log(room_overlap);
-  }, [booking, data, numcat, numcamera, startDate, endDate]);
-
-  // useEffect(() => {
-  //   let num_cat = parseInt(JSON.parse(localStorage.getItem("number_of_cats")));
-  //   let num_camera = parseInt(JSON.parse(localStorage.getItem("number_of_cameras")));
-  //   setNumcat(num_cat);
-  //   setNumcamera(num_camera);
-
-  // },[numcat, numcamera]);
-
-  const fetchData = async () => {
-    // let link = "http://localhost:8700/v1/room";
-
-    console.log(production_check());
-
-    axios.get(production_check() + "/v1/room").then((res) => {
-      setData(res.data.body.room);
-      setBooking(res.data.body.booking);
-
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
-    });
-  };
-
-  const saveToLocalStorage = (index) => {
-    localStorage.setItem("data", JSON.stringify(data[index]));
-
-    const res = JSON.parse(localStorage.getItem("data"));
-    // console.log(index);
-  };
-
-  const handleTimeChange = (e) => {
-    setNumcat(e.numcat);
-    setNumcamera(e.numcamera);
-    setStartDate(e.startDate);
-    setEndDate(e.endDate);
-    // console.log("ok ok ok");
-
-    // show circle loading 2 sec
-    // fetchData();
-    // production_check();
-    // console.log(e);
-  };
-  const checkroom = (room_name) => {
-    for (let i = 0; i < room_overlap.length; i++) {
-      if (room_overlap[i].room_name === room_name) {
-        // console.log(room_overlap[i].len_room);
-        return room_overlap[i].len_room;
-      }
-    }
-  };
-
   return (
-    <div>
+    <>
       {loading ? (
-        <>
+        <div>
           <LoadingSpinner />
-        </>
+        </div>
       ) : (
-        <>
+        <div>
           <div className="sticky top-0 bg-white z-50">
             <div className="grid grid-cols-5 gap-1 p-4">
               <img
@@ -200,13 +87,28 @@ export default function Dashboard() {
                 width={80}
                 height={80}
               />
-              <button className="text-gray-600 hover:text-blue-500">
+              <button
+                onClick={() => {
+                  navigate("/home");
+                }}
+                className="text-gray-600 hover:text-blue-500"
+              >
                 Home
               </button>
-              <button className="text-gray-600 hover:text-blue-500">
+              <button
+                onClick={() => {
+                  navigate("/");
+                }}
+                className="text-gray-600 hover:text-blue-500"
+              >
                 Booking
               </button>
-              <button className="text-gray-600 hover:text-blue-500">
+              <button
+                onClick={() => {
+                  navigate("/about");
+                }}
+                className="text-gray-600 hover:text-blue-500"
+              >
                 About Us
               </button>
               {localStorage.getItem("token") ? (
@@ -251,8 +153,8 @@ export default function Dashboard() {
                       anchorEl={anchorEl}
                       id="account-menu"
                       open={open}
-                      onClose={()=>{}}
-                      onClick={()=>{}}
+                      onClose={() => {}}
+                      onClick={() => {}}
                       PaperProps={{
                         elevation: 0,
                         sx: {
@@ -283,14 +185,25 @@ export default function Dashboard() {
                       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                     >
                       <MenuItem onClick={handleClose}>
-                        <Avatar /> {JSON.parse(localStorage.getItem("user-provider")).first_name} {JSON.parse(localStorage.getItem("user-provider")).last_name}
+                        <Avatar />{" "}
+                        {
+                          JSON.parse(localStorage.getItem("user-provider"))
+                            .first_name
+                        }{" "}
+                        {
+                          JSON.parse(localStorage.getItem("user-provider"))
+                            .last_name
+                        }
                       </MenuItem>
                       <MenuItem onClick={handleClose}>
-                        <Avatar /> {JSON.parse(localStorage.getItem("user-provider")).email}
+                        <Avatar />{" "}
+                        {
+                          JSON.parse(localStorage.getItem("user-provider"))
+                            .email
+                        }
                       </MenuItem>
                       <Divider />
-                    
-            
+
                       <MenuItem onClick={handleCloseLogout}>
                         <ListItemIcon>
                           <Logout fontSize="small" />
@@ -320,9 +233,7 @@ export default function Dashboard() {
                         aria-haspopup="true"
                         aria-expanded={open ? "true" : undefined}
                       >
-                        <Avatar sx={{ width: 32, height: 32 }}>
-                          
-                        </Avatar>
+                        <Avatar sx={{ width: 32, height: 32 }}></Avatar>
                       </IconButton>
                     </Tooltip>
                   </Box>
@@ -361,27 +272,6 @@ export default function Dashboard() {
                     transformOrigin={{ horizontal: "right", vertical: "top" }}
                     anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                   >
-                    {/* <MenuItem onClick={handleClose}>
-                    <Avatar /> History
-                  </MenuItem>
-                  <MenuItem onClick={handleClose}>
-                    <Settings /> Password
-                  </MenuItem>
-                  <Divider />
-                   */}
-
-                    {/* <MenuItem onClick={handleClose}>
-                    <ListItemIcon>
-                      <PersonAdd fontSize="small" />
-                    </ListItemIcon>
-                    Add another account
-                  </MenuItem> */}
-                    {/* <MenuItem onClick={handleClose}>
-                    <ListItemIcon>
-                      <Settings fontSize="small" />
-                    </ListItemIcon>
-                    Settings
-                  </MenuItem> */}
                     <MenuItem onClick={handleCloseLogin}>
                       <ListItemIcon>
                         <Logout fontSize="small" />
@@ -395,116 +285,201 @@ export default function Dashboard() {
           </div>
 
           <hr />
-          <Appbar handleAppbar={(e) => handleTimeChange(e)} />
 
-          {/* <h1>Dashboard</h1> */}
+          {/* code  */}
+          <div>
+            {/* {หน้า Home โรงแรมแมว} */}
 
-          {data.map((item, index) => (
-            <div key={index}>
-              <div className="content-out">
-                <div className="content">
-                  <div className="conten-left">
+            <div className="flex flex-col items-center justify-center  bg-gray-200 overflow-hidden">
+              <div className="bg-white p-5 rounded-lg shadow-lg w-screen overflow-hidden">
+                <div className="flex w-[200%] animate-slide">
+                  {" "}
+                  {/* ใช้ flex และ width 200% เพื่อแสดงผลสไลด์ */}
+                  {images.map((image, index) => (
                     <img
-                      className="bg-blue-100"
                       key={index}
-                      src={
-                        "https://szrepoqlfkcnlfdeicse.supabase.co/storage/v1/object/public/rooms/" +
-                        item.type +
-                        "/" +
-                        item.image[0]
-                      }
-                      alt={item.type}
-                      width={150}
-                      height={150}
+                      src={image}
+                      alt={`Slide ${index}`}
+                      className="w-1/3"
                     />
-
-                    <div className="content-label">
-                      <h2 className="text-xl">{item.room_name}</h2>
-                      <p>จำนวนกล้อง : {item.cameras}</p>
-                      <p>จำนวนแมว : {item.number_of_cats} สูงสุด</p>
-
-                      <p>
-                        {checkroom(item.room_name) >= 0
-                          ? `ห้องที่สามารถจองได้ : ${
-                              item.number_of_rooms -
-                                checkroom(item.room_name) >=
-                              0
-                                ? item.number_of_rooms -
-                                  checkroom(item.room_name)
-                                : 0
-                            }`
-                          : `ห้องที่สามารถจองได้ : ${item.number_of_rooms}`}{" "}
-                      </p>
-                      <p>คำอธิบาย : {item.description}</p>
-                    </div>
-
-                    <div className="py-10 px-10 text-center ">
-                      <p>{item.price} บาท /คืน</p>
-
-                      {numcamera >
-                        item.cameras *
-                          Math.ceil(numcat / item.number_of_cats) &&
-                      (numcat >
-                        item.number_of_cats *
-                          (item.number_of_rooms - checkroom(item.room_name)) ||
-                        numcat > item.number_of_cats * item.number_of_rooms) ? (
-                        <button className="btn-primary3">
-                          {"จำนวนกล้องไม่เพียงพอและ " +
-                            `ต้องการ ${Math.ceil(
-                              numcat / item.number_of_cats
-                            )} ห้อง เหลือเพียง  ${
-                              item.number_of_rooms - checkroom(item.room_name)
-                                ? item.number_of_rooms -
-                                    checkroom(item.room_name) >=
-                                  0
-                                  ? item.number_of_rooms -
-                                    checkroom(item.room_name)
-                                  : 0
-                                : item.number_of_rooms
-                            } ห้องว่าง `}
-                        </button>
-                      ) : numcat >
-                          item.number_of_cats *
-                            (item.number_of_rooms -
-                              checkroom(item.room_name)) ||
-                        numcat > item.number_of_cats * item.number_of_rooms ? (
-                        <button className="btn-primary3">{` ต้องการ ${Math.ceil(
-                          numcat / item.number_of_cats
-                        )} ห้อง แต่เหลือเพียง ${
-                          item.number_of_rooms - checkroom(item.room_name)
-                            ? item.number_of_rooms -
-                                checkroom(item.room_name) >=
-                              0
-                              ? item.number_of_rooms - checkroom(item.room_name)
-                              : 0
-                            : item.number_of_rooms
-                        } ห้องว่าง `}</button>
-                      ) : numcamera >
-                        item.cameras *
-                          Math.ceil(numcat / item.number_of_cats) ? (
-                        <button className="btn-primary3">
-                          จำนวนกล้องไม่เพียงพอ
-                        </button>
-                      ) : (
-                        <Link to={`/detail/${item.type}`}>
-                          <button
-                            className="btn-primary"
-                            onClick={() => {
-                              saveToLocalStorage(index);
-                            }}
-                          >
-                            จองที่พัก
-                          </button>{" "}
-                        </Link>
-                      )}
-                    </div>
-                  </div>
+                  ))}
+                  {images.map((image, index) => (
+                    <img
+                      key={index + images.length}
+                      src={image}
+                      alt={`Slide Duplicate ${index}`}
+                      className="w-1/3"
+                    />
+                  ))}
                 </div>
               </div>
             </div>
-          ))}
-        </>
+          </div>
+          <div className="bg-white p-5 rounded-lg text-center shadow-lg w-full my-4">
+            <div className="text-black text-3xl text-left mt-10 mb-10">
+              {" "}
+              Term of Use
+            </div>
+            <div className="grid grid-cols-3 gap-4 mb-20">
+              <div className="border-2 border-gray-400 px-4 py-5 border-opacity-50 rounded-sm	">
+                <p className="text-left text-green-400 mb-5">การจองห้องพัก</p>
+                <p className="text-left text-gray-400 mb-5">
+                  Confirm วัน เวลาที่จะมาส่งและมารับน้อง เลือกห้องพักที่ต้องการ
+                  (หรือห้องที่ว่างอยู่) การจองห้องพักจะต้องมีการมัดจำ 50%
+                  ของยอดรวมค่าพัก ส่วนยอดคงเหลือ นำมาชำระในวันที่ส่งน้องแมวค่ะ
+                  (การจองห้องที่ไม่มีการโอนเงินมัดจำ
+                  เราจะถือว่ายังไม่มีการจองห้องเกิดขึ้นนะค่ะ)
+                  สำหรับในช่วงเทศกาลปีใหม่และสงกรานต์
+                  รบกวนโอนยอดค่าเข้าพักทั้งหมดเต็มจำนวนค่ะ
+                </p>
+
+                <ul className="text-left text-gray-400 mr-10 ml-10 mb-5">
+                  <li className="mb-5">
+                    1. กรณีการยกเลิกห้องพัก สามารถยกเลิกได้ 15 วัน
+                    ก่อนวันเข้าพัก คืนเงินมัดจำให้ทั้งหมดค่ะ
+                  </li>
+                  <li className="mb-5">
+                    2. กรณีเพิ่มวันพัก โดยไม่แจ้งล่วงหน้า
+                    และห้องของทางโรงแรมเต็มทุกห้องในวันนั้น
+                    เราขอนำน้องแมวออกมาพักในที่พักชั่วคราว
+                    ซึ่งเป็นที่พักสำรองของทางเราค่ะ
+                    โดยคิดค่าใช้จ่ายตามราคาห้องปกติค่ะ
+                  </li>
+                  <li className="mb-5">
+                    3. การลดจำนวนวันพัก โดยไม่แจ้งล่วงหน้า
+                    ทางเรารบกวนไม่คืนเงินในส่วนวันที่เหลือค่ะ
+                  </li>
+                </ul>
+
+                <p className="text-left text-green-400 mb-5">บัญชีธนาคาร</p>
+
+                <ul className="text-left text-gray-400 mr-10 ml-10">
+                  <li className="text-left text-gray-400">
+                    ชื่อบัญชี ปวีณา <br />
+                    วิบูลย์สันติพงศ์ ไทยพาณิชย์
+                    <br />
+                    เลขที่บัญชี 085-225160-3
+                    <br />
+                    ออมทรัพย์ สาขาประชานิเวศน์ 1
+                  </li>
+                </ul>
+              </div>
+
+              <div className="border-2 border-gray-400 px-4 py-5 border-opacity-50 rounded-sm	">
+                <p className="text-left text-green-400 mb-5">
+                  เงื่อนไขการจองห้องพัก
+                </p>
+                <ul className="text-left text-gray-400 mr-10 ml-10 ">
+                  <li className="mb-5">
+                    น้องแมวทุกตัวต้องได้รับการฉีดวัคซีนป้องกันโรคขั้นพื้นฐาน
+                    (โรคพิษสุนัขบ้า โรคลิวคิเมีย โรคหัดแมว)
+                    โดยนำใบวัคซีนมาให้ในวันส่งน้องค่ะ
+                  </li>
+
+                  <li className="mb-5">ต้องมีอายุ 3 เดือนขึ้นไป</li>
+
+                  <li className="mb-5">
+                    เป็นแมวที่เลี้ยงมาจากระบบปิดเท่านั้น (ระบบปิด หมายถึง
+                    เลี้ยงในบ้านเท่านั้น) เพื่อป้องกันในเรื่องของเห็บ หมัด
+                    และพาหะโรคต่างๆ ที่จะแพร่สู่น้องแมวตัวอื่นๆได้ค่ะ
+                  </li>
+
+                  <li className="mb-5">
+                    กรณีน้องแมวป่วยระหว่างพักกับเรา จะแจ้งให้เจ้าของทราบโดยทันที
+                    และสามารถพาน้องแมวไปโรงพยาบาลสัตว์ได้ค่ะ
+                    (ค่าใช้จ่ายตามบิลของโรงพยาบาล)
+                  </li>
+
+                  <li className="mb-5">
+                    หากน้องแมวเสียชีวิต หรือป่วยในระหว่างพักหรือหลังพัก
+                    ทางเราไม่ขอรับผิดชอบใดๆทั้งสิ้น เพราะก่อนน้องแมวเข้าพัก
+                    เราได้สอบถามประวัติทางด้านสุขภาพ
+                    การฉีดวัคซีนของน้องแมวทุกๆตัวค่ะ ซึ่งในระหว่างที่พักกับเรา
+                    เรามั่นใจในการดูแลในเรื่องความสะอาด ปลอดภัย
+                    และสุขภาพอนามัยที่ดีค่ะ
+                  </li>
+
+                  <li className="mb-5">
+                    กรุณาตัดเล็บให้น้องแมวก่อนมาส่งด้วยนะค่ะ
+                  </li>
+                </ul>
+
+                <p className="text-left text-green-400">
+                  ถ้าน้องแมวที่มาส่งมีเห็บ หมัด เราจะไม่รับฝากทุกกรณีค่ะ
+                </p>
+              </div>
+
+              <div className="border-2 border-gray-400 px-4 py-5 border-opacity-50 rounded-sm">
+                <p className="text-left text-green-400 mb-5">
+                  สิ่งที่ต้องเตรียมมาในวันมาส่งน้องแมว
+                </p>
+                <ul className="text-left text-gray-400 mr-10 ml-10 ">
+                  <li className="mb-5">ใบวัคซีน</li>
+                  <li className="mb-5">สำเนาบัตรประชาชนเจ้าของแมว</li>
+                  <li className="mb-5">อาหารที่น้องทานประจำ</li>
+                  <li className="mb-5">
+                    ทรายแมว (แต่ถ้าไม่สะดวกนำมาเอง เรามีแบ่งขายให้
+                    ราคาตามท้องตลาดทั่วไป ส่วนกระบะทราย เรามีให้อยู่แล้วค่ะ)
+                  </li>
+                  <li className="mb-5">
+                    ของเล่นที่น้องชอบ ผ้าหรือเบาะนอนที่น้องคุ้นเคย
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <div className="border-2 border-gray-400 px-4 py-5 border-opacity-50 rounded-sm">
+                <p className="text-left text-green-400 mb-5">
+                  การรับ-ส่งน้องแมว
+                </p>
+                <ul className="text-left text-gray-400 mr-10 ml-10 ">
+                  <li className="mb-5">
+                    นัดเวลามาส่งและมารับน้องแมว กรุณาระบุเวลาทุกครั้งค่ะ
+                  </li>
+                  <li className="mb-5">
+                    การมารับน้องแมว มารับได้ไม่เกิน 2 ทุ่ม หากเกินเวลานี้
+                    ขอให้เพิ่มเวลาพักอีก 1 คืนและมารับน้องในวันถัดไปค่ะ
+                    (เพื่อไม่ให้เป็นการรบกวนน้องแมวห้องอื่น
+                    เพราะในเวลานี้น้องแมวส่วนใหญ่จะหลับพักผ่อนกันแล้วค่ะ)
+                  </li>
+                </ul>
+              </div>
+
+              <div className="border-2 border-gray-400 px-4 py-5 border-opacity-50 rounded-sm">
+                <p className="text-left text-green-400 mb-5">
+                  การสื่อสารในระหว่างที่น้องแมวมาพักกับเรา
+                </p>
+                <ul className="text-left text-gray-400 mr-10 ml-10 ">
+                  <li>
+                    ติดต่อโดยส่งรูปภาพและวิดิโอทางไลน์ (id: nekoluxury)
+                    ทางเราจะมีการอัพเดตรายละเอียดของน้องวันเว้นวัน วันละ 1
+                    ครั้งเท่านั้นค่ะ
+                  </li>
+                </ul>
+              </div>
+
+              <div className="border-2 border-gray-400 px-4 py-5 border-opacity-50 rounded-sm">
+                <p className="text-left text-green-400 mb-5">การนัดเยี่ยมชม </p>
+                <ul className="text-left text-gray-400 mr-10 ml-10 ">
+                  <li className="mb-5">
+                    โรงแรมแมวของเราเปิดเวลา 9.00-20.00น.
+                    กรุณานัดหมายเข้าเยี่ยมชมล่วงหน้าค่ะ
+                  </li>
+                  <li className="mb-5">
+                    การนัดหมายทุกประเภท กรุณาระบุเวลาและตรงต่อเวลาด้วยค่ะ
+                    หากเปลี่ยนเวลานัดหมาย ขอความกรุณาแจ้งล่วงหน้าด้วยค่ะ
+                  </li>
+                  <li className="mb-5">
+                    หากมีการทิ้งน้องแมว ทางเราจะดำเนินคดี ตาม พรบ.
+                    คุ้มครองสัตว์ค่ะ{" "}
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
       )}
-    </div>
+    </>
   );
 }
