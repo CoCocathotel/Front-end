@@ -429,7 +429,7 @@ export default function Dashboard() {
                 <div className="bg-white shadow-lg rounded-lg px-4 py-5 w-full h-auto  ml-72 mr-72">
                   <div className="grid grid-cols-3 gap-2 ">
                     
-                    <div className="col-span-2 flex space-x-10 items-center justify-center">
+                    <div className="col-span-2 flex space-x-10 justify-center">
                     <img
                       className="rounded-lg"
                       key={index}
@@ -445,11 +445,12 @@ export default function Dashboard() {
                     />
 
                       <div className="">
-                        <h2 className="text-xl">{item.room_name}</h2>
-                        <p>จำนวนกล้อง : {item.cameras}</p>
-                        <p>จำนวนแมว : {item.number_of_cats} สูงสุด</p>
+                        <h2 className="text-xl mt-4">{item.room_name}</h2>
+                        <div className="mt-5">
+                        <p className="text-xs ">จำนวนกล้อง : {item.cameras}</p>
+                        <p  className="text-xs ">จำนวนแมว : {item.number_of_cats} สูงสุด</p>
 
-                        <p>
+                        <p  className="text-xs ">
                           {checkroom(item.room_name) >= 0
                             ? `ห้องที่สามารถจองได้ : ${
                                 item.number_of_rooms -
@@ -461,7 +462,8 @@ export default function Dashboard() {
                               }`
                             : `ห้องที่สามารถจองได้ : ${item.number_of_rooms}`}{" "}
                         </p>
-                        <p>คำอธิบาย : {item.description}</p>
+                        <p  className="text-xs ">คำอธิบาย : {item.description}</p>
+                        </div>
                       </div>
                     </div>
 
@@ -535,7 +537,7 @@ export default function Dashboard() {
                       ) : (
                         <Link to={`/detail/${item.type}`}>
                           <button
-                            className="btn-primary"
+                            className="bg-blue-400 hover:bg-blue-500 text-white font-bold w-40 mt-4 py-2 px-4 rounded-lg"
                             onClick={() => {
                               saveToLocalStorage(index);
                             }}

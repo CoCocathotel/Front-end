@@ -79,70 +79,87 @@ export default function Appbar({ handleAppbar }) {
   }, [numcamera, numcat, startDate, endDate]);
 
   return (
-    <div className="">
+    <div className="items-center justify-center  h-auto bg-white-50 text-center px-4 py-5">
+      <div className=" ">
+        <div className="flex items-center justify-center h-20">
+          <img src={Logo} alt="Logo" className="w-12 h-12 mr-4" />
+          <Space direction="vertical" size={12}>
+            <RangePicker
+              className=" h-12 "
+              picker="date"
+              defaultValue={[
+                dayjs(startDate, dateFormat),
+                dayjs(endDate, dateFormat),
+              ]}
+              onChange={(date, dateString) => {
+                setStartDate(dateString[0]);
+                setEndDate(dateString[1]);
+              }}
 
-      <div className="app-bar">
-        <Space direction="vertical" size={12}>
-          <RangePicker
-            picker="date"
-            defaultValue={[
-              dayjs(startDate, dateFormat),
-              dayjs(endDate, dateFormat),
-            ]}
-            onChange={(date, dateString) => {
-              setStartDate(dateString[0]);
-              setEndDate(dateString[1]);
-            }}
-            onFocus={(_, info) => {
-              // console.log("Focus:", info.range);
-            }}
-            onBlur={(_, info) => {
-              // console.log("Blur:", info.range);
-            }}
-          />
-        </Space>
-
-        <div className=" font-text ">
-          <div className="box-space">
-            <p> แมว </p>
-            <input
-              className="input-primary"
-              type="text"
-              // width = "10px"
-
-              value={numcat}
-              onChange={(e) => setNumcat(e.target.value)}
+              //  suffixIcon={<img src={Logo} alt="Logo" className="w-12 h-12" />}
             />
-            <button className="btn-primary2" onClick={Decreaments}>
-              -
-            </button>
-            <button className="btn-primary2" onClick={Increment}>
-              +
-            </button>
-          </div>
-
-          <div className="box-space">
-            <p> กล้อง</p>
-            <input
-              className="input-primary"
-              type="text"
-              value={numcamera}
-              onChange={(e) => setNumcamera(e.target.value)}
-            />
-            <button className="btn-primary2" onClick={Decreaments_cam}>
-              -
-            </button>
-            <button className="btn-primary2" onClick={Increment_cam}>
-              +
+          </Space>
+        </div>
+        <div>
+          <div className=" items-center text-center flex space-x-20 justify-center mb-4">
+            <div className="items-center text-center justify-center flex">
+              <div className="w-56 flex mt-4 items-center bg-gray-100 space-x-1 rounded-lg">
+                <img src={Logo} alt="Logo" className="w-12 h-12 " />
+                <input
+                  className="text-center bg-gray-100 w-20"
+                  type="text"
+                  // width = "10px"
+                  readOnly
+                  value={numcat}
+                  onChange={(e) => setNumcat(e.target.value)}
+                />
+                <button
+                  className="w-12 h-12 bg-blue-400 rounded-lg text-white"
+                  onClick={Decreaments}
+                >
+                  -
+                </button>
+                <button
+                  className="w-12 h-12 bg-blue-400 rounded-lg text-white"
+                  onClick={Increment}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <div className="items-center text-center justify-center flex ">
+            <div className="w-56 flex mt-4 items-center bg-gray-100 space-x-1 rounded-lg">
+              <img src={Logo} alt="Logo" className="w-12 h-12 " />
+                <input
+                  className="text-center bg-gray-100 w-20"
+                  type="text"
+                  // width = "10px"
+                  readOnly
+                  value={numcamera}
+                  onChange={(e) => setNumcamera(e.target.value)}
+                />
+                <button
+                  className="w-12 h-12 bg-blue-400 rounded-lg text-white"
+                  onClick={Decreaments_cam}
+                >
+                  -
+                </button>
+                <button
+                  className="w-12 h-12 bg-blue-400 rounded-lg text-white"
+                  onClick={Increment_cam}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+            <button
+              className="mt-5 bg-blue-400 w-32 h-12 rounded-lg text-white"
+              onClick={handlePageChange}
+            >
+              Search
             </button>
           </div>
         </div>
-
-        {/* refrest api button  */}
-
-        <button className="btn-primary" onClick={handlePageChange}>
-          ค้นหา
-        </button>
       </div>
     </div>
   );

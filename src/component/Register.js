@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import Logo from "../cococat-hotel.png";
 import LoadingSpinner from "./Loading";
 
-export default function Login() {
+export default function Register() {
   // http://localhost:8700/v1/login
   const [email, setEmail] = useState("");
+  const [first_name, setFirst_name] = useState("");
+  const [last_name, setLast_name] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -23,12 +25,12 @@ export default function Login() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch(production_check() + "/v1/login", {
+      const response = await fetch(production_check() + "/v1/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, first_name, last_name }),
       });
       const result = await response.json();
 
@@ -36,15 +38,15 @@ export default function Login() {
         localStorage.setItem("user-provider", JSON.stringify(result));
         localStorage.setItem("token", result.token);
         navigate("/");
-        console.log("Login successful");
+        console.log("Register and Login successful");
       } else {
-        console.log("Login failed");
+        console.log("Register failed");
       }
     } catch (err) {
       console.log("An error occurred. Please try again.");
     }
   };
-
+ 
   return (
     <>
       {loading ? (
@@ -54,6 +56,27 @@ export default function Login() {
           <div className="bg-white p-5 rounded-lg shadow-lg">
             <div className="justify-center flex">
               <img src={Logo} alt="Logo" width={200} height={200} />
+            </div>
+
+
+            <div className="m-5">
+              <input
+                className="max-w-max bg-slate-100 rounded-lg p-2 text-black"
+                type="first_name"
+                placeholder="first_name"
+                value={first_name}
+                onChange={(e) => setFirst_name(e.target.value)}
+              />
+            </div>
+
+            <div className="m-5">
+              <input
+                className="max-w-max bg-slate-100 rounded-lg p-2 text-black"
+                type="last_name"
+                placeholder="last_name"
+                value={last_name}
+                onChange={(e) => setLast_name(e.target.value)}
+              />
             </div>
 
             <div className="m-5 flex">
@@ -76,17 +99,15 @@ export default function Login() {
               />
             </div>
 
-
-            
             <div className="py-2 px-2 mt-5 mb-5 mr-5 ml-5 items-center text-center bg-blue-500 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
-              <button onClick={handleLogin}>Login</button>
+              <button onClick={handleLogin}>Register</button>
               
             </div>
 
             <div className="mt-5 ml-5 mr-5 flex text-xs">
-              <p className="text-gray-600">ลงทะเบียนบัญชีผู้ใช้งาน </p>
+              <p className="text-gray-600">มีบัญชีผู้ใช้งานอยู่แล้ว </p>
               
-              <a className="text-blue-700 ml-2 underline" href="/register">Register</a>
+              <a className="text-blue-700 ml-2 underline" href="/login">Login</a>
             </div>
 
           </div>
