@@ -4,6 +4,7 @@ import Logo from "../cococat-hotel.png";
 import Img_bg from "../cococat_preview.jpg";
 import LoadingSpinner from "./Loading";
 import Appbar from "../Appbar";
+import TikTokEmbed from "./Tiktok1";
 
 import * as React from "react";
 import Button from "@mui/material/Button";
@@ -286,10 +287,8 @@ export default function Home() {
 
           <hr />
 
-          {/* code  */}
           <div>
             {/* {หน้า Home โรงแรมแมว} */}
-
             <div className="flex flex-col items-center justify-center  bg-gray-200 overflow-hidden">
               <div className="bg-white p-5 rounded-lg shadow-lg w-screen overflow-hidden">
                 <div className="flex w-[200%] animate-slide">
@@ -315,7 +314,95 @@ export default function Home() {
               </div>
             </div>
           </div>
-          <div className="bg-white p-5 rounded-lg text-center shadow-lg w-full my-4">
+
+          <div>
+            <div className="text-3xl text-left text-black ml-5 mt-10 mb-10">
+              Our Faclities
+            </div>
+            <div className="flex bg-white shadow-sm  justify-between ">
+              <div className="  justify-center text-start space-x-4 p-5 items-center flex ">
+                <img
+                  className="w-44"
+                  src="https://szrepoqlfkcnlfdeicse.supabase.co/storage/v1/object/public/rooms/fan-room/0.png"
+                  alt=""
+                />
+
+                <div>
+                  <h1>Play RoomS</h1>
+                  <p>
+                    Lorem ipsum odor amet, consectetuer adipiscing elit. Libero
+                    ut litora dolor quisque aliquet.
+                  </p>
+                </div>
+              </div>
+              <div className=" justify-center text-start space-x-4 p-5 items-center flex ">
+                <img
+                  className="w-44 h-44"
+                  src="https://szrepoqlfkcnlfdeicse.supabase.co/storage/v1/object/public/rooms/fan-room/0.png"
+                  alt=""
+                />
+                <div>
+                  <h1>Play RoomS</h1>
+                  <p>
+                    Lorem ipsum odor amet, consectetuer adipiscing elit. Libero
+                    ut litora dolor quisque aliquet.
+                  </p>
+                </div>
+              </div>
+              <div className=" justify-center text-start space-x-4 p-5 items-center flex  ">
+                <img
+                  className="w-44 h-44"
+                  src="https://szrepoqlfkcnlfdeicse.supabase.co/storage/v1/object/public/rooms/fan-room/0.png"
+                  alt=""
+                />
+                <div>
+                  <h1>Play RoomS</h1>
+                  <p>
+                    Lorem ipsum odor amet, consectetuer adipiscing elit. Libero
+                    ut litora dolor quisque aliquet.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr />
+
+          <div>
+            <div className="text-3xl text-left text-black ml-5 mt-10 mb-10">
+              Our Social Media
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="min-h-screen  flex flex-col items-center justify-center">
+                <h1 className="text-2xl font-bold mb-4">
+                  Watch This TikTok Video
+                </h1>
+                <TikTokEmbed
+                  url={"https://www.tiktok.com/embed/7292001456092220678"}
+                />
+              </div>
+              <div className="min-h-screen flex flex-col items-center justify-center">
+                <h1 className="text-2xl font-bold mb-4">
+                  Watch This TikTok Video
+                </h1>
+                <TikTokEmbed
+                  url={"https://www.tiktok.com/embed/7378412182633041153"}
+                />
+              </div>
+              <div className="min-h-screen  flex flex-col items-center justify-center">
+                <h1 className="text-2xl font-bold mb-4">
+                  Watch This TikTok Video
+                </h1>
+                <TikTokEmbed
+                  url={"https://www.tiktok.com/embed/7378408740363472145"}
+                />
+              </div>
+            </div>
+          </div>
+
+          <hr className="mt-20" />
+
+          {/* <div className="bg-white p-5 rounded-lg text-center shadow-lg w-full my-4">
             <div className="text-black text-3xl text-left mt-10 mb-10">
               {" "}
               Term of Use
@@ -477,9 +564,32 @@ export default function Home() {
                 </ul>
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       )}
+      <footer className=" bg-[#8CAFCB] p-14 mt-20  items-center justify-between text-center shadow-lg w-full">
+      <h1 className="text-3xl text-left text-white">ติดต่อเรา</h1>
+        <div className="flex  text-white justify-between   mt-2 mb-10">
+          <div className=" text-left">
+            <div>
+              <p>Adress</p>
+              <p>
+                121, 105 3 Ban Tungree, Kho Hong, Hat Yai District, Songkhla
+                90110
+              </p>
+            </div>
+          </div>
+          <div className=" text-white text-left  items-end justify-end">
+            <p>โทร : 065-384-5659</p>
+            <p>Line : https://lin.ee/8OFTOx2l(@cococathotel)IG</p>
+            <p>Tiktok : cococat.hotelTiktok: cococat.hotel</p>
+          </div>
+        </div>
+        <hr />
+        <h1 className="text-left text-white p-5">
+          © 2023 All rights Reserved.
+        </h1>
+      </footer>
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { Route, Routes, Link, json} from "react-router-dom";
+import { Route, Routes, Link, json } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 import { useEffect, useState, useRef } from "react";
@@ -22,8 +22,8 @@ import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import SendIcon from '@mui/icons-material/Send';
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import SendIcon from "@mui/icons-material/Send";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 
 // icons-material/PersonAdd
 // icons-material/Settings
@@ -60,7 +60,7 @@ export default function Dashboard() {
     setAnchorEl(null);
   };
 
-  const handleClose= () => {
+  const handleClose = () => {
     setAnchorEl(null);
   };
 
@@ -200,13 +200,28 @@ export default function Dashboard() {
                 width={80}
                 height={80}
               />
-              <button onClick={()=>{navigate("/home")}} className="text-gray-600 hover:text-blue-500">
+              <button
+                onClick={() => {
+                  navigate("/home");
+                }}
+                className="text-gray-600 hover:text-blue-500"
+              >
                 Home
               </button>
-              <button onClick={()=>{navigate("/")}} className="text-gray-600 hover:text-blue-500">
+              <button
+                onClick={() => {
+                  navigate("/");
+                }}
+                className="text-gray-600 hover:text-blue-500"
+              >
                 Booking
               </button>
-              <button onClick={()=>{console.log("About")}}  className="text-gray-600 hover:text-blue-500">
+              <button
+                onClick={() => {
+                  console.log("About");
+                }}
+                className="text-gray-600 hover:text-blue-500"
+              >
                 About Us
               </button>
               {localStorage.getItem("token") ? (
@@ -251,8 +266,8 @@ export default function Dashboard() {
                       anchorEl={anchorEl}
                       id="account-menu"
                       open={open}
-                      onClose={()=>{}}
-                      onClick={()=>{}}
+                      onClose={() => {}}
+                      onClick={() => {}}
                       PaperProps={{
                         elevation: 0,
                         sx: {
@@ -283,14 +298,25 @@ export default function Dashboard() {
                       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                     >
                       <MenuItem onClick={handleClose}>
-                        <Avatar /> {JSON.parse(localStorage.getItem("user-provider")).first_name} {JSON.parse(localStorage.getItem("user-provider")).last_name}
+                        <Avatar />{" "}
+                        {
+                          JSON.parse(localStorage.getItem("user-provider"))
+                            .first_name
+                        }{" "}
+                        {
+                          JSON.parse(localStorage.getItem("user-provider"))
+                            .last_name
+                        }
                       </MenuItem>
                       <MenuItem onClick={handleClose}>
-                        <Avatar /> {JSON.parse(localStorage.getItem("user-provider")).email}
+                        <Avatar />{" "}
+                        {
+                          JSON.parse(localStorage.getItem("user-provider"))
+                            .email
+                        }
                       </MenuItem>
                       <Divider />
-                    
-            
+
                       <MenuItem onClick={handleCloseLogout}>
                         <ListItemIcon>
                           <Logout fontSize="small" />
@@ -320,9 +346,7 @@ export default function Dashboard() {
                         aria-haspopup="true"
                         aria-expanded={open ? "true" : undefined}
                       >
-                        <Avatar sx={{ width: 32, height: 32 }}>
-                          
-                        </Avatar>
+                        <Avatar sx={{ width: 32, height: 32 }}></Avatar>
                       </IconButton>
                     </Tooltip>
                   </Box>
@@ -402,10 +426,12 @@ export default function Dashboard() {
           {data.map((item, index) => (
             <div key={index}>
               <div className="content-out">
-                <div className="content">
-                  <div className="conten-left">
+                <div className="bg-white shadow-lg rounded-lg px-4 py-5 w-full h-auto  ml-72 mr-72">
+                  <div className="grid grid-cols-3 gap-2 ">
+                    
+                    <div className="col-span-2 flex space-x-10 items-center justify-center">
                     <img
-                      className="bg-blue-100"
+                      className="rounded-lg"
                       key={index}
                       src={
                         "https://szrepoqlfkcnlfdeicse.supabase.co/storage/v1/object/public/rooms/" +
@@ -418,7 +444,28 @@ export default function Dashboard() {
                       height={150}
                     />
 
-                    <div className="content-label">
+                      <div className="">
+                        <h2 className="text-xl">{item.room_name}</h2>
+                        <p>จำนวนกล้อง : {item.cameras}</p>
+                        <p>จำนวนแมว : {item.number_of_cats} สูงสุด</p>
+
+                        <p>
+                          {checkroom(item.room_name) >= 0
+                            ? `ห้องที่สามารถจองได้ : ${
+                                item.number_of_rooms -
+                                  checkroom(item.room_name) >=
+                                0
+                                  ? item.number_of_rooms -
+                                    checkroom(item.room_name)
+                                  : 0
+                              }`
+                            : `ห้องที่สามารถจองได้ : ${item.number_of_rooms}`}{" "}
+                        </p>
+                        <p>คำอธิบาย : {item.description}</p>
+                      </div>
+                    </div>
+
+                    {/* <div className="">
                       <h2 className="text-xl">{item.room_name}</h2>
                       <p>จำนวนกล้อง : {item.cameras}</p>
                       <p>จำนวนแมว : {item.number_of_cats} สูงสุด</p>
@@ -436,7 +483,7 @@ export default function Dashboard() {
                           : `ห้องที่สามารถจองได้ : ${item.number_of_rooms}`}{" "}
                       </p>
                       <p>คำอธิบาย : {item.description}</p>
-                    </div>
+                    </div> */}
 
                     <div className="py-10 px-10 text-center ">
                       <p>{item.price} บาท /คืน</p>
