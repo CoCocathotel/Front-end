@@ -99,10 +99,12 @@ export default function Register() {
               />
             </div>
 
-            <div className="py-2 px-2 mt-5 mb-5 mr-5 ml-5 items-center text-center bg-blue-500 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
-              <button onClick={handleLogin}>Register</button>
-              
-            </div>
+            <button
+              className="w-48 py-2 px-2 mt-5 mb-5 mr-5 ml-5 items-center text-center bg-blue-500 text-white font-semibold rounded-xl shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+              onClick={handleLogin}
+            >
+              Register  
+            </button>
 
             <div className="mt-5 ml-5 mr-5 flex text-xs">
               <p className="text-gray-600">มีบัญชีผู้ใช้งานอยู่แล้ว </p>
