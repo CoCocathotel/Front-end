@@ -105,11 +105,10 @@ export default function Detail() {
     let get_user = JSON.parse(localStorage.getItem("user-provider"));
     console.log(get_user);
 
-
     setUsername(get_user.first_name + " " + get_user.last_name);
     setEmail(get_user.email);
     setPhone(get_user.phone);
-    
+
     console.log(error);
 
     let getdata = getRoom();
@@ -363,10 +362,10 @@ export default function Detail() {
                       กรอกข้อมูล
                     </div>
                     <hr />
-                    <div className="text-center flex mb-10 ml-5 mt-5">
+                    {/* <div className="text-center flex mb-10 ml-5 mt-5">
                       ข้อมูลการจอง
-                    </div>
-                    <div className="flex items-center border  border-gray-400 mr-5 ml-5 mt-10 mb-10 rounded-sm shadow-md focus:outline-none focus:ring-opacity-750">
+                    </div> */}
+                    <div className="flex items-center  border-gray-400 mr-5 ml-5 mt-10 mb-10">
                       <div className="ml-20 mt-4 mr-10 py-4 px-5">
                         {data.image && data.image.length > 0 ? (
                           <>
@@ -380,8 +379,8 @@ export default function Detail() {
                                   img
                                 }
                                 alt={data.type}
-                                width={200}
-                                height={200}
+                                width={100}
+                                height={100}
                               />
                             ))}
                           </>
@@ -404,12 +403,12 @@ export default function Detail() {
                     </div>
 
                     <hr />
-                    <div className="text-center flex mt-10 mb-10 ml-5 justify-between mr-10">
+                    <div className="text-center flex mt-10  ml-5 justify-between mr-10">
                       {" "}
                       ข้อมูลการติดต่อ{" "}
-                      {!open_edit && (
+                      {/* {!open_edit && (
                         <div
-                          className="text-sm font-semibold text-right text-cyan-500 underline"
+                          className="text-sm font-semibold text-right text-blue-400 underline"
                           onClick={() =>
                             open_edit ? setOpen_edit(false) : setOpen_edit(true)
                           }
@@ -427,10 +426,10 @@ export default function Detail() {
                             บันทึก
                           </button>
                         </div>
-                      )}
+                      )} */}
                     </div>
-
-                    <div className="px-4 py-5 text-sm text-gray-500 flex justify-start items-end border border-gray-400 mr-5 ml-5 mt-10 mb-10 rounded-sm shadow-md focus:outline-none focus:ring-opacity-750">
+                    {/* 
+                    <div className="px-4 py-5 text-sm text-gray-500 flex justify-start items-end mr-5 ml-5 mt-10 mb-10">
                       {open_edit && (
                         <>
                           <div className="nice_grid">
@@ -465,14 +464,6 @@ export default function Detail() {
                               }
                             />
                           </div>
-                          {/* <div className="w-96  text-right">
-                  <button
-                    className="btn-primary"
-                    onClick={() => setOpen_edit(false)}
-                  >
-                    บันทึก
-                  </button>
-                </div> */}
                         </>
                       )}
 
@@ -491,13 +482,51 @@ export default function Detail() {
                           <p className="px-4 py-1 ">{special_request}</p>
                         </div>
                       )}
+                    </div> */}
+
+                    <div className="space-y-4 p-6 rounded-lg text-sm mt-3">
+                      <div className="grid grid-cols-1 gap-4">
+                        <input
+                          type="text"
+                          placeholder="First Name"
+                          value={username}
+                          onChange={(e) => setUsername(e.target.value)}
+                          className="border border-gray-300 rounded p-2"
+                        />
+                        <input
+                          type="email"
+                          placeholder="E-mail address"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="border border-gray-300 rounded p-2"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Mobile number"
+                          value={phone}
+                          onChange={(e) => setPhone(e.target.value)}
+                          className="border border-gray-300 rounded p-2"
+                        />
+                      </div>
+                      <div className="mt-4">
+                        <h4 className="text-lg font-medium mb-2">
+                          Special Request (optional)
+                        </h4>
+                        <textarea
+                          className="w-full border border-gray-300 rounded p-2"
+                          rows="4"
+                          value={special_request}
+                          onChange={(e) => setSpecialRequest(e.target.value)}
+                          placeholder="Enter any special requests..."
+                        ></textarea>
+                      </div>
                     </div>
                     <div className="text-center flex mt-10 mb-10 ml-5">
                       <h1>เลือกวิธีการชำระเงิน</h1>
                       <p>{""}</p>
                     </div>
 
-                    <div className="px-4 py-5 text-sm   text-gray-500  items-center border border-gray-400 mr-5 ml-5 mt-10 mb-10 rounded-sm shadow-md focus:outline-none focus:ring-opacity-750">
+                    <div className="px-4 py-5 text-sm   text-gray-500  items-center mr-5 ml-5 mt-10 mb-10 focus:outline-none focus:ring-opacity-750">
                       <div className="flex justify-evenly px-4 py-5">
                         <button
                           className={`${
@@ -670,10 +699,12 @@ export default function Detail() {
                     </div>
                   </div>
 
-                  <div className=" bg-white mr-10 ml-0 mt-10 mb-4 px-4 py-5 h-max w-max rounded-sm shadow-md focus:outline-none  focus:ring-opacity-75">
-                    <h1 className="mb-5">แสดงรายละเอียด</h1>
+                  <div className=" bg-white mr-10 ml-0 mt-10 w-fu mb-4 px-5 py-6 h-max w-96 rounded-3xl shadow-md focus:outline-none items-center justify-center text-center focus:ring-opacity-75">
+                    <h1 className="mb-5 text-2xl items-center justify-center text-center">
+                      แสดงรายละเอียด
+                    </h1>
 
-                    <div className="grid grid-cols-2 gap-1  w-max justify-between">
+                    <div className="grid grid-cols-2 gap-1 space-y-2 justify-between">
                       <p className="text-left">วันที่เช็คอิน</p>
                       <p className="text-right">
                         {dayjs(startDate).format("DD/MM/YYYY")}
@@ -702,16 +733,40 @@ export default function Detail() {
                       <p className="text-left">ราคาที่ต้องจ่าย</p>
                       <p className="text-right">{data.price * totalday} บาท</p>
                     </div>
-                    <div className="flex text-center items-center justify-end mr-10 mt-10">
-                      <button className="btn-primary " onClick={handleBuy}>
-                        ยืนยันการจอง
-                      </button>
-                    </div>
+                    <button
+                      className="mt-4 hover:bg-blue-500 bg-blue-400 w-40 h-12 rounded-lg text-white shadow-lg items-center justify-center text-center"
+                      onClick={handleBuy}
+                    >
+                      ยืนยันการจอง
+                    </button>
                   </div>
                 </div>
               </div>
             </>
           )}
+          <footer className=" bg-[#8CAFCB] p-14  items-center justify-between text-center shadow-lg w-full">
+            <h1 className="text-3xl text-left text-white">ติดต่อเรา</h1>
+            <div className="flex  text-white justify-between   mt-2 mb-10">
+              <div className=" text-left">
+                <div>
+                  <p>Adress</p>
+                  <p>
+                    121, 105 3 Ban Tungree, Kho Hong, Hat Yai District, Songkhla
+                    90110
+                  </p>
+                </div>
+              </div>
+              <div className=" text-white text-left  items-end justify-end">
+                <p>โทร : 065-384-5659</p>
+                <p>Line : https://lin.ee/8OFTOx2l(@cococathotel)IG</p>
+                <p>Tiktok : cococat.hotelTiktok: cococat.hotel</p>
+              </div>
+            </div>
+            <hr />
+            <h1 className="text-left text-white p-5">
+              © 2023 All rights Reserved.
+            </h1>
+          </footer>
         </>
       )}
     </div>
