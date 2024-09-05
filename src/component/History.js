@@ -5,9 +5,7 @@ import Img_bg from "../cococat_preview.jpg";
 import LoadingSpinner from "./Loading";
 import Appbar from "../Appbar";
 
-
-
-import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import EmailTwoToneIcon from "@mui/icons-material/EmailTwoTone";
 import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
 
@@ -282,20 +280,21 @@ export default function Cart() {
                         }
                       </MenuItem>
 
-
                       {JSON.parse(localStorage.getItem("user-provider")).pos ===
                       "admin" ? (
                         <>
-                          <MenuItem onClick={(_)=>{ navigate("/admin_home")}}>
-                            <AdminPanelSettingsOutlinedIcon />{" "}
-                            Admin_Home
+                          <MenuItem
+                            onClick={(_) => {
+                              navigate("/admin_home");
+                            }}
+                          >
+                            <AdminPanelSettingsOutlinedIcon /> Admin_Home
                           </MenuItem>
                         </>
                       ) : (
                         ""
                       )}
                       <Divider />
-
 
                       <MenuItem onClick={handleCloseLogout}>
                         <ListItemIcon>
@@ -401,50 +400,73 @@ export default function Cart() {
           {data.map((item, index) => (
             <div
               className="flex flex-col items-center justify-around m-4 x-4 py-5 w-full h-auto "
-              key={item}
+              key={item._id}
             >
               <div className="bg-white p-5 justify-between rounded-lg shadow-lg flex  w-1/2 h-44">
                 <div className="items-center text-sm flex space-x-8">
-                  {item.image != "" ? (
+                  {item.image !== "" ? (
                     <img src={item.image} alt="Logo" width={60} height={60} />
                   ) : (
                     <img src={Logo} alt="Logo" width={100} height={100} />
                   )}
-                  <div>
-                    <h1 className="text-lg">{item.room_name}</h1>
-                    <h1 className="text-xs text-gray-400">
-                      รายละเอียดเพิ่มเติม: {item.special_request}
-                    </h1>
-                    <h1 className="">ราคา: {item.total_price} บาท</h1>
-                    <h1>แมว: {item.total_cats}</h1>
-                    {/* <h1>เบอร์มือถือ: {item.phone}</h1> */}
-                    <h1>รูปแบบการชำระ: {item.pay_way}</h1>
+                  <div className="overflow-hidden ">
+                    <Tooltip title={item.room_name} arrow>
+                      <h1 className="text-lg">{item.room_name}</h1>
+                    </Tooltip>
+                    <Tooltip
+                      title={`รายละเอียดเพิ่มเติม: ${item.special_request}`}
+                      arrow
+                    >
+                      <span className="text-xs text-gray-400  ">
+                        รายละเอียดเพิ่มเติม: {item.special_request.slice(0, 20)}...
+                      </span>
+                    </Tooltip>
+                    <Tooltip title={`ราคา: ${item.total_price} บาท`} arrow>
+                      <h1 className="">ราคา: {item.total_price} บาท</h1>
+                    </Tooltip>
+                    <Tooltip title={`แมว: ${item.total_cats}`} arrow>
+                      <h1>แมว: {item.total_cats}</h1>
+                    </Tooltip>
+                    <Tooltip title={`รูปแบบการชำระ: ${item.pay_way}`} arrow>
+                      <h1>รูปแบบการชำระ: {item.pay_way}</h1>
+                    </Tooltip>
                   </div>
                 </div>
 
-                <div className="justify-between space-y-20 text-right h-auto  ">
-                  <div className="flex text-xs text-gray-400">
-                    <h1>{formatDate(dayjs(item.check_in_date))}</h1>
-                    <h1>{" - "}</h1>
-                    <h1>{formatDate(dayjs(item.check_out_date))}</h1>
-                  </div>
+                <div className="justify-between space-y-20 text-right h-auto">
+                  <Tooltip
+                    title={`วันที่เช็คอิน: ${formatDate(
+                      dayjs(item.check_in_date)
+                    )} - วันที่เช็คเอาท์: ${formatDate(
+                      dayjs(item.check_out_date)
+                    )}`}
+                    arrow
+                  >
+                    <div className="flex text-xs text-gray-400">
+                      <h1>{formatDate(dayjs(item.check_in_date))}</h1>
+                      <h1>{" - "}</h1>
+                      <h1>{formatDate(dayjs(item.check_out_date))}</h1>
+                    </div>
+                  </Tooltip>
 
                   {item.status === "pending" ? (
-                    <button className="bg-yellow-300 p-2 rounded-lg shadow-lg  w-1/2  ">
-                      <h1 className="text-sm">{item.status}</h1>
-                    </button>
+                    <Tooltip title={item.status} arrow>
+                      <button className="bg-yellow-300 p-2 rounded-lg shadow-lg w-1/2">
+                        <h1 className="text-sm">{item.status}</h1>
+                      </button>
+                    </Tooltip>
+                  ) : item.status === "pass" ? (
+                    <Tooltip title={item.status} arrow>
+                      <button className="bg-green-300 p-2 rounded-lg shadow-lg w-1/2">
+                        <h1 className="text-sm">{item.status}</h1>
+                      </button>
+                    </Tooltip>
                   ) : (
-                    <>
-                      {item.status === "pass" ? (
-                        <button className="bg-green-300 p-2 rounded-lg shadow-lg  w-1/2  ">
-                          <h1 className="text-sm">{item.status}</h1>
-                        </button>
-                      ) : (
-                        <button className="bg-red-300 p-2 rounded-lg shadow-lg  w-1/2  ">
-                          <h1 className="text-sm">{item.status}</h1>
-                        </button>
-                      )}
-                    </>
+                    <Tooltip title={item.status} arrow>
+                      <button className="bg-red-300 p-2 rounded-lg shadow-lg w-1/2">
+                        <h1 className="text-sm">{item.status}</h1>
+                      </button>
+                    </Tooltip>
                   )}
                 </div>
               </div>

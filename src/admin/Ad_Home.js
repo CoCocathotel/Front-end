@@ -16,7 +16,6 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
@@ -27,11 +26,11 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import moment from "moment-timezone";
 
+import Tooltip from "@mui/material/Tooltip";
 
-import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import EmailTwoToneIcon from "@mui/icons-material/EmailTwoTone";
 import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
-
 
 export default function Ad_Home() {
   const navigate = useNavigate();
@@ -145,7 +144,6 @@ export default function Ad_Home() {
     setLoading(false);
   }, []);
 
-
   const changeStatus = async (id, status) => {
     try {
       const response = await fetch("http://localhost:8700/v1/update-status", {
@@ -174,7 +172,7 @@ export default function Ad_Home() {
           <LoadingSpinner />
         </div>
       ) : (
-        <>
+        <div className="overflow-x-auto">
           <div className="sticky top-0 bg-white z-50">
             <div className="grid grid-cols-5 gap-1 p-4">
               <img
@@ -219,7 +217,7 @@ export default function Ad_Home() {
                 >
                   Logout {" "} {JSON.parse(localStorage.getItem("user-provider")).email}
                 </button> */}
-                 <React.Fragment>
+                  <React.Fragment>
                     <Box
                       sx={{
                         display: "flex",
@@ -300,20 +298,21 @@ export default function Ad_Home() {
                         }
                       </MenuItem>
 
-
                       {JSON.parse(localStorage.getItem("user-provider")).pos ===
                       "admin" ? (
                         <>
-                          <MenuItem onClick={(_)=>{ navigate("/admin_home")}}>
-                            <AdminPanelSettingsOutlinedIcon />{" "}
-                            Admin_Home
+                          <MenuItem
+                            onClick={(_) => {
+                              navigate("/admin_home");
+                            }}
+                          >
+                            <AdminPanelSettingsOutlinedIcon /> Admin_Home
                           </MenuItem>
                         </>
                       ) : (
                         ""
                       )}
                       <Divider />
-
 
                       <MenuItem onClick={handleCloseLogout}>
                         <ListItemIcon>
@@ -416,41 +415,92 @@ export default function Ad_Home() {
             </div>
           </div>
 
-          {/* column  */}
-          <div className="grid grid-cols-11 gap-1 p-4 text-center">
-            <h1>จัดการห้อง</h1>
-            <h1>ห้อง</h1>
-            <h1>วันที่เช็คอิน</h1>
-            <h1>วันที่เช็คเอาท์</h1>
-            <h1>สถานะ</h1>
-            <h1>สลิปโอนเงิน</h1>
-            <h1>อีเมล</h1>
-            <h1>เบอร์โทร</h1>
-            <h1>ราคาทั้งหมด</h1>
-            <h1>จำนวนแมว</h1>
-            <h1>คำขอพิเศษ</h1>
-          </div>
-
-          {data.map((item, index) => (
-            <div className="grid grid-cols-11 gap-1 p-4 text-center " key={item._id}>
-              <div className="grid grid-cols-3 gap-1  text-center">
-              <button onClick={(_)=>{changeStatus(item._id, "pass")}} className="w-10 h-10 bg-green-400"></button>
-              <button onClick={(_)=>{changeStatus(item._id, "pending")}} className="w-10 h-10 bg-yellow-400"></button>
-              <button onClick={(_)=>{changeStatus(item._id, "failed")}} className="w-10 h-10 bg-red-400"></button>
-              </div>
-              <h1>{item.room_name}</h1>
-              <h1>{formatDate(dayjs(item.check_in_date))}</h1>
-              <h1>{formatDate(dayjs(item.check_out_date))}</h1>
-              <h1>{item.status}</h1>
-              <h1>{item.pay_way}</h1>
-              <h1>{item.email}</h1>
-              <h1>{item.phone}</h1>
-              <h1>{item.total_price}</h1>
-              <h1>{item.total_cats}</h1>
-              <h1 className="">{item.special_request}</h1>
+          <div className="p-4">
+            {/* Header Row */}
+            <div className="grid grid-cols-12 gap-1 text-center mb-4">
+              {[
+                "จัดการห้อง",
+                "ห้อง",
+                "วันที่เช็คอิน",
+                "วันที่เช็คเอาท์",
+                "สถานะ",
+                "สลิปโอนเงิน",
+                "อีเมล",
+                "เบอร์โทร",
+                "ราคาทั้งหมด",
+                "จำนวนแมว",
+                "จำนวนกล้อง",
+                "คำขอพิเศษ",
+              ].map((header) => (
+                <h1 key={header} className="font-bold text-sm">
+                  {header}
+                </h1>
+              ))}
             </div>
-          ))}
-        </>
+
+            {/* Data Rows */}
+            {data.map((item) => (
+              <div
+                key={item._id}
+                className="grid grid-cols-12 gap-4 p-4 text-center text-sm mb-4 border-b border-gray-300"
+              >
+                {/* Status Buttons */}
+                <div className="flex justify-center space-x-2">
+                  {["pass", "pending", "failed"].map((status) => (
+                    <button
+                      key={status}
+                      onClick={() => changeStatus(item._id, status)}
+                      className={`w-5 h-5 ${
+                        status === "pass"
+                          ? "bg-green-400"
+                          : status === "pending"
+                          ? "bg-yellow-400"
+                          : "bg-red-400"
+                      }`}
+                    />
+                  ))}
+                </div>
+
+                {/* Room Details */}
+                <div className="col-span-11 grid grid-cols-11 gap-4">
+                  <Tooltip title={item.room_name} arrow>
+                    <span className="truncate ...">{item.room_name}</span>
+                  </Tooltip>
+                  <Tooltip title={formatDate(dayjs(item.check_in_date))} arrow>
+                    <span>{formatDate(dayjs(item.check_in_date))}</span>
+                  </Tooltip>
+                  <Tooltip title={formatDate(dayjs(item.check_out_date))} arrow>
+                    <span>{formatDate(dayjs(item.check_out_date))}</span>
+                  </Tooltip>
+                  <Tooltip title={item.status} arrow>
+                    <span>{item.status}</span>
+                  </Tooltip>
+                  <Tooltip title={item.pay_way} arrow>
+                    <span>{item.pay_way}</span>
+                  </Tooltip>
+                  <Tooltip title={item.email} arrow>
+                    <span className="truncate ...">{item.email}</span>
+                  </Tooltip>
+                  <Tooltip title={item.phone} arrow>
+                    <span className="truncate ...">{item.phone}</span>
+                  </Tooltip>
+                  <Tooltip title={item.total_price} arrow>
+                    <span>{item.total_price}</span>
+                  </Tooltip>
+                  <Tooltip title={item.total_cats} arrow>
+                    <span>{item.total_cats}</span>
+                  </Tooltip>
+                  <Tooltip title={item.total_cameras} arrow>
+                    <span>{item.total_cameras}</span>
+                  </Tooltip>
+                  <Tooltip title={item.special_request} arrow>
+                    <span className="truncate ...">{item.special_request}</span>
+                  </Tooltip>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
     </>
   );
