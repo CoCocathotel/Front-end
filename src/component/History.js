@@ -1,11 +1,15 @@
-import { Route, Routes, Link, json } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
-import { useEffect, useState, useRef } from "react";
-import axios from "axios";
+import { useEffect, useState } from "react";
 import Logo from "../cococat-hotel.png";
-
+import Img_bg from "../cococat_preview.jpg";
 import LoadingSpinner from "./Loading";
+import Appbar from "../Appbar";
+
+
+
+import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import EmailTwoToneIcon from "@mui/icons-material/EmailTwoTone";
+import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
 
 import * as React from "react";
 import Button from "@mui/material/Button";
@@ -25,49 +29,26 @@ import Logout from "@mui/icons-material/Logout";
 import SendIcon from "@mui/icons-material/Send";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 
+import { DatePicker, Space } from "antd";
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+import moment from "moment-timezone";
 
-import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
-import EmailTwoToneIcon from "@mui/icons-material/EmailTwoTone";
-import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
-
-// icons-material/PersonAdd
-// icons-material/Settings
-// mui/icons-material/Logout
-
-import Appbar from "../Appbar";
-import "../App.css";
-import { bottomNavigationActionClasses } from "@mui/material";
-
-export default function Dashboard() {
+export default function Cart() {
   const navigate = useNavigate();
-  // axios fetch data
-  const [data, setData] = useState([]);
-  const [booking, setBooking] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [numcat, setNumcat] = useState(1);
-  const [numcamera, setNumcamera] = useState(0);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [room_overlap, setRoom_overlap] = useState([]);
-  const [err_check, setErr_check] = useState(true);
-  const [url, setURL] = useState("");
-
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-  const handleCloseLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user-provider");
-    window.location.reload();
-    setAnchorEl(null);
+
+  const { RangePicker } = DatePicker;
+  const timezone = "Asia/Bangkok";
+  const dateFormat = "YYYY-MM-DD";
+
+  const formatDate = (date) => {
+    return date.format("ddd ,DD MMM-YYYY");
   };
 
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
+  const [data, setData] = useState([]);
 
   const handleCloseLogin = () => {
     localStorage.removeItem("token");
@@ -77,125 +58,105 @@ export default function Dashboard() {
     setAnchorEl(null);
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+  const handleCloseLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user-provider");
+    window.location.reload();
+    setAnchorEl(null);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-  function production_check() {
-    const isDevelopment =
-      window.location.origin.includes("localhost") ||
-      window.location.origin.includes("127.0.0.1");
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
-    return isDevelopment
-      ? "http://localhost:8700"
-      : "https://co-cocat-backend-theta.vercel.app";
-  }
-
-  useEffect(() => {
-    let overlaping = booking.filter(({ check_in_date, check_out_date }) => {
-      const checkIn = new Date(check_in_date);
-      const checkOut = new Date(check_out_date);
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      return (
-        (data.room_name === booking.room_name &&
-          start >= checkIn &&
-          start <= checkOut &&
-          end >= checkIn &&
-          end <= checkOut) ||
-        (start <= checkIn &&
-          start <= checkOut &&
-          end >= checkIn &&
-          end <= checkOut) ||
-        (start >= checkIn &&
-          start <= checkOut &&
-          end >= checkIn &&
-          end >= checkOut) ||
-        (start <= checkIn &&
-          start <= checkOut &&
-          end >= checkIn &&
-          end >= checkOut)
-      );
-    });
-
-    let room_overlap = overlaping.reduce((acc, item) => {
-      let found = acc.find((room) => room.room_name === item.room_name);
-      if (found) {
-        found.len_room += item.total_rooms;
-        // console.log(item.total_rooms);
-      } else {
-        acc.push({
-          room_name: item.room_name,
-          len_room: item.total_rooms,
-        });
-      }
-      return acc;
-    }, []);
-
-    setRoom_overlap(room_overlap);
-    // console.log(room_overlap);
-    //  console.log(room_overlap);
-  }, [booking, data, numcat, numcamera, startDate, endDate]);
-
-  // useEffect(() => {
-  //   let num_cat = parseInt(JSON.parse(localStorage.getItem("number_of_cats")));
-  //   let num_camera = parseInt(JSON.parse(localStorage.getItem("number_of_cameras")));
-  //   setNumcat(num_cat);
-  //   setNumcamera(num_camera);
-
-  // },[numcat, numcamera]);
-
-  const fetchData = async () => {
-    // let link = "http://localhost:8700/v1/room";
-
-    console.log(production_check());
-
-    axios.get(production_check() + "/v1/room").then((res) => {
-      setData(res.data.body.room);
-      setBooking(res.data.body.booking);
+  const fecthdata = async () => {
+    try {
+      const response = await fetch("http://localhost:8700/v1/cart", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+          email: JSON.parse(localStorage.getItem("user-provider")).email,
+        }),
+      });
+      const result = await response.json();
+      console.log(result);
+      setData(result.body);
       setLoading(false);
-      // setTimeout(() => {
-      //   setLoading(false);
-      // }, 2000);
-    });
-  };
-
-  const saveToLocalStorage = (index) => {
-    localStorage.setItem("data", JSON.stringify(data[index]));
-
-    const res = JSON.parse(localStorage.getItem("data"));
-    // console.log(index);
-  };
-
-  const handleTimeChange = (e) => {
-    setNumcat(e.numcat);
-    setNumcamera(e.numcamera);
-    setStartDate(e.startDate);
-    setEndDate(e.endDate);
-    // console.log("ok ok ok");
-
-    // show circle loading 2 sec
-    // fetchData();
-    // production_check();
-    // console.log(e);
-  };
-  const checkroom = (room_name) => {
-    for (let i = 0; i < room_overlap.length; i++) {
-      if (room_overlap[i].room_name === room_name) {
-        // console.log(room_overlap[i].len_room);
-        return room_overlap[i].len_room;
-      }
+    } catch (err) {
+      console.log("An error occurred. Please try again.");
     }
   };
 
+  //   check_in_date
+  // :
+  // "2024-08-23T01:31:57.000Z"
+  // check_out_date
+  // :
+  // "2024-08-24T01:31:57.000Z"
+  // email
+  // :
+  // "vs@mail.com"
+  // image
+  // :
+  // "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAA
+  // optional_services
+  // :
+  // []
+  // pay_way
+  // :
+  // "credit"
+  // phone
+  // :
+  // "08122131"
+  // room_name
+  // :
+  // "Fan Room"
+  // special_request
+  // :
+  // "ขอกระบะทราย มีน่ำ มีข้าวพร้อม"
+  // status
+  // :
+  // "pending"
+  // total_cameras
+  // :
+  // 1
+  // total_cats
+  // :
+  // 1
+  // total_price
+  // :
+  // 100
+  // total_rooms
+  // :
+  // 1
+  // type
+  // :
+  // "fan-room"
+
+  useEffect(() => {
+    let get_user = JSON.parse(localStorage.getItem("user-provider"));
+
+    if (get_user === null || get_user === "") {
+      navigate("/login");
+    } else {
+      fecthdata();
+    }
+  }, []);
+
   return (
-    <div>
+    <>
       {loading ? (
-        <>
+        <div>
           <LoadingSpinner />
-        </>
+        </div>
       ) : (
-        <>
+        <div className="bg-gray-200 h-screen flex flex-col ">
           <div className="sticky top-0 bg-white z-50">
             <div className="grid grid-cols-5 gap-1 p-4">
               <img
@@ -240,7 +201,7 @@ export default function Dashboard() {
                 >
                   Logout {" "} {JSON.parse(localStorage.getItem("user-provider")).email}
                 </button> */}
-                   <React.Fragment>
+                  <React.Fragment>
                     <Box
                       sx={{
                         display: "flex",
@@ -437,146 +398,59 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <hr />
-          <Appbar handleAppbar={(e) => handleTimeChange(e)} />
-
-          {/* <h1>Dashboard</h1> */}
-
           {data.map((item, index) => (
-            <div key={index}>
-              <div className="content-out">
-                <div className="bg-white shadow-lg rounded-lg px-4 py-5 w-full h-auto  ml-72 mr-72">
-                  <div className="grid grid-cols-3 gap-2 ">
-                    <div className="col-span-2 flex space-x-10 justify-center">
-                      <img
-                        className="rounded-lg"
-                        key={index}
-                        src={
-                          "https://szrepoqlfkcnlfdeicse.supabase.co/storage/v1/object/public/rooms/" +
-                          item.type +
-                          "/" +
-                          item.image[0]
-                        }
-                        alt={item.type}
-                        width={150}
-                        height={150}
-                      />
+            <div
+              className="flex flex-col items-center justify-around m-4 x-4 py-5 w-full h-auto "
+              key={item}
+            >
+              <div className="bg-white p-5 justify-between rounded-lg shadow-lg flex  w-1/2 h-44">
+                <div className="items-center text-sm flex space-x-8">
+                  {item.image != "" ? (
+                    <img src={item.image} alt="Logo" width={60} height={60} />
+                  ) : (
+                    <img src={Logo} alt="Logo" width={100} height={100} />
+                  )}
+                  <div>
+                    <h1 className="text-lg">{item.room_name}</h1>
+                    <h1 className="text-xs text-gray-400">
+                      รายละเอียดเพิ่มเติม: {item.special_request}
+                    </h1>
+                    <h1 className="">ราคา: {item.total_price} บาท</h1>
+                    <h1>แมว: {item.total_cats}</h1>
+                    {/* <h1>เบอร์มือถือ: {item.phone}</h1> */}
+                    <h1>รูปแบบการชำระ: {item.pay_way}</h1>
+                  </div>
+                </div>
 
-                      <div className="">
-                        <h2 className="text-xl mt-4">{item.room_name}</h2>
-                        <div className="mt-5">
-                          <p className="text-xs ">
-                            จำนวนกล้อง : {item.cameras}
-                          </p>
-                          <p className="text-xs ">
-                            จำนวนแมว : {item.number_of_cats} สูงสุด
-                          </p>
+                <div className="justify-between space-y-20 text-right h-auto  ">
+                  <div className="flex text-xs text-gray-400">
+                    <h1>{formatDate(dayjs(item.check_in_date))}</h1>
+                    <h1>{" - "}</h1>
+                    <h1>{formatDate(dayjs(item.check_out_date))}</h1>
+                  </div>
 
-                          <p className="text-xs ">
-                            {checkroom(item.room_name) >= 0
-                              ? `ห้องที่สามารถจองได้ : ${
-                                  item.number_of_rooms -
-                                    checkroom(item.room_name) >=
-                                  0
-                                    ? item.number_of_rooms -
-                                      checkroom(item.room_name)
-                                    : 0
-                                }`
-                              : `ห้องที่สามารถจองได้ : ${item.number_of_rooms}`}{" "}
-                          </p>
-                          <p className="text-xs ">
-                            คำอธิบาย : {item.description}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* <div className="">
-                      <h2 className="text-xl">{item.room_name}</h2>
-                      <p>จำนวนกล้อง : {item.cameras}</p>
-                      <p>จำนวนแมว : {item.number_of_cats} สูงสุด</p>
-
-                      <p>
-                        {checkroom(item.room_name) >= 0
-                          ? `ห้องที่สามารถจองได้ : ${
-                              item.number_of_rooms -
-                                checkroom(item.room_name) >=
-                              0
-                                ? item.number_of_rooms -
-                                  checkroom(item.room_name)
-                                : 0
-                            }`
-                          : `ห้องที่สามารถจองได้ : ${item.number_of_rooms}`}{" "}
-                      </p>
-                      <p>คำอธิบาย : {item.description}</p>
-                    </div> */}
-
-                    <div className="py-10 px-10 text-center ">
-                      <p>{item.price} บาท /คืน</p>
-
-                      {numcamera >
-                        item.cameras *
-                          Math.ceil(numcat / item.number_of_cats) &&
-                      (numcat >
-                        item.number_of_cats *
-                          (item.number_of_rooms - checkroom(item.room_name)) ||
-                        numcat > item.number_of_cats * item.number_of_rooms) ? (
-                        <button className="btn-primary3">
-                          {"จำนวนกล้องไม่เพียงพอและ " +
-                            `ต้องการ ${Math.ceil(
-                              numcat / item.number_of_cats
-                            )} ห้อง เหลือเพียง  ${
-                              item.number_of_rooms - checkroom(item.room_name)
-                                ? item.number_of_rooms -
-                                    checkroom(item.room_name) >=
-                                  0
-                                  ? item.number_of_rooms -
-                                    checkroom(item.room_name)
-                                  : 0
-                                : item.number_of_rooms
-                            } ห้องว่าง `}
-                        </button>
-                      ) : numcat >
-                          item.number_of_cats *
-                            (item.number_of_rooms -
-                              checkroom(item.room_name)) ||
-                        numcat > item.number_of_cats * item.number_of_rooms ? (
-                        <button className="btn-primary3">{` ต้องการ ${Math.ceil(
-                          numcat / item.number_of_cats
-                        )} ห้อง แต่เหลือเพียง ${
-                          item.number_of_rooms - checkroom(item.room_name)
-                            ? item.number_of_rooms -
-                                checkroom(item.room_name) >=
-                              0
-                              ? item.number_of_rooms - checkroom(item.room_name)
-                              : 0
-                            : item.number_of_rooms
-                        } ห้องว่าง `}</button>
-                      ) : numcamera >
-                        item.cameras *
-                          Math.ceil(numcat / item.number_of_cats) ? (
-                        <button className="btn-primary3">
-                          จำนวนกล้องไม่เพียงพอ
+                  {item.status === "pending" ? (
+                    <button className="bg-yellow-300 p-2 rounded-lg shadow-lg  w-1/2  ">
+                      <h1 className="text-sm">{item.status}</h1>
+                    </button>
+                  ) : (
+                    <>
+                      {item.status === "pass" ? (
+                        <button className="bg-green-300 p-2 rounded-lg shadow-lg  w-1/2  ">
+                          <h1 className="text-sm">{item.status}</h1>
                         </button>
                       ) : (
-                        <Link to={`/detail/${item.type}`}>
-                          <button
-                            className="bg-blue-400 hover:bg-blue-500 text-white font-bold w-40 mt-4 py-2 px-4 rounded-lg"
-                            onClick={() => {
-                              saveToLocalStorage(index);
-                            }}
-                          >
-                            จองที่พัก
-                          </button>{" "}
-                        </Link>
+                        <button className="bg-red-300 p-2 rounded-lg shadow-lg  w-1/2  ">
+                          <h1 className="text-sm">{item.status}</h1>
+                        </button>
                       )}
-                    </div>
-                  </div>
+                    </>
+                  )}
                 </div>
               </div>
             </div>
           ))}
-          <footer className=" bg-[#8CAFCB] p-14  items-center justify-between text-center shadow-lg w-full">
+          <footer className=" bg-[#8CAFCB] p-14  items-center justify-between text-center shadow-lg w-full bottom-0 h-auto">
             <h1 className="text-3xl text-left text-white">ติดต่อเรา</h1>
             <div className="flex  text-white justify-between   mt-2 mb-10">
               <div className=" text-left">
@@ -599,8 +473,8 @@ export default function Dashboard() {
               © 2023 All rights Reserved.
             </h1>
           </footer>
-        </>
+        </div>
       )}
-    </div>
+    </>
   );
 }

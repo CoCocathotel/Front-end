@@ -10,6 +10,8 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ProtectedRoute from './components/ProtectedRoute';
 import Register from './component/Register';
+import History from './component/History';
+import Ad_Home from './admin/Ad_Home';
 
 const router = createBrowserRouter([
   {
@@ -32,6 +34,14 @@ const router = createBrowserRouter([
   {
     path: '/register',
     element: <Register />
+  },
+  {
+    path: '/history',
+    element: <History />
+  },
+  {
+    path: '/admin_home',
+    element: <Ad_Home />
   }
 ]);
 

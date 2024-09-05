@@ -6,6 +6,7 @@ import LoadingSpinner from "./Loading";
 import Appbar from "../Appbar";
 import TikTokEmbed from "./Tiktok1";
 
+import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
@@ -23,6 +24,9 @@ import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import SendIcon from "@mui/icons-material/Send";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
+import EmailIcon from "@mui/icons-material/Email";
+import EmailTwoToneIcon from "@mui/icons-material/EmailTwoTone";
+import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -68,7 +72,7 @@ export default function Home() {
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
-    }, 1000);
+    }, 500);
   }, []);
 
   return (
@@ -106,11 +110,11 @@ export default function Home() {
               </button>
               <button
                 onClick={() => {
-                  navigate("/about");
+                  navigate("/history");
                 }}
                 className="text-gray-600 hover:text-blue-500"
               >
-                About Us
+                Order
               </button>
               {localStorage.getItem("token") ? (
                 <>
@@ -186,7 +190,7 @@ export default function Home() {
                       anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
                     >
                       <MenuItem onClick={handleClose}>
-                        <Avatar />{" "}
+                        <PermIdentityOutlinedIcon />{" "}
                         {
                           JSON.parse(localStorage.getItem("user-provider"))
                             .first_name
@@ -197,13 +201,27 @@ export default function Home() {
                         }
                       </MenuItem>
                       <MenuItem onClick={handleClose}>
-                        <Avatar />{" "}
+                        <EmailTwoToneIcon />{" "}
                         {
                           JSON.parse(localStorage.getItem("user-provider"))
                             .email
                         }
                       </MenuItem>
+
+
+                      {JSON.parse(localStorage.getItem("user-provider")).pos ===
+                      "admin" ? (
+                        <>
+                          <MenuItem onClick={(_)=>{ navigate("/admin_home")}}>
+                            <AdminPanelSettingsOutlinedIcon />{" "}
+                            Admin_Home
+                          </MenuItem>
+                        </>
+                      ) : (
+                        ""
+                      )}
                       <Divider />
+
 
                       <MenuItem onClick={handleCloseLogout}>
                         <ListItemIcon>
@@ -568,7 +586,7 @@ export default function Home() {
         </div>
       )}
       <footer className=" bg-[#8CAFCB] p-14 mt-20  items-center justify-between text-center shadow-lg w-full">
-      <h1 className="text-3xl text-left text-white">ติดต่อเรา</h1>
+        <h1 className="text-3xl text-left text-white">ติดต่อเรา</h1>
         <div className="flex  text-white justify-between   mt-2 mb-10">
           <div className=" text-left">
             <div>

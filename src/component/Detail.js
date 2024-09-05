@@ -101,8 +101,16 @@ export default function Detail() {
     let numcamera = parseInt(
       JSON.parse(localStorage.getItem("number_of_cameras"))
     );
+    
+
 
     let get_user = JSON.parse(localStorage.getItem("user-provider"));
+
+    if(get_user === null || get_user === ""){
+      navigate("/login");
+    }else{
+      
+  
     console.log(get_user);
 
     setUsername(get_user.first_name + " " + get_user.last_name);
@@ -134,6 +142,7 @@ export default function Detail() {
       setNumcamera(numcamera);
       setTotal(num);
     }
+  }
   }, []);
 
   const getRoom = async () => {
@@ -526,7 +535,7 @@ export default function Detail() {
                       <p>{""}</p>
                     </div>
 
-                    <div className="px-4 py-5 text-sm   text-gray-500  items-center mr-5 ml-5 mt-10 mb-10 focus:outline-none focus:ring-opacity-750">
+                    <div className="px-4 py-5 text-sm text-gray-500  items-center mr-5 ml-5 mt-10 mb-10 focus:outline-none focus:ring-opacity-750">
                       <div className="flex justify-evenly px-4 py-5">
                         <button
                           className={`${
@@ -538,6 +547,7 @@ export default function Detail() {
                         >
                           ชำระเงินปลายทาง
                         </button>
+                       
                         <button
                           className={`${
                             selectedPayment === "credit"
@@ -699,7 +709,7 @@ export default function Detail() {
                     </div>
                   </div>
 
-                  <div className=" bg-white mr-10 ml-0 mt-10 w-fu mb-4 px-5 py-6 h-max w-96 rounded-3xl shadow-md focus:outline-none items-center justify-center text-center focus:ring-opacity-75">
+                  <div className=" bg-white mr-10 ml-0 mt-10 w-fu mb-4 px-5 py-6 h-full w-96 rounded-3xl shadow-md focus:outline-none items-center justify-center text-center focus:ring-opacity-75 sticky top-32 z-0">
                     <h1 className="mb-5 text-2xl items-center justify-center text-center">
                       แสดงรายละเอียด
                     </h1>
