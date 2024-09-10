@@ -156,7 +156,7 @@ export default function Dashboard() {
     //   setBooking(res.data.body.booking);
     //   setLoading(false);
     //   // setTimeout(() => {
-    //   //   setLoading(false);
+        setLoading(false);
     //   // }, 2000);
     // });
   };
