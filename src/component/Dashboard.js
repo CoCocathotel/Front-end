@@ -215,7 +215,7 @@ export default function Dashboard() {
                         className="rounded-lg"
                         key={index}
                         src={
-                          "https://szrepoqlfkcnlfdeicse.supabase.co/storage/v1/object/public/rooms/" +
+                          "https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/rooms/" +
                           item.type +
                           "/" +
                           item.image[0]
