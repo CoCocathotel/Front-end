@@ -6,6 +6,7 @@ import axios from "axios";
 import Logo from "../cococat-hotel.png";
 
 import LoadingSpinner from "./Loading";
+import Appbar from "../Appbar"
 import Appbar_master from "../Appbar_master";
 
 import * as React from "react";
