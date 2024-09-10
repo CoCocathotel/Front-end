@@ -58,7 +58,7 @@ export default function Appbar_master() {
           </button>
           <button
             onClick={() => {
-              navigate("/");
+              navigate("/booking");
             }}
             className="text-gray-600 hover:text-blue-500"
           >
