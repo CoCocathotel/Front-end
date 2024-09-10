@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import Logo from "../cococat-hotel.png";
 import Img_bg from "../cococat_preview.jpg";
 import LoadingSpinner from "../component/Loading";
-import Appbar from "../Appbar";
 
 import DragIndicatorOutlinedIcon from '@mui/icons-material/DragIndicatorOutlined';
 import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
