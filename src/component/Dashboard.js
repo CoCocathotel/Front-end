@@ -56,9 +56,11 @@ export default function Dashboard() {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleCloseLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user-provider");
@@ -80,6 +82,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     // fetchData();
+    setLoading(false);
   }, []);
 
   function production_check() {
@@ -149,7 +152,7 @@ export default function Dashboard() {
   const fetchData = async () => {
     // let link = "http://localhost:8700/v1/room";
 
-    console.log(production_check());
+    // console.log(production_check());
 
     axios.get(production_check() + "/v1/room").then((res) => {
       setData(res.data.body.room);
