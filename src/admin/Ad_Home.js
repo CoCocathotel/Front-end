@@ -80,7 +80,7 @@ export default function Ad_Home() {
 
   const fecthdata = async () => {
     try {
-      const response = await fetch("http://localhost:8700/v1/cart", {
+      const response = await fetch("https://cococatbackend.vercel.app/v1/cart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -152,7 +152,7 @@ export default function Ad_Home() {
 
   const changeStatus = async (id, status) => {
     try {
-      const response = await fetch("http://localhost:8700/v1/update-status", {
+      const response = await fetch("https://cococatbackend.vercel.app/v1/update-status", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
