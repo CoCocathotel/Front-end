@@ -50,7 +50,7 @@ export default function Appbar_master() {
           <img className="ml-24" src={Logo} alt="logo" width={80} height={80} />
           <button
             onClick={() => {
-              navigate("/home");
+              navigate("/");
             }}
             className="text-gray-600 hover:text-blue-500"
           >
