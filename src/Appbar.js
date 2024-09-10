@@ -7,12 +7,6 @@ import moment from "moment-timezone";
 import Logo from "./cococat-hotel.png";
 import "./App.css";
 
-dayjs.extend(customParseFormat);
-
-const { RangePicker } = DatePicker;
-const dateFormat = "YYYY-MM-DD";
-const timezone = "Asia/Bangkok";
-
 export default function Appbar({ handleAppbar }) {
   const [numcat, setNumcat] = useState(
     parseInt(JSON.parse(localStorage.getItem("number_of_cats"))) || 1
@@ -25,6 +19,16 @@ export default function Appbar({ handleAppbar }) {
   );
 
   const today = new Date();
+
+  dayjs.extend(customParseFormat);
+
+  const { RangePicker } = DatePicker;
+  const dateFormat = "YYYY-MM-DD";
+  const timezone = "Asia/Bangkok";
+
+  const formatDate = (date) => {
+    return date.format("ddd, DD MMM-YYYY");
+  };
 
   const tomorrow = new Date(today);
   tomorrow.setDate(today.getDate() + 1);
@@ -81,24 +85,31 @@ export default function Appbar({ handleAppbar }) {
   return (
     <div className="items-center justify-center  h-auto bg-white-50 text-center px-4 py-5">
       <div className=" ">
-        <div className="flex items-center justify-center h-20">
-          <img src={Logo} alt="Logo" className="w-12 h-12 mr-4" />
+        <div className="flex items-center justify-center h-20 ">
+          <div className="flex rounded-lg h-12 bg-gray-100 items-center justify-center ">
+            <img src={Logo} alt="Logo" className="w-12 h-12 mr-4 " />
           <Space direction="vertical" size={12}>
-            <RangePicker
-              className=" h-12 "
+          <RangePicker
+              className="ml-7 hover:text-[#2D3DDF]  "
               picker="date"
+              suffixIcon={null}
               defaultValue={[
                 dayjs(startDate, dateFormat),
                 dayjs(endDate, dateFormat),
               ]}
-              onChange={(date, dateString) => {
-                setStartDate(dateString[0]);
-                setEndDate(dateString[1]);
+              onChange={(dates) => {
+                if (dates) {
+                  setStartDate(dates[0].format(dateFormat));
+                  setEndDate(dates[1].format(dateFormat));
+                }
               }}
-
-              //  suffixIcon={<img src={Logo} alt="Logo" className="w-12 h-12" />}
+              format={formatDate}
+              renderExtraFooter={() => null}
+              bordered={false}
+              placeholder={["Start Date", "End Date"]}
             />
           </Space>
+          </div>
         </div>
         <div>
           <div className=" items-center text-center flex space-x-20 justify-center mb-4">
@@ -128,8 +139,8 @@ export default function Appbar({ handleAppbar }) {
               </div>
             </div>
             <div className="items-center text-center justify-center flex ">
-            <div className="w-56 flex mt-4 items-center bg-gray-100 space-x-1 rounded-lg">
-              <img src={Logo} alt="Logo" className="w-12 h-12 " />
+              <div className="w-56 flex mt-4 items-center bg-gray-100 space-x-1 rounded-lg">
+                <img src={Logo} alt="Logo" className="w-12 h-12 " />
                 <input
                   className="text-center bg-gray-100 w-20"
                   type="text"

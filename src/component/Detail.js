@@ -219,7 +219,7 @@ export default function Detail() {
         total_rooms: total,
         pay_way: selectedPayment,
         status: "pending",
-        total_cameras: data.cameras,
+        total_cameras: numcamera,
         image: selectedPayment === "credit" ? img : "",
       };
 

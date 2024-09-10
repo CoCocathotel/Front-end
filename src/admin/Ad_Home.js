@@ -5,6 +5,10 @@ import Img_bg from "../cococat_preview.jpg";
 import LoadingSpinner from "../component/Loading";
 import Appbar from "../Appbar";
 
+import DragIndicatorOutlinedIcon from '@mui/icons-material/DragIndicatorOutlined';
+import ModeEditOutlinedIcon from '@mui/icons-material/ModeEditOutlined';
+import ArrowDropDownOutlinedIcon from '@mui/icons-material/ArrowDropDownOutlined';
+import Appbar_master from "../Appbar_master";
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
@@ -25,6 +29,8 @@ import { DatePicker, Space } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import moment from "moment-timezone";
+
+import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
 
 import Tooltip from "@mui/material/Tooltip";
 
@@ -174,245 +180,7 @@ export default function Ad_Home() {
       ) : (
         <div className="overflow-x-auto">
           <div className="sticky top-0 bg-white z-50">
-            <div className="grid grid-cols-5 gap-1 p-4">
-              <img
-                className="ml-24"
-                src={Logo}
-                alt="logo"
-                width={80}
-                height={80}
-              />
-              <button
-                onClick={() => {
-                  navigate("/home");
-                }}
-                className="text-gray-600 hover:text-blue-500"
-              >
-                Home
-              </button>
-              <button
-                onClick={() => {
-                  navigate("/");
-                }}
-                className="text-gray-600 hover:text-blue-500"
-              >
-                Booking
-              </button>
-              <button
-                onClick={() => {
-                  navigate("/history");
-                }}
-                className="text-gray-600 hover:text-blue-500"
-              >
-                Order
-              </button>
-              {localStorage.getItem("token") ? (
-                <>
-                  {/* <button
-                  className="ext-gray-600 hover:text-blue-500"
-                  onClick={() => {
-                    localStorage.removeItem("token");
-                    window.location.reload();
-                  }}
-                >
-                  Logout {" "} {JSON.parse(localStorage.getItem("user-provider")).email}
-                </button> */}
-                  <React.Fragment>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        textAlign: "center",
-                      }}
-                    >
-                      {/* <Typography sx={{ minWidth: 100 }}>Contact</Typography>
-                      <Typography sx={{ minWidth: 100 }}>Profile</Typography> */}
-                      <Tooltip title="Account settings">
-                        <IconButton
-                          onClick={handleClick}
-                          size="small"
-                          sx={{ ml: 2 }}
-                          aria-controls={open ? "account-menu" : undefined}
-                          aria-haspopup="true"
-                          aria-expanded={open ? "true" : undefined}
-                        >
-                          <Avatar sx={{ width: 32, height: 32 }}>
-                            {JSON.parse(
-                              localStorage.getItem("user-provider")
-                            ).email[0].toUpperCase()}
-                          </Avatar>
-                        </IconButton>
-                      </Tooltip>
-                    </Box>
-                    <Menu
-                      anchorEl={anchorEl}
-                      id="account-menu"
-                      open={open}
-                      onClose={() => {}}
-                      onClick={() => {}}
-                      PaperProps={{
-                        elevation: 0,
-                        sx: {
-                          overflow: "visible",
-                          filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                          mt: 1.5,
-                          "& .MuiAvatar-root": {
-                            width: 32,
-                            height: 32,
-                            ml: -0.5,
-                            mr: 1,
-                          },
-                          "&::before": {
-                            content: '""',
-                            display: "block",
-                            position: "absolute",
-                            top: 0,
-                            right: 14,
-                            width: 10,
-                            height: 10,
-                            bgcolor: "background.paper",
-                            transform: "translateY(-50%) rotate(45deg)",
-                            zIndex: 0,
-                          },
-                        },
-                      }}
-                      transformOrigin={{ horizontal: "right", vertical: "top" }}
-                      anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-                    >
-                      <MenuItem onClick={handleClose}>
-                        <PermIdentityOutlinedIcon />{" "}
-                        {
-                          JSON.parse(localStorage.getItem("user-provider"))
-                            .first_name
-                        }{" "}
-                        {
-                          JSON.parse(localStorage.getItem("user-provider"))
-                            .last_name
-                        }
-                      </MenuItem>
-                      <MenuItem onClick={handleClose}>
-                        <EmailTwoToneIcon />{" "}
-                        {
-                          JSON.parse(localStorage.getItem("user-provider"))
-                            .email
-                        }
-                      </MenuItem>
-
-                      {JSON.parse(localStorage.getItem("user-provider")).pos ===
-                      "admin" ? (
-                        <>
-                          <MenuItem
-                            onClick={(_) => {
-                              navigate("/admin_home");
-                            }}
-                          >
-                            <AdminPanelSettingsOutlinedIcon /> Admin_Home
-                          </MenuItem>
-                        </>
-                      ) : (
-                        ""
-                      )}
-                      <Divider />
-
-                      <MenuItem onClick={handleCloseLogout}>
-                        <ListItemIcon>
-                          <Logout fontSize="small" />
-                        </ListItemIcon>
-                        Logout
-                      </MenuItem>
-                    </Menu>
-                  </React.Fragment>
-                </>
-              ) : (
-                <React.Fragment>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      alignItems: "center",
-                      textAlign: "center",
-                    }}
-                  >
-                    {/* <Typography sx={{ minWidth: 100 }}>Contact</Typography>
-                  <Typography sx={{ minWidth: 100 }}>Profile</Typography> */}
-                    <Tooltip title="Account settings">
-                      <IconButton
-                        onClick={handleClick}
-                        size="small"
-                        sx={{ ml: 2 }}
-                        aria-controls={open ? "account-menu" : undefined}
-                        aria-haspopup="true"
-                        aria-expanded={open ? "true" : undefined}
-                      >
-                        <Avatar sx={{ width: 32, height: 32 }}></Avatar>
-                      </IconButton>
-                    </Tooltip>
-                  </Box>
-                  <Menu
-                    anchorEl={anchorEl}
-                    id="account-menu"
-                    open={open}
-                    onClose={handleClose}
-                    onClick={handleClose}
-                    PaperProps={{
-                      elevation: 0,
-                      sx: {
-                        overflow: "visible",
-                        filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                        mt: 1.5,
-                        "& .MuiAvatar-root": {
-                          width: 32,
-                          height: 32,
-                          ml: -0.5,
-                          mr: 1,
-                        },
-                        "&::before": {
-                          content: '""',
-                          display: "block",
-                          position: "absolute",
-                          top: 0,
-                          right: 14,
-                          width: 10,
-                          height: 10,
-                          bgcolor: "background.paper",
-                          transform: "translateY(-50%) rotate(45deg)",
-                          zIndex: 0,
-                        },
-                      },
-                    }}
-                    transformOrigin={{ horizontal: "right", vertical: "top" }}
-                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-                  >
-                    {/* <MenuItem onClick={handleClose}>
-                    <Avatar /> History
-                  </MenuItem>
-                  <MenuItem onClick={handleClose}>
-                    <Settings /> Password
-                  </MenuItem>
-                  <Divider />
-                   */}
-
-                    {/* <MenuItem onClick={handleClose}>
-                    <ListItemIcon>
-                      <PersonAdd fontSize="small" />
-                    </ListItemIcon>
-                    Add another account
-                  </MenuItem> */}
-                    {/* <MenuItem onClick={handleClose}>
-                    <ListItemIcon>
-                      <Settings fontSize="small" />
-                    </ListItemIcon>
-                    Settings
-                  </MenuItem> */}
-                    <MenuItem onClick={handleCloseLogin}>
-                      <ListItemIcon>
-                        <Logout fontSize="small" />
-                      </ListItemIcon>
-                      Login
-                    </MenuItem>
-                  </Menu>
-                </React.Fragment>
-              )}
-            </div>
+            <Appbar_master />
           </div>
 
           <div className="p-4">
@@ -444,8 +212,7 @@ export default function Ad_Home() {
                 key={item._id}
                 className="grid grid-cols-12 gap-4 p-4 text-center text-sm mb-4 border-b border-gray-300"
               >
-                {/* Status Buttons */}
-                <div className="flex justify-center space-x-2">
+                {/* <div className="flex justify-center space-x-2">
                   {["pass", "pending", "failed"].map((status) => (
                     <button
                       key={status}
@@ -459,9 +226,64 @@ export default function Ad_Home() {
                       }`}
                     />
                   ))}
+                </div>  */}
+
+                <div className="flex justify-center h-5 items-center space-x-1 ">
+                <button className="col-span-1 hover:bg-gray-50 rounded-lg bg-yellow-300 h-10 w-10 "><ModeEditOutlinedIcon /></button>
+                <button className="col-span-1 hover:bg-gray-50 rounded-lg bg-blue-300 h-10 w-10 "><AddOutlinedIcon /></button>
+                <div className="col-span-1 hover:bg-gray-50 rounded-lg bg-green-300">
+                  <PopupState variant="popover" popupId="demo-popup-menu">
+                    {(popupState) => (
+                      <React.Fragment>
+                        <IconButton
+                          aria-label="more"
+                          {...bindTrigger(popupState)}
+                        >
+                          <DragIndicatorOutlinedIcon />
+                        </IconButton>
+                        <Menu
+                          {...bindMenu(popupState)} 
+                          PaperProps={{
+                            style: {
+                              maxHeight: 48 * 4.5,
+                              width: "10ch",
+                            },
+                          }}
+                        >
+                          <MenuItem
+                            onClick={() => {
+                              changeStatus(item._id, "pass");
+                              popupState.close();
+                            }}
+                          >
+                        
+                            <Typography variant="inherit">pass</Typography>
+                          </MenuItem>
+                          <MenuItem
+                            onClick={() => {
+                              changeStatus(item._id, "pending");
+                              popupState.close();
+                            }}
+                          >
+                    
+                            <Typography variant="inherit">pending</Typography>
+                          </MenuItem>
+                          <MenuItem
+                            onClick={() => {
+                              changeStatus(item._id, "failed");
+                              popupState.close();
+                            }}
+                          >
+                           
+                            <Typography variant="inherit">failed</Typography>
+                          </MenuItem>
+                        </Menu>
+                      </React.Fragment>
+                    )}
+                  </PopupState>
+                </div>
                 </div>
 
-                {/* Room Details */}
                 <div className="col-span-11 grid grid-cols-11 gap-4">
                   <Tooltip title={item.room_name} arrow>
                     <span className="truncate ...">{item.room_name}</span>
@@ -475,7 +297,11 @@ export default function Ad_Home() {
                   <Tooltip title={item.status} arrow>
                     <span>{item.status}</span>
                   </Tooltip>
-                  <Tooltip title={item.pay_way} arrow>
+                  <Tooltip title={
+       
+                    <img src={item.image} alt="slip" width={100} height={100} />
+
+                  } arrow>
                     <span>{item.pay_way}</span>
                   </Tooltip>
                   <Tooltip title={item.email} arrow>
