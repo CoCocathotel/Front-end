@@ -151,14 +151,14 @@ export default function Dashboard() {
 
     console.log(production_check());
 
-    axios.get(production_check() + "/v1/room").then((res) => {
-      setData(res.data.body.room);
-      setBooking(res.data.body.booking);
-      setLoading(false);
-      // setTimeout(() => {
-      //   setLoading(false);
-      // }, 2000);
-    });
+    // axios.get(production_check() + "/v1/room").then((res) => {
+    //   setData(res.data.body.room);
+    //   setBooking(res.data.body.booking);
+    //   setLoading(false);
+    //   // setTimeout(() => {
+    //   //   setLoading(false);
+    //   // }, 2000);
+    // });
   };
 
   const saveToLocalStorage = (index) => {
@@ -211,7 +211,7 @@ export default function Dashboard() {
                 <div className="bg-white shadow-lg rounded-lg px-4 py-5 w-full h-auto  ml-72 mr-72">
                   <div className="grid grid-cols-3 gap-2 ">
                     <div className="col-span-2 flex space-x-10 justify-center">
-                      {/* <img
+                      <img
                         className="rounded-lg"
                         key={index}
                         src={
@@ -223,7 +223,7 @@ export default function Dashboard() {
                         alt={item.type}
                         width={150}
                         height={150}
-                      /> */}
+                      />
 
                       <div className="">
                         <h2 className="text-xl mt-4">{item.room_name}</h2>
