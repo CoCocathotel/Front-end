@@ -35,7 +35,7 @@ import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
 // icons-material/Settings
 // mui/icons-material/Logout
 
-import Appbar from "../Appbar";
+// import Appbar from "../Appbar";
 import "../App.css";
 import { bottomNavigationActionClasses } from "@mui/material";
 
@@ -81,8 +81,8 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    // fetchData();
-    setLoading(false);
+    fetchData();
+    // setLoading(false);
   }, []);
 
   function production_check() {
