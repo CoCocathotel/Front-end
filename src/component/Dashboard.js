@@ -79,7 +79,7 @@ export default function Dashboard() {
   };
 
   useEffect(() => {
-    fetchData();
+    // fetchData();
   }, []);
 
   function production_check() {
@@ -151,14 +151,14 @@ export default function Dashboard() {
 
     console.log(production_check());
 
-    // axios.get(production_check() + "/v1/room").then((res) => {
-    //   setData(res.data.body.room);
-    //   setBooking(res.data.body.booking);
-    //   setLoading(false);
-    //   // setTimeout(() => {
-        setLoading(false);
-    //   // }, 2000);
-    // });
+    axios.get(production_check() + "/v1/room").then((res) => {
+      setData(res.data.body.room);
+      setBooking(res.data.body.booking);
+      setLoading(false);
+      // setTimeout(() => {
+      //   setLoading(false);
+      // }, 2000);
+    });
   };
 
   const saveToLocalStorage = (index) => {
