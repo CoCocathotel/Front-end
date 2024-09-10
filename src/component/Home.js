@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import Logo from "../cococat-hotel.png";
 import Img_bg from "../cococat_preview.jpg";
 import LoadingSpinner from "./Loading";
-import Appbar from "../Appbar";
 import TikTokEmbed from "./Tiktok1";
 
 import Appbar_master from "../Appbar_master";
