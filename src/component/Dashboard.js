@@ -89,7 +89,7 @@ export default function Dashboard() {
 
     return isDevelopment
       ? "http://localhost:8700"
-      : "https://co-cocat-backend-theta.vercel.app";
+      : "https://cococatbackend.vercel.app";
   }
 
   useEffect(() => {

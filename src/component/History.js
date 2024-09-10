@@ -73,7 +73,7 @@ export default function Cart() {
 
   const fecthdata = async () => {
     try {
-      const response = await fetch("http://localhost:8700/v1/cart", {
+      const response = await fetch("https://cococatbackend.vercel.app/v1/cart", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -20,7 +20,7 @@ export default function Register() {
 
     return isDevelopment
       ? "http://localhost:8700"
-      : "https://co-cocat-backend-theta.vercel.app";
+      : "https://cococatbackend.vercel.app";
   }
 
   const handleLogin = async () => {
