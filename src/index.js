@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import Detail from './component/Detail';
 import Login from './component/Login';
-import Dashboard from './component/History';
+import Dashboard from './component/Dashboard';
 import Home from './component/Home';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, createBrowserRouter, RouterProvider } from 'react-router-dom';
@@ -13,7 +13,7 @@ import Ad_Home from './admin/Ad_Home';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: '/booking',
     // element: <ProtectedRoute element={<Dashboard />} />,
     element : <Dashboard />
   },
