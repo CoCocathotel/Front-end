@@ -382,7 +382,7 @@ export default function Detail() {
                               <img
                                 key={index}
                                 src={
-                                  "https://szrepoqlfkcnlfdeicse.supabase.co/storage/v1/object/public/rooms/" +
+                                  "https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/rooms/" +
                                   data.type +
                                   "/" +
                                   img
