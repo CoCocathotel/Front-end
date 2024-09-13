@@ -13,7 +13,6 @@ import Appbar from "../Appbar";
 import Appbar_master from "../Appbar_master";
 
 import * as React from "react";
-import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
@@ -30,9 +29,12 @@ import Logout from "@mui/icons-material/Logout";
 import SendIcon from "@mui/icons-material/Send";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 
+import { Button, Modal } from "antd";
+
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import EmailTwoToneIcon from "@mui/icons-material/EmailTwoTone";
 import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
+import Login from "../component/Login";
 
 // icons-material/PersonAdd
 // icons-material/Settings
@@ -54,6 +56,9 @@ export default function Dashboard() {
   const [room_overlap, setRoom_overlap] = useState([]);
   const [err_check, setErr_check] = useState(true);
   const [url, setURL] = useState("");
+
+  const [modal1Open, setModal1Open] = useState(false);
+  const [modal2Open, setModal2Open] = useState(false);
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -201,23 +206,64 @@ export default function Dashboard() {
         </>
       ) : (
         <>
-          {/* <div className="sticky top-0 bg-white z-50">
-            <Appbar_master />
-          </div> */}
-          {/* <hr /> */}
           <Appbar handleAppbar={(e) => handleTimeChange(e)} />
 
-          {/* <h1>Dashboard</h1> */}
+          <Modal
+            // title="เข้าสู่ระบบ"
+
+            style={{ top: 20 }}
+            open={modal1Open}
+            onCancel={() => setModal1Open(false)}
+            footer={null}
+          >
+            <div className="space-y-4">
+              <h1 className="text-3xl">เข้าสู่ระบบ</h1>
+              <div className="flex space-x-4">
+                <img src={Feet} className="w-5  h-5" alt="feet" />
+                <p className="text-xm ">
+                  ยินดีต้อนรับเข้าสู่โรงแรมโคโค่แคท
+                </p>
+              </div>
+              <hr />
+              <Login />
+            </div>
+          </Modal>
+          {/* <>
+            <Button type="primary" onClick={() => setModal1Open(true)}>
+              Display a modal dialog at 20px to Top
+            </Button>
+           
+            <br />
+            <br />
+            <Button type="primary" onClick={() => setModal2Open(true)}>
+              Vertically centered modal dialog
+            </Button>
+            <Modal
+              title="Vertically centered modal dialog"
+              centered
+              open={modal2Open}
+              onOk={() => setModal2Open(false)}
+              onCancel={() => setModal2Open(false)}
+            >
+              <p>some contents...</p>
+              <p>some contents...</p>
+              <p>some contents...</p>
+            </Modal>
+          </> */}
 
           {data.map((item, index) => (
             <div key={index} className="">
-              <div className={`${index%2==0 ? "bg-[#BCD1D2]": "bg-[#EAEDF1]"} flex py-7 px-4 justify-center items-center align-middle w-full h-full space-x-20`}>
+              <div
+                className={`${
+                  index % 2 == 0 ? "bg-[#BCD1D2]" : "bg-[#EAEDF1]"
+                } flex py-7 px-4 justify-center items-center align-middle w-full h-full space-x-20`}
+              >
                 <div className="  rounded-lg px-4 py-5 w-full h-auto  ml-72 mr-72">
                   <div className="flex">
                     <div className="col-span-2 flex space-x-5 overflow-hidden">
                       <div className="w-96">
                         <img
-                          className="rounded-lg h-96 w-full object-cover border-x-orange-500 border-y-orange-900 border-4"
+                          className="rounded-lg h-96 w-full object-cover border-gray-400 border-4"
                           key={index}
                           src={
                             "https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/rooms/" +
@@ -227,9 +273,6 @@ export default function Dashboard() {
                           }
                         />
                       </div>
-                      {/* <div className="absolute h-96 w-96 items-end justify-end flex">
-                        <img src={Cat01} alt="cat01" className="w-52 " />
-                      </div> */}
 
                       <div className="w-full">
                         <p className="opacity-45 font-extralight">
@@ -279,14 +322,17 @@ export default function Dashboard() {
                     </div>
 
                     <div className="py-10  px-5 overflow-hidden w-64 h-96 text-center grid grid-cols-1 gap-40 ">
-                      
                       <div className="">
-                        <p>จำนวนน้องแมว {item.number_of_cats } ตัว </p> 
+                        <p>จำนวนน้องแมว {item.number_of_cats} ตัว </p>
                         <div className="flex items-center justify-center ">
                           {Array.from(
                             { length: item.number_of_cats },
                             (_, i) => (
-                              <img src={CatIcon} key={i} className="w-10 h-10 mt-5"/>
+                              <img
+                                src={CatIcon}
+                                key={i}
+                                className="w-10 h-10 mt-5"
+                              />
                             )
                           )}
                         </div>
@@ -341,16 +387,38 @@ export default function Dashboard() {
                             จำนวนกล้องไม่เพียงพอ
                           </button>
                         ) : (
-                          <Link to={`/detail/${item.type}`}>
-                            <button
-                              className="bg-[#55605B] hover:bg-[#A2A7A7] text-white w-40 mt-4 py-2 px-4 rounded-lg"
-                              onClick={() => {
-                                saveToLocalStorage(index);
-                              }}
-                            >
-                              จองที่พัก
-                            </button>{" "}
-                          </Link>
+                          <>
+                            {" "}
+                            {localStorage.getItem("token") ? (
+                              <>
+                                <Link to={`/detail/${item.type}`}>
+                                  <button
+                                    className="bg-[#55605B] hover:bg-[#A2A7A7] text-white w-40 mt-4 py-2 px-4 rounded-lg"
+                                    onClick={() => {
+                                      saveToLocalStorage(index);
+                                      // setModal1Open(true);
+                                    }}
+                                  >
+                                    จองที่พัก
+                                  </button>{" "}
+                                </Link>
+                              </>
+                            ) : (
+                              <>
+                                {/* <Link to={`/detail/${item.type}`}> */}
+                                <button
+                                  className="bg-[#55605B] hover:bg-[#A2A7A7] text-white w-40 mt-4 py-2 px-4 rounded-lg"
+                                  onClick={() => {
+                                    // saveToLocalStorage(index);
+                                    setModal1Open(true);
+                                  }}
+                                >
+                                  จองที่พัก
+                                </button>{" "}
+                                {/* </Link> */}
+                              </>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>
@@ -359,29 +427,6 @@ export default function Dashboard() {
               </div>
             </div>
           ))}
-          {/* <footer className=" bg-[#8CAFCB] p-14  items-center justify-between text-center shadow-lg w-full">
-            <h1 className="text-3xl text-left text-white">ติดต่อเรา</h1>
-            <div className="flex  text-white justify-between   mt-2 mb-10">
-              <div className=" text-left">
-                <div>
-                  <p>Adress</p>
-                  <p>
-                    121, 105 3 Ban Tungree, Kho Hong, Hat Yai District, Songkhla
-                    90110
-                  </p>
-                </div>
-              </div>
-              <div className=" text-white text-left  items-end justify-end">
-                <p>โทร : 065-384-5659</p>
-                <p>Line : https://lin.ee/8OFTOx2l(@cococathotel)IG</p>
-                <p>Tiktok : cococat.hotelTiktok: cococat.hotel</p>
-              </div>
-            </div>
-            <hr />
-            <h1 className="text-left text-white p-5">
-              © 2023 All rights Reserved.
-            </h1>
-          </footer> */}
         </>
       )}
     </div>

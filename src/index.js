@@ -35,7 +35,7 @@ const router = createBrowserRouter([
     path: "detail/:Type",
     element: (
       <>
-       <Appbar_master />
+        <Appbar_master />
         <Detail />
         <Footer />
       </>
@@ -83,7 +83,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <Appbar_master />
-          <Ad_Edit />
+        <Ad_Edit />
       </>
     ),
   },

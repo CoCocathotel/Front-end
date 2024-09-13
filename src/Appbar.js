@@ -11,6 +11,8 @@ import InsertInvitationOutlinedIcon from "@mui/icons-material/InsertInvitationOu
 import moment from "moment-timezone";
 import Logo from "./cococat-hotel.png";
 import "./App.css";
+import Cat01 from "../src/assets/image/cat01.png"
+import Cat02 from "../src/assets/image/Cat_memes.png"
 
 dayjs.extend(customParseFormat);
 
@@ -167,10 +169,10 @@ export default function Appbar({ handleAppbar }) {
   );
 
   return (
-    // <div className="items-center justify-center  h-auto bg-white-50 text-center px-4 py-5">
-    <div className=" items-center w-full bg-[#EAEDF1] flex justify-center h-96">
-
-      <div className=" items-center justify-center h-56 rounded-2xl bg-[#A2A7A7] space-x-4 shadow-lg  w-1/2 border-2 px-4 py-2">
+    // <div className="items-center justify-center  h-auto bg-white-50 text-center px-4 py-5"> bg-[#EAEDF1]
+    <div className=" items-center w-full bg-[#EAEDF1] flex justify-center h-96  ">
+        <img src={Cat01} alt="23" className="absolute object-cover z-0 w-screen h-60 filter blur-3xl from-teal-400 to-blue-500 hover:from-purple-500 hover:to-blue-500" />
+      <div className=" items-center justify-center h-56 rounded-2xl bg-[#A2A7A7] space-x-4 shadow-lg z-10 w-1/2 border-2 px-4 py-2">
       <h1 className="text-4xl text-white px-4 py-5">จองห้องพัก</h1>
         <div className="flex  space-x-4">
         <div className="border h-10 items-center flex px-4 py-2 w-80 bg-white rounded-md border-[#A2A7A7] shadow-md hover:text-[#A2A7A7]">
@@ -215,67 +217,6 @@ export default function Appbar({ handleAppbar }) {
         </button>
       </div>
         </div>
-
-      {/* <div>
-        <div className=" bg-yellow-50 items-center text-center flex space-x-20 justify-center p-4">
-          <div className="items-center text-center justify-center flex">
-            <div className="w-56 flex mt-4 items-center bg-gray-100 space-x-1 rounded-lg">
-              <img src={Logo} alt="Logo" className="w-12 h-12 " />
-              <input
-                className="text-center bg-gray-100 w-20"
-                type="text"
-                // width = "10px"
-                readOnly
-                value={numcat}
-                onChange={(e) => setNumcat(e.target.value)}
-              />
-              <button
-                className="w-12 h-12 bg-blue-400 rounded-lg text-white"
-                onClick={Decreaments}
-              >
-                -
-              </button>
-              <button
-                className="w-12 h-12 bg-blue-400 rounded-lg text-white"
-                onClick={Increment}
-              >
-                +
-              </button>
-            </div>
-          </div>
-          <div className="items-center text-center justify-center flex ">
-            <div className="w-56 flex mt-4 items-center bg-gray-100 space-x-1 rounded-lg">
-              <img src={Logo} alt="Logo" className="w-12 h-12 " />
-              <input
-                className="text-center bg-gray-100 w-20"
-                type="text"
-                // width = "10px"
-                readOnly
-                value={numcamera}
-                onChange={(e) => setNumcamera(e.target.value)}
-              />
-              <button
-                className="w-12 h-12 bg-blue-400 rounded-lg text-white"
-                onClick={Decreaments_cam}
-              >
-                -
-              </button>
-              <button
-                className="w-12 h-12 bg-blue-400 rounded-lg text-white"
-                onClick={Increment_cam}
-              >
-                +
-              </button>
-            </div>
-          </div>
-          <button
-            className="mt-5 bg-blue-400 w-32 h-12 rounded-lg text-white"
-            onClick={handlePageChange}
-          >
-            Search
-          </button>
-        </div>
-      </div> */}
     </div>
     // </div>
   );
