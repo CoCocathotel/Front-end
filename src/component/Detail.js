@@ -430,42 +430,42 @@ export default function Detail() {
                       <p>{""}</p>
                     </div>
                     <div className="flex">
-                    <div className="space-y-5 px-4 py-5 text-xl text-gray-500  items-center mr-5 ml-5 mt-10 mb-10 focus:outline-none focus:ring-opacity-750">
-                      <div>
-                        <button
-                          onClick={() => handleSelectPayment("walk-in")}
-                          className={`${
-                            selectedPayment === "walk-in"
-                              ? "border-blue-500"
-                              : ""
-                          } bg-white hover:border-blue-500  w-96 h-16 items-center justify-between px-4  flex border  rounded-lg`}
-                        >
-                          <div className="w-12">
-                            <PaymentsIcon />
-                          </div>
-                          <p>ชำระเงินสด</p>
-                          <ArrowForwardIosIcon />
-                        </button>
-                      </div>
-                      <div>
-                        <button
-                          onClick={() => handleSelectPayment("credit")}
-                          className={`${
-                            selectedPayment === "credit"
-                              ? "border-blue-500"
-                              : ""
-                          } bg-white hover:border-blue-500  w-96 h-16 items-center justify-between px-4  flex border  rounded-lg`}
-                        >
-                          <img src={PromtPay} alt="1" className="h-12 w-12" />
-                          <p>พร้อมเพย์</p>
-                          <ArrowForwardIosIcon />
-                        </button>
-                      </div>
+                      <div className="space-y-5 px-4 py-5 text-xl text-gray-500  items-center mr-5 ml-5 mt-10 mb-10 focus:outline-none focus:ring-opacity-750">
+                        <div>
+                          <button
+                            onClick={() => handleSelectPayment("walk-in")}
+                            className={`${
+                              selectedPayment === "walk-in"
+                                ? "border-blue-500"
+                                : ""
+                            } bg-white hover:border-blue-500  w-96 h-16 items-center justify-between px-4  flex border  rounded-lg`}
+                          >
+                            <div className="w-12">
+                              <PaymentsIcon />
+                            </div>
+                            <p>ชำระเงินสด</p>
+                            <ArrowForwardIosIcon />
+                          </button>
+                        </div>
+                        <div>
+                          <button
+                            onClick={() => handleSelectPayment("credit")}
+                            className={`${
+                              selectedPayment === "credit"
+                                ? "border-blue-500"
+                                : ""
+                            } bg-white hover:border-blue-500  w-96 h-16 items-center justify-between px-4  flex border  rounded-lg`}
+                          >
+                            <img src={PromtPay} alt="1" className="h-12 w-12" />
+                            <p>พร้อมเพย์</p>
+                            <ArrowForwardIosIcon />
+                          </button>
+                        </div>
                       </div>
                       {selectedPayment === "credit" && (
                         <div className="w-full h-64 items-center justify-center text-center">
                           {upload && (
-                            <React.Fragment >
+                            <React.Fragment>
                               <div>
                                 <button
                                   className=""
@@ -502,24 +502,31 @@ export default function Detail() {
                                   {/* <DialogTitle>อัพโหลดสลิปโอนเงิน</DialogTitle> */}
                                   <DialogContent>
                                     <DialogContentText>
-                                      
-                                    <img
+                                      <img
                                         src="https://www.paocloud.co.th/wp-content/uploads/2021/01/Screen-Shot-2564-01-26-at-18.56.53.png"
                                         alt="QR code"
                                         width={250}
                                         height={250}
                                       />
-                                      
                                     </DialogContentText>
 
                                     <div className=" w-full text-center space-y-2 mb-2">
-                                      <div className="flex justify-center space-x-2"><p className="font-semibold">ชื่อบัญชี</p> <p>สุประวีร์ ลู่วิ่งเส้นชัย</p></div>
-                                      <div className="flex justify-center space-x-2"> <p className="font-semibold">จำนวนเงิน</p> <p>{"1,900"} บาท</p></div>
-                                     
-                                      
+                                      <div className="flex justify-center space-x-2">
+                                        <p className="font-semibold">
+                                          ชื่อบัญชี
+                                        </p>{" "}
+                                        <p>สุประวีร์ ลู่วิ่งเส้นชัย</p>
                                       </div>
-                                   
-                                      <input
+                                      <div className="flex justify-center space-x-2">
+                                        {" "}
+                                        <p className="font-semibold">
+                                          จำนวนเงิน
+                                        </p>{" "}
+                                        <p>{"1,900"} บาท</p>
+                                      </div>
+                                    </div>
+
+                                    <input
                                       autoFocus
                                       required
                                       margin="dense"
@@ -534,13 +541,21 @@ export default function Detail() {
                                       className=" w-60 px-4 py-1"
                                     />
                                   </DialogContent>
-                                 
-                                    
+
                                   <DialogActions>
-                                 
-                                    <div className="space-x-4">     
-                                    <button onClick={handleClose} className="bg-gray-100 hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-sm">ยกเลิก</button>
-                                    <button type="submit" className="bg-gray-100 hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-sm">อัพโหลด</button>
+                                    <div className="space-x-4">
+                                      <button
+                                        onClick={handleClose}
+                                        className="bg-gray-100 hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-sm"
+                                      >
+                                        ยกเลิก
+                                      </button>
+                                      <button
+                                        type="submit"
+                                        className="bg-gray-100 hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-sm"
+                                      >
+                                        อัพโหลด
+                                      </button>
                                     </div>
                                     {/* <Button onClick={handleClose}>
                                       ยกเลิก
@@ -585,24 +600,31 @@ export default function Detail() {
                                   {/* <DialogTitle>อัพโหลดสลิปโอนเงิน</DialogTitle> */}
                                   <DialogContent>
                                     <DialogContentText>
-                                      
-                                    <img
+                                      <img
                                         src="https://www.paocloud.co.th/wp-content/uploads/2021/01/Screen-Shot-2564-01-26-at-18.56.53.png"
                                         alt="QR code"
                                         width={250}
                                         height={250}
                                       />
-                                      
                                     </DialogContentText>
 
                                     <div className=" w-full text-center space-y-2 mb-2">
-                                      <div className="flex justify-center space-x-2"><p className="font-semibold">ชื่อบัญชี</p> <p>สุประวีร์ ลู่วิ่งเส้นชัย</p></div>
-                                      <div className="flex justify-center space-x-2"> <p className="font-semibold">จำนวนเงิน</p> <p>{"1,900"} บาท</p></div>
-                                     
-                                      
+                                      <div className="flex justify-center space-x-2">
+                                        <p className="font-semibold">
+                                          ชื่อบัญชี
+                                        </p>{" "}
+                                        <p>สุประวีร์ ลู่วิ่งเส้นชัย</p>
                                       </div>
-                                   
-                                      <input
+                                      <div className="flex justify-center space-x-2">
+                                        {" "}
+                                        <p className="font-semibold">
+                                          จำนวนเงิน
+                                        </p>{" "}
+                                        <p>{"1,900"} บาท</p>
+                                      </div>
+                                    </div>
+
+                                    <input
                                       autoFocus
                                       required
                                       margin="dense"
@@ -617,13 +639,21 @@ export default function Detail() {
                                       className=" w-60 px-4 py-1"
                                     />
                                   </DialogContent>
-                                 
-                                    
+
                                   <DialogActions>
-                                 
-                                    <div className="space-x-4">     
-                                    <button onClick={handleClose} className="bg-gray-100 hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-sm">ยกเลิก</button>
-                                    <button type="submit" className="bg-gray-100 hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-sm">อัพโหลด</button>
+                                    <div className="space-x-4">
+                                      <button
+                                        onClick={handleClose}
+                                        className="bg-gray-100 hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-sm"
+                                      >
+                                        ยกเลิก
+                                      </button>
+                                      <button
+                                        type="submit"
+                                        className="bg-gray-100 hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-sm"
+                                      >
+                                        อัพโหลด
+                                      </button>
                                     </div>
                                     {/* <Button onClick={handleClose}>
                                       ยกเลิก
@@ -638,9 +668,11 @@ export default function Detail() {
                       )}
 
                       {selectedPayment === "walk-in" && (
-                      <div className="w-full h-64 items-center justify-center text-center flex">
-                      <h1>เมื่อเดินทางมาถึงที่พัก กรุณาชำระเงินที่หน้าเคาเตอร์</h1>
-                      </div>
+                        <div className="w-full h-64 items-center justify-center text-center flex">
+                          <h1>
+                            เมื่อเดินทางมาถึงที่พัก กรุณาชำระเงินที่หน้าเคาเตอร์
+                          </h1>
+                        </div>
                       )}
                     </div>
 
