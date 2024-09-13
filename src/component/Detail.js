@@ -5,6 +5,8 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Logo from "../cococat-hotel.png";
+import PromtPay from "../assets/image/promt-pay.png";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import LoadingSpinner from "./Loading";
 import Error from "./Error";
@@ -16,6 +18,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import PaymentsIcon from "@mui/icons-material/Payments";
 
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -47,6 +50,9 @@ export default function Detail() {
   const [special_request, setSpecialRequest] = useState(
     "ขอกระบะทราย มีน่ำ มีข้าวพร้อม"
   );
+
+  const [username2, setUsername2] = useState(null);
+  const [phone2, setPhone2] = useState(null);
 
   const [selectedPayment, setSelectedPayment] = useState("");
   const [open, setOpen] = useState(false);
@@ -101,48 +107,44 @@ export default function Detail() {
     let numcamera = parseInt(
       JSON.parse(localStorage.getItem("number_of_cameras"))
     );
-    
-
 
     let get_user = JSON.parse(localStorage.getItem("user-provider"));
 
-    if(get_user === null || get_user === ""){
+    if (get_user === null || get_user === "") {
       navigate("/login");
-    }else{
-      
-  
-    console.log(get_user);
+    } else {
+      console.log(get_user);
 
-    setUsername(get_user.first_name + " " + get_user.last_name);
-    setEmail(get_user.email);
-    setPhone(get_user.phone);
+      setUsername(get_user.first_name + " " + get_user.last_name);
+      setEmail(get_user.email);
+      setPhone(get_user.phone);
 
-    console.log(error);
+      console.log(error);
 
-    let getdata = getRoom();
+      let getdata = getRoom();
 
-    let num;
+      let num;
 
-    if (Type === "fan-room") {
-      num = numcat;
-    } else if (Type === "ac-standard-room") {
-      num = Math.ceil(numcat / 2);
-    } else if (Type === "ac-connecting-room") {
-      num = Math.ceil(numcat / 4);
+      if (Type === "fan-room") {
+        num = numcat;
+      } else if (Type === "ac-standard-room") {
+        num = Math.ceil(numcat / 2);
+      } else if (Type === "ac-connecting-room") {
+        num = Math.ceil(numcat / 4);
+      }
+
+      // console.log(Type, num, numcat);
+
+      if (start && end && numcat && getdata) {
+        // setData(getdata);
+        setStartDate(start);
+        setEndDate(end);
+        setNumcat(numcat);
+        setTotalday(totalday);
+        setNumcamera(numcamera);
+        setTotal(num);
+      }
     }
-
-    // console.log(Type, num, numcat);
-
-    if (start && end && numcat && getdata) {
-      // setData(getdata);
-      setStartDate(start);
-      setEndDate(end);
-      setNumcat(numcat);
-      setTotalday(totalday);
-      setNumcamera(numcamera);
-      setTotal(num);
-    }
-  }
   }, []);
 
   const getRoom = async () => {
@@ -209,6 +211,8 @@ export default function Detail() {
         room_name: data.room_name,
         type: data.type,
         user_name: username,
+        user_name_2: username2,
+        phone_2: phone2,
         email: email,
         phone: phone,
         special_request: special_request,
@@ -250,56 +254,6 @@ export default function Detail() {
     }
   };
 
-  // const SendApi = async () => {
-  //   try {
-  //     if (selectedPayment === "credit" && !upload) {
-  //       alert("กรุณาอัพโหลดสลิปโอนเงิน");
-  //       return;
-  //     } else if (selectedPayment === "credit" && upload) {
-  //       // console.log(base64img);
-  //     } else if (selectedPayment === "walk-in") {
-  //       console.log("walk-in");
-  //     }
-  //     let item = {
-  //       room_name: data.room_name,
-  //       type: data.type,
-  //       user_name: username,
-  //       email: email,
-  //       phone: phone,
-  //       special_request: special_request,
-  //       check_in_date: new Date(startDate).toISOString(),
-  //       check_out_date: new Date(endDate).toISOString(),
-  //       total_price: data.price * totalday,
-  //       total_cats: nunmcat,
-  //       total_rooms: total,
-  //       pay_way: selectedPayment,
-  //       status: "pending",
-  //       total_cameras: data.cameras,
-  //       image: selectedPayment === "credit" ? base64img : "",
-  //     };
-
-  //     console.log(item);
-
-  // const response = await fetch(`http://localhost:8700/v1/book_room`, {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify(item),
-  // });
-
-  // const result = await response.json();
-
-  // console.log(result , "result");
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
-
-  // const handleFileChange = (e) => {
-  //   setUpload_slip(e.target.files[0]);
-  // };
-
   return (
     <div>
       {loading ? (
@@ -318,15 +272,8 @@ export default function Detail() {
               <div className="">
                 <div className="sticky top-0 bg-white z-50">
                   <div className="sticky top-0 bg-white z-50 shadow-md">
-                    <div className="grid grid-cols-5 items-center gap-1 p-4">
-                      <img
-                        className="ml-24"
-                        src={Logo}
-                        alt="logo"
-                        width={80}
-                        height={80}
-                      />
-
+                    <div className="grid grid-cols-5 items-center gap-1 p-4 h-32">
+                      <div></div>
                       <div className="col-span-3 flex justify-center space-x-8">
                         <div className="flex items-center">
                           <div className="flex items-center justify-center w-8 h-8 text-white bg-green-500 rounded-full">
@@ -387,8 +334,9 @@ export default function Detail() {
                                   "/" +
                                   img
                                 }
+                                className="rounded-xl shadow-lg"
                                 alt={data.type}
-                                width={100}
+                                width={250}
                                 height={100}
                               />
                             ))}
@@ -415,97 +363,25 @@ export default function Detail() {
                     <div className="text-center flex mt-10  ml-5 justify-between mr-10">
                       {" "}
                       ข้อมูลการติดต่อ{" "}
-                      {/* {!open_edit && (
-                        <div
-                          className="text-sm font-semibold text-right text-blue-400 underline"
-                          onClick={() =>
-                            open_edit ? setOpen_edit(false) : setOpen_edit(true)
-                          }
-                        >
-                          {" "}
-                          แก้ไขข้อมูล
-                        </div>
-                      )}
-                      {open_edit && (
-                        <div className=" text-sm">
-                          <button
-                            className="btn-primary"
-                            onClick={() => setOpen_edit(false)}
-                          >
-                            บันทึก
-                          </button>
-                        </div>
-                      )} */}
                     </div>
-                    {/* 
-                    <div className="px-4 py-5 text-sm text-gray-500 flex justify-start items-end mr-5 ml-5 mt-10 mb-10">
-                      {open_edit && (
-                        <>
-                          <div className="nice_grid">
-                            <p>ชื่อ</p>
-                            <input
-                              type="text"
-                              className="px-4 py-1 bg-gray-200"
-                              value={username}
-                              onChange={(e) => setUsername(e.target.value)}
-                            />
-                            <p>เบอร์โทร</p>
-                            <input
-                              type="text"
-                              className="px-4 py-1 bg-gray-200"
-                              value={phone}
-                              onChange={(e) => setPhone(e.target.value)}
-                            />
-                            <p>อีเมล</p>
-                            <input
-                              type="text"
-                              className="px-4 py-1 bg-gray-200"
-                              value={email}
-                              onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <p>คำขอพิเศษ</p>
-                            <input
-                              type="text"
-                              className="px-4 py-1 bg-gray-200"
-                              value={special_request}
-                              onChange={(e) =>
-                                setSpecialRequest(e.target.value)
-                              }
-                            />
-                          </div>
-                        </>
-                      )}
-
-                      {!open_edit && (
-                        <div className="nice_grid">
-                          <p>ชื่อ</p>
-                          <p className="px-4 py-1 "> {username}</p>
-
-                          <p>เบอร์โทร</p>
-                          <p className="px-4 py-1 ">{phone}</p>
-
-                          <p>อีเมล</p>
-                          <p className="px-4 py-1 ">{email}</p>
-
-                          <p>คำขอพิเศษ</p>
-                          <p className="px-4 py-1 ">{special_request}</p>
-                        </div>
-                      )}
-                    </div> */}
 
                     <div className="space-y-4 p-6 rounded-lg text-sm mt-3">
                       <div className="grid grid-cols-1 gap-4">
+                        <h1>ผู้จอง</h1>
                         <input
                           type="text"
-                          placeholder="First Name"
+                          placeholder="Name"
                           value={username}
+                          readOnly
                           onChange={(e) => setUsername(e.target.value)}
                           className="border border-gray-300 rounded p-2"
                         />
+
                         <input
                           type="email"
                           placeholder="E-mail address"
                           value={email}
+                          readOnly
                           onChange={(e) => setEmail(e.target.value)}
                           className="border border-gray-300 rounded p-2"
                         />
@@ -513,10 +389,29 @@ export default function Detail() {
                           type="text"
                           placeholder="Mobile number"
                           value={phone}
+                          // readOnly
                           onChange={(e) => setPhone(e.target.value)}
                           className="border border-gray-300 rounded p-2"
                         />
                       </div>
+                      <div className="mt-4 rounded-lg text-sm  grid grid-cols-1 gap-4 ">
+                        <h1>ผู้รับ-ฝาก</h1>
+                        <input
+                          type="text"
+                          placeholder="Name"
+                          value={username2}
+                          onChange={(e) => setUsername2(e.target.value)}
+                          className="border border-gray-300 rounded p-2"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Mobile number"
+                          value={phone2}
+                          onChange={(e) => setPhone2(e.target.value)}
+                          className="border border-gray-300 rounded p-2"
+                        />
+                      </div>
+
                       <div className="mt-4">
                         <h4 className="text-lg font-medium mb-2">
                           Special Request (optional)
@@ -534,8 +429,222 @@ export default function Detail() {
                       <h1>เลือกวิธีการชำระเงิน</h1>
                       <p>{""}</p>
                     </div>
+                    <div className="flex">
+                    <div className="space-y-5 px-4 py-5 text-xl text-gray-500  items-center mr-5 ml-5 mt-10 mb-10 focus:outline-none focus:ring-opacity-750">
+                      <div>
+                        <button
+                          onClick={() => handleSelectPayment("walk-in")}
+                          className={`${
+                            selectedPayment === "walk-in"
+                              ? "border-blue-500"
+                              : ""
+                          } bg-white hover:border-blue-500  w-96 h-16 items-center justify-between px-4  flex border  rounded-lg`}
+                        >
+                          <div className="w-12">
+                            <PaymentsIcon />
+                          </div>
+                          <p>ชำระเงินสด</p>
+                          <ArrowForwardIosIcon />
+                        </button>
+                      </div>
+                      <div>
+                        <button
+                          onClick={() => handleSelectPayment("credit")}
+                          className={`${
+                            selectedPayment === "credit"
+                              ? "border-blue-500"
+                              : ""
+                          } bg-white hover:border-blue-500  w-96 h-16 items-center justify-between px-4  flex border  rounded-lg`}
+                        >
+                          <img src={PromtPay} alt="1" className="h-12 w-12" />
+                          <p>พร้อมเพย์</p>
+                          <ArrowForwardIosIcon />
+                        </button>
+                      </div>
+                      </div>
+                      {selectedPayment === "credit" && (
+                        <div className="w-full h-64 items-center justify-center text-center">
+                          {upload && (
+                            <React.Fragment >
+                              <div>
+                                <button
+                                  className=""
+                                  variant="outlined"
+                                  onClick={handleClickOpen}
+                                >
+                                  <img
+                                    src={URL.createObjectURL(upload_slip)}
+                                    alt="Uploaded"
+                                    width={160}
+                                    height={160}
+                                  />
+                                </button>
+                                <Dialog
+                                  open={open}
+                                  onClose={handleClose}
+                                  PaperProps={{
+                                    component: "form",
+                                    onSubmit: async (event) => {
+                                      event.preventDefault();
+                                      const formData = new FormData(
+                                        event.currentTarget
+                                      );
+                                      const file = formData.get("paymentSlip");
 
-                    <div className="px-4 py-5 text-sm text-gray-500  items-center mr-5 ml-5 mt-10 mb-10 focus:outline-none focus:ring-opacity-750">
+                                      if (file) {
+                                        setUpload_slip(file);
+                                        setUpload(true);
+                                      }
+                                      handleClose();
+                                    },
+                                  }}
+                                >
+                                  {/* <DialogTitle>อัพโหลดสลิปโอนเงิน</DialogTitle> */}
+                                  <DialogContent>
+                                    <DialogContentText>
+                                      
+                                    <img
+                                        src="https://www.paocloud.co.th/wp-content/uploads/2021/01/Screen-Shot-2564-01-26-at-18.56.53.png"
+                                        alt="QR code"
+                                        width={250}
+                                        height={250}
+                                      />
+                                      
+                                    </DialogContentText>
+
+                                    <div className=" w-full text-center space-y-2 mb-2">
+                                      <div className="flex justify-center space-x-2"><p className="font-semibold">ชื่อบัญชี</p> <p>สุประวีร์ ลู่วิ่งเส้นชัย</p></div>
+                                      <div className="flex justify-center space-x-2"> <p className="font-semibold">จำนวนเงิน</p> <p>{"1,900"} บาท</p></div>
+                                     
+                                      
+                                      </div>
+                                   
+                                      <input
+                                      autoFocus
+                                      required
+                                      margin="dense"
+                                      id="paymentSlip"
+                                      name="paymentSlip"
+                                      type="file"
+                                      accept="image/*"
+                                      // style={{
+                                      //   display: "block",
+                                      //   marginTop: "20px ",
+                                      // }}
+                                      className=" w-60 px-4 py-1"
+                                    />
+                                  </DialogContent>
+                                 
+                                    
+                                  <DialogActions>
+                                 
+                                    <div className="space-x-4">     
+                                    <button onClick={handleClose} className="bg-gray-100 hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-sm">ยกเลิก</button>
+                                    <button type="submit" className="bg-gray-100 hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-sm">อัพโหลด</button>
+                                    </div>
+                                    {/* <Button onClick={handleClose}>
+                                      ยกเลิก
+                                    </Button>
+                                    <Button type="submit">อัพโหลด</Button> */}
+                                  </DialogActions>
+                                </Dialog>
+                              </div>
+                            </React.Fragment>
+                          )}
+
+                          {!upload && (
+                            <div className="justify-center items-center text-center flex h-72">
+                              <React.Fragment>
+                                <Button
+                                  className=""
+                                  variant="outlined"
+                                  onClick={handleClickOpen}
+                                >
+                                  อัพโหลดสลิปโอนเงิน
+                                </Button>
+                                <Dialog
+                                  open={open}
+                                  onClose={handleClose}
+                                  PaperProps={{
+                                    component: "form",
+                                    onSubmit: async (event) => {
+                                      event.preventDefault();
+                                      const formData = new FormData(
+                                        event.currentTarget
+                                      );
+                                      const file = formData.get("paymentSlip");
+
+                                      if (file) {
+                                        setUpload_slip(file);
+                                        setUpload(true);
+                                      }
+                                      handleClose();
+                                    },
+                                  }}
+                                >
+                                  {/* <DialogTitle>อัพโหลดสลิปโอนเงิน</DialogTitle> */}
+                                  <DialogContent>
+                                    <DialogContentText>
+                                      
+                                    <img
+                                        src="https://www.paocloud.co.th/wp-content/uploads/2021/01/Screen-Shot-2564-01-26-at-18.56.53.png"
+                                        alt="QR code"
+                                        width={250}
+                                        height={250}
+                                      />
+                                      
+                                    </DialogContentText>
+
+                                    <div className=" w-full text-center space-y-2 mb-2">
+                                      <div className="flex justify-center space-x-2"><p className="font-semibold">ชื่อบัญชี</p> <p>สุประวีร์ ลู่วิ่งเส้นชัย</p></div>
+                                      <div className="flex justify-center space-x-2"> <p className="font-semibold">จำนวนเงิน</p> <p>{"1,900"} บาท</p></div>
+                                     
+                                      
+                                      </div>
+                                   
+                                      <input
+                                      autoFocus
+                                      required
+                                      margin="dense"
+                                      id="paymentSlip"
+                                      name="paymentSlip"
+                                      type="file"
+                                      accept="image/*"
+                                      // style={{
+                                      //   display: "block",
+                                      //   marginTop: "20px ",
+                                      // }}
+                                      className=" w-60 px-4 py-1"
+                                    />
+                                  </DialogContent>
+                                 
+                                    
+                                  <DialogActions>
+                                 
+                                    <div className="space-x-4">     
+                                    <button onClick={handleClose} className="bg-gray-100 hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-sm">ยกเลิก</button>
+                                    <button type="submit" className="bg-gray-100 hover:bg-gray-50 px-4 py-2 border border-gray-300 rounded-sm">อัพโหลด</button>
+                                    </div>
+                                    {/* <Button onClick={handleClose}>
+                                      ยกเลิก
+                                    </Button>
+                                    <Button type="submit">อัพโหลด</Button> */}
+                                  </DialogActions>
+                                </Dialog>
+                              </React.Fragment>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {selectedPayment === "walk-in" && (
+                      <div className="w-full h-64 items-center justify-center text-center flex">
+                      <h1>เมื่อเดินทางมาถึงที่พัก กรุณาชำระเงินที่หน้าเคาเตอร์</h1>
+                      </div>
+                      )}
+                    </div>
+
+                    {/* <div className="px-4 py-5 text-sm text-gray-500  items-center mr-5 ml-5 mt-10 mb-10 focus:outline-none focus:ring-opacity-750">
                       <div className="flex justify-evenly px-4 py-5">
                         <button
                           className={`${
@@ -547,7 +656,7 @@ export default function Detail() {
                         >
                           ชำระเงินปลายทาง
                         </button>
-                       
+
                         <button
                           className={`${
                             selectedPayment === "credit"
@@ -706,10 +815,10 @@ export default function Detail() {
                           )}
                         </>
                       )}
-                    </div>
+                    </div> */}
                   </div>
 
-                  <div className=" bg-white mr-10 ml-0 mt-10 w-fu mb-4 px-5 py-6 h-full w-96 rounded-3xl shadow-md focus:outline-none items-center justify-center text-center focus:ring-opacity-75 sticky top-32 z-0">
+                  <div className=" bg-white mr-10 ml-0 mt-10 w-fu mb-4 px-5 py-6 h-full w-96  shadow-md focus:outline-none items-center justify-center text-center focus:ring-opacity-75 sticky top-32 z-0">
                     <h1 className="mb-5 text-2xl items-center justify-center text-center">
                       แสดงรายละเอียด
                     </h1>
@@ -754,7 +863,7 @@ export default function Detail() {
               </div>
             </>
           )}
-          <footer className=" bg-[#8CAFCB] p-14  items-center justify-between text-center shadow-lg w-full">
+          {/* <footer className=" bg-[#8CAFCB] p-14  items-center justify-between text-center shadow-lg w-full">
             <h1 className="text-3xl text-left text-white">ติดต่อเรา</h1>
             <div className="flex  text-white justify-between   mt-2 mb-10">
               <div className=" text-left">
@@ -776,7 +885,7 @@ export default function Detail() {
             <h1 className="text-left text-white p-5">
               © 2023 All rights Reserved.
             </h1>
-          </footer>
+          </footer> */}
         </>
       )}
     </div>

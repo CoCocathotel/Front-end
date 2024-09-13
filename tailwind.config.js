@@ -14,6 +14,9 @@ module.exports = {
             '50%': { transform: 'translateX(-100%)' }, 
           },
         },
+        fontFamily:{
+          Kanit: ['Kanit']
+        }
       },
     },
     plugins: [],

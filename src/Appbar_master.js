@@ -15,8 +15,6 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Logout from "@mui/icons-material/Logout";
 
-
-
 export default function Appbar_master() {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -43,219 +41,728 @@ export default function Appbar_master() {
     setAnchorEl(event.currentTarget);
   };
 
+  const [prevScrollPosition, setPrevScrollPosition] = useState(0);
+  const [visible, setVisable] = useState(true);
+  const handleScroll = () => {
+    const currentScrollPosition = window.scrollY;
+
+    if (currentScrollPosition > prevScrollPosition) {
+      setVisable(false);
+    } else {
+      setVisable(true);
+    }
+    setPrevScrollPosition(currentScrollPosition);
+  };
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  });
+
   return (
     <>
-      <div className="sticky top-0 bg-white z-50">
-        <div className="grid grid-cols-5 gap-1 p-4">
-          <img className="ml-24" src={Logo} alt="logo" width={80} height={80} />
-          <button
-            onClick={() => {
-              navigate("/");
-            }}
-            className="text-gray-600 hover:text-blue-500"
+      {localStorage.getItem("token") &&
+      JSON.parse(localStorage.getItem("user-provider")).pos === "admin" ? (
+        <>
+          {/* <div className="sticky top-0 bg-white  z-50"> */}
+          <div
+            className={`transition ease-linear duration-700 flex border-b w-full h-28 top-0 bg-white z-50 sticky ${
+              visible ? "opacity-80" : "opacity-0 invisible"
+            }`}
           >
-            Home
-          </button>
-          <button
-            onClick={() => {
-              navigate("/booking");
-            }}
-            className="text-gray-600 hover:text-blue-500"
-          >
-            Booking
-          </button>
-          <button
-            onClick={() => {
-              navigate("/history");
-            }}
-            className="text-gray-600 hover:text-blue-500"
-          >
-            Order
-          </button>
-          {localStorage.getItem("token") ? (
-            <>
-              {/* <button
-                  className="ext-gray-600 hover:text-blue-500"
-                  onClick={() => {
-                    localStorage.removeItem("token");
-                    window.location.reload();
-                  }}
-                >
-                  Logout {" "} {JSON.parse(localStorage.getItem("user-provider")).email}
-                </button> */}
-              <React.Fragment>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    textAlign: "center",
-                  }}
-                >
-                  {/* <Typography sx={{ minWidth: 100 }}>Contact</Typography>
-                      <Typography sx={{ minWidth: 100 }}>Profile</Typography> */}
-                  <Tooltip title="Account settings">
-                    <IconButton
-                      onClick={handleClick}
-                      size="small"
-                      sx={{ ml: 2 }}
-                      aria-controls={open ? "account-menu" : undefined}
-                      aria-haspopup="true"
-                      aria-expanded={open ? "true" : undefined}
-                    >
-                      <Avatar sx={{ width: 32, height: 32 }}>
-                        {JSON.parse(
-                          localStorage.getItem("user-provider")
-                        ).email[0].toUpperCase()}
-                      </Avatar>
-                    </IconButton>
-                  </Tooltip>
-                </Box>
-                <Menu
-                  anchorEl={anchorEl}
-                  id="account-menu"
-                  open={open}
-                  onClose={() => {}}
-                  onClick={() => {}}
-                  PaperProps={{
-                    elevation: 0,
-                    sx: {
-                      overflow: "visible",
-                      filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                      mt: 1.5,
-                      "& .MuiAvatar-root": {
-                        width: 32,
-                        height: 32,
-                        ml: -0.5,
-                        mr: 1,
-                      },
-                      "&::before": {
-                        content: '""',
-                        display: "block",
-                        position: "absolute",
-                        top: 0,
-                        right: 14,
-                        width: 10,
-                        height: 10,
-                        bgcolor: "background.paper",
-                        transform: "translateY(-50%) rotate(45deg)",
-                        zIndex: 0,
-                      },
-                    },
-                  }}
-                  transformOrigin={{ horizontal: "right", vertical: "top" }}
-                  anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-                >
-                  <MenuItem onClick={handleClose}>
-                    <PermIdentityOutlinedIcon />{" "}
-                    {
-                      JSON.parse(localStorage.getItem("user-provider"))
-                        .first_name
-                    }{" "}
-                    {
-                      JSON.parse(localStorage.getItem("user-provider"))
-                        .last_name
-                    }
-                  </MenuItem>
-                  <MenuItem onClick={handleClose}>
-                    <EmailTwoToneIcon />{" "}
-                    {JSON.parse(localStorage.getItem("user-provider")).email}
-                  </MenuItem>
+            <div className="grid grid-cols-7 w-full gap-1 p-4">
+              <img
+                className="ml-24"
+                src={Logo}
+                alt="logo"
+                width={80}
+                height={80}
+              />
 
-                  {JSON.parse(localStorage.getItem("user-provider")).pos ===
-                  "admin" ? (
-                    <>
-                      <MenuItem
-                        onClick={(_) => {
-                          navigate("/admin_home");
-                        }}
-                      >
-                        <AdminPanelSettingsOutlinedIcon /> Admin_Home
-                      </MenuItem>
-                    </>
-                  ) : (
-                    ""
-                  )}
-                  <Divider />
-
-                  <MenuItem onClick={handleCloseLogout}>
-                    <ListItemIcon>
-                      <Logout fontSize="small" />
-                    </ListItemIcon>
-                    Logout
-                  </MenuItem>
-                </Menu>
-              </React.Fragment>
-            </>
-          ) : (
-            <React.Fragment>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  textAlign: "center",
+              <button
+                onClick={() => {
+                  navigate("/admin_home");
                 }}
+                className="text-gray-600 hover:text-blue-500"
               >
-                {/* <Typography sx={{ minWidth: 100 }}>Contact</Typography>
-                  <Typography sx={{ minWidth: 100 }}>Profile</Typography> */}
-                <Tooltip title="Account settings">
-                  <IconButton
-                    onClick={handleClick}
-                    size="small"
-                    sx={{ ml: 2 }}
-                    aria-controls={open ? "account-menu" : undefined}
-                    aria-haspopup="true"
-                    aria-expanded={open ? "true" : undefined}
+                การจองทั้งหมด
+              </button>
+              <button
+                onClick={() => {
+                  navigate("#");
+                }}
+                className="text-gray-600 hover:text-blue-500"
+              >
+                ข้อมูลเชิงวิเคราะห์
+              </button>
+              <button
+                onClick={() => {
+                  navigate("#");
+                }}
+                className="text-gray-600 hover:text-blue-500"
+              >
+                เพิ่มห้อง
+              </button>
+              <button
+                onClick={() => {
+                  navigate("#");
+                }}
+                className="text-gray-600 hover:text-blue-500"
+              >
+                จัดการโฮมเพจ
+              </button>
+              <button
+                onClick={() => {
+                  navigate("#");
+                }}
+                className="text-gray-600 hover:text-blue-500"
+              >
+                จัดการผู้ใช้งาน
+              </button>
+
+              {localStorage.getItem("token") ? (
+                <>
+                  {/* <button
+                    className="ext-gray-600 hover:text-blue-500"
+                    onClick={() => {
+                      localStorage.removeItem("token");
+                      window.location.reload();
+                    }}
                   >
-                    <Avatar sx={{ width: 32, height: 32 }}></Avatar>
-                  </IconButton>
-                </Tooltip>
-              </Box>
-              <Menu
-                anchorEl={anchorEl}
-                id="account-menu"
-                open={open}
-                onClose={handleClose}
-                onClick={handleClose}
-                PaperProps={{
-                  elevation: 0,
-                  sx: {
-                    overflow: "visible",
-                    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                    mt: 1.5,
-                    "& .MuiAvatar-root": {
-                      width: 32,
-                      height: 32,
-                      ml: -0.5,
-                      mr: 1,
-                    },
-                    "&::before": {
-                      content: '""',
-                      display: "block",
-                      position: "absolute",
-                      top: 0,
-                      right: 14,
-                      width: 10,
-                      height: 10,
-                      bgcolor: "background.paper",
-                      transform: "translateY(-50%) rotate(45deg)",
-                      zIndex: 0,
-                    },
-                  },
+                    Logout {" "} {JSON.parse(localStorage.getItem("user-provider")).email}
+                  </button> */}
+                  <React.Fragment>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        textAlign: "center",
+                      }}
+                    >
+                      {/* <Typography sx={{ minWidth: 100 }}>Contact</Typography>
+                        <Typography sx={{ minWidth: 100 }}>Profile</Typography> */}
+                      <Tooltip title="บัญชีผู้ใช้งาน">
+                        <div
+                          className="grid grid-cols-2 gap-0  items-center justify-center text-center"
+                          onClick={handleClick}
+                        >
+                          <IconButton
+                            size="small"
+                            sx={{ ml: 2 }}
+                            aria-controls={open ? "account-menu" : undefined}
+                            aria-haspopup="true"
+                            aria-expanded={open ? "true" : undefined}
+                          >
+                            <Avatar sx={{ width: 32, height: 32 }}>
+                              {JSON.parse(
+                                localStorage.getItem("user-provider")
+                              ).email[0].toUpperCase()}
+                            </Avatar>
+                          </IconButton>
+                          <p>
+                            {" "}
+                            {
+                              JSON.parse(localStorage.getItem("user-provider"))
+                                .first_name
+                            }{" "}
+                            {
+                              JSON.parse(localStorage.getItem("user-provider"))
+                                .last_name
+                            }
+                          </p>
+                        </div>
+                      </Tooltip>
+                    </Box>
+                    <Menu
+                      anchorEl={anchorEl}
+                      id="account-menu"
+                      open={open}
+                      onClose={handleClose}
+                      onClick={handleClose}
+                      PaperProps={{
+                        elevation: 0,
+                        sx: {
+                          overflow: "visible",
+                          filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                          mt: 1.5,
+                          "& .MuiAvatar-root": {
+                            width: 32,
+                            height: 32,
+                            ml: -0.5,
+                            mr: 1,
+                          },
+                          "&::before": {
+                            content: '""',
+                            display: "block",
+                            position: "absolute",
+                            top: 0,
+                            right: 14,
+                            width: 10,
+                            height: 10,
+                            bgcolor: "background.paper",
+                            transform: "translateY(-50%) rotate(45deg)",
+                            zIndex: 0,
+                          },
+                        },
+                      }}
+                      transformOrigin={{ horizontal: "right", vertical: "top" }}
+                      anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                    >
+                      {/* <MenuItem onClick={handleClose}>
+                        <PermIdentityOutlinedIcon />{" "}
+                        {
+                          JSON.parse(localStorage.getItem("user-provider"))
+                            .first_name
+                        }{" "}
+                        {
+                          JSON.parse(localStorage.getItem("user-provider"))
+                            .last_name
+                        }
+                      </MenuItem>
+                      <MenuItem onClick={handleClose}>
+                        <EmailTwoToneIcon />{" "}
+                        {
+                          JSON.parse(localStorage.getItem("user-provider"))
+                            .email
+                        }
+                      </MenuItem>
+
+                      {JSON.parse(localStorage.getItem("user-provider")).pos ===
+                      "admin" ? (
+                        <>
+                          <MenuItem
+                            onClick={(_) => {
+                              navigate("/admin_home");
+                            }}
+                          >
+                            <AdminPanelSettingsOutlinedIcon /> Admin_Home
+                          </MenuItem>
+                        </>
+                      ) : (
+                        ""
+                      )}
+                      <Divider /> */}
+                      <MenuItem onClick={handleClose}>
+                        <EmailTwoToneIcon />{" "}
+                        {
+                          JSON.parse(localStorage.getItem("user-provider"))
+                            .email
+                        }
+                      </MenuItem>
+
+                      <Divider />
+                      <MenuItem onClick={handleCloseLogout}>
+                        <ListItemIcon>
+                          <Logout fontSize="small" />
+                        </ListItemIcon>
+                        Logout
+                      </MenuItem>
+                    </Menu>
+                  </React.Fragment>
+                </>
+              ) : (
+                <React.Fragment>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      textAlign: "center",
+                    }}
+                  >
+                    {/* <Typography sx={{ minWidth: 100 }}>Contact</Typography>
+                    <Typography sx={{ minWidth: 100 }}>Profile</Typography> */}
+                    <Tooltip title="Account settings">
+                      <IconButton
+                        onClick={handleClick}
+                        size="small"
+                        sx={{ ml: 2 }}
+                        aria-controls={open ? "account-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? "true" : undefined}
+                      >
+                        <Avatar sx={{ width: 32, height: 32 }}></Avatar>
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                  <Menu
+                    anchorEl={anchorEl}
+                    id="account-menu"
+                    open={open}
+                    onClose={handleClose}
+                    onClick={handleClose}
+                    PaperProps={{
+                      elevation: 0,
+                      sx: {
+                        overflow: "visible",
+                        filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                        mt: 1.5,
+                        "& .MuiAvatar-root": {
+                          width: 32,
+                          height: 32,
+                          ml: -0.5,
+                          mr: 1,
+                        },
+                        "&::before": {
+                          content: '""',
+                          display: "block",
+                          position: "absolute",
+                          top: 0,
+                          right: 14,
+                          width: 10,
+                          height: 10,
+                          bgcolor: "background.paper",
+                          transform: "translateY(-50%) rotate(45deg)",
+                          zIndex: 0,
+                        },
+                      },
+                    }}
+                    transformOrigin={{ horizontal: "right", vertical: "top" }}
+                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                  >
+                    <MenuItem onClick={handleCloseLogin}>
+                      <ListItemIcon>
+                        <Logout fontSize="small" />
+                      </ListItemIcon>
+                      Login
+                    </MenuItem>
+                  </Menu>
+                </React.Fragment>
+              )}
+            </div>
+          </div>
+        </>
+      ) : (
+        <>
+          <div
+            className={`transition ease-linear duration-700 flex border-b w-full h-28 top-0 bg-white z-50 sticky ${
+              visible ? "opacity-80" : "opacity-0 invisible"
+            }`}
+          >
+            <div className="grid grid-cols-5 gap-1 p-4 w-full ">
+              <img
+                className="ml-24"
+                src={Logo}
+                alt="logo"
+                width={80}
+                height={80}
+              />
+              <button
+                onClick={() => {
+                  navigate("/");
                 }}
-                transformOrigin={{ horizontal: "right", vertical: "top" }}
-                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                className="text-gray-600 hover:text-blue-500"
               >
-                <MenuItem onClick={handleCloseLogin}>
-                  <ListItemIcon>
-                    <Logout fontSize="small" />
-                  </ListItemIcon>
-                  Login
-                </MenuItem>
-              </Menu>
-            </React.Fragment>
-          )}
-        </div>
-      </div>
+                หน้าแรก
+              </button>
+              <button
+                onClick={() => {
+                  navigate("/booking");
+                }}
+                className="text-gray-600 hover:text-blue-500"
+              >
+                จองห้องพัก
+              </button>
+              <button
+                onClick={() => {
+                  navigate("/history");
+                }}
+                className="text-gray-600 hover:text-blue-500"
+              >
+                ประวัติการจอง
+              </button>
+              {localStorage.getItem("token") ? (
+                <>
+              
+                  <React.Fragment>
+                    <Box
+                      sx={{
+                        display: "flex",
+                        alignItems: "center",
+                        textAlign: "center",
+                      }}
+                    >
+                   
+                      <Tooltip title="Account settings">
+                        <IconButton
+                          onClick={handleClick}
+                          size="small"
+                          sx={{ ml: 2 }}
+                          aria-controls={open ? "account-menu" : undefined}
+                          aria-haspopup="true"
+                          aria-expanded={open ? "true" : undefined}
+                        >
+                          <Avatar sx={{ width: 32, height: 32 }}>
+                            {JSON.parse(
+                              localStorage.getItem("user-provider")
+                            ).email[0].toUpperCase()}
+                          </Avatar>
+                        </IconButton>
+                      </Tooltip>
+                    </Box>
+                    <Menu
+                      anchorEl={anchorEl}
+                      id="account-menu"
+                      open={open}
+                      onClose={handleClose}
+                      onClick={handleClose}
+                      PaperProps={{
+                        elevation: 0,
+                        sx: {
+                          overflow: "visible",
+                          filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                          mt: 1.5,
+                          "& .MuiAvatar-root": {
+                            width: 32,
+                            height: 32,
+                            ml: -0.5,
+                            mr: 1,
+                          },
+                          "&::before": {
+                            content: '""',
+                            display: "block",
+                            position: "absolute",
+                            top: 0,
+                            right: 14,
+                            width: 10,
+                            height: 10,
+                            bgcolor: "background.paper",
+                            transform: "translateY(-50%) rotate(45deg)",
+                            zIndex: 0,
+                          },
+                        },
+                      }}
+                      transformOrigin={{ horizontal: "right", vertical: "top" }}
+                      anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                    >
+                      <MenuItem onClick={handleClose}>
+                        <PermIdentityOutlinedIcon />{" "}
+                        {
+                          JSON.parse(localStorage.getItem("user-provider"))
+                            .first_name
+                        }{" "}
+                        {
+                          JSON.parse(localStorage.getItem("user-provider"))
+                            .last_name
+                        }
+                      </MenuItem>
+                      <MenuItem onClick={handleClose}>
+                        <EmailTwoToneIcon />{" "}
+                        {
+                          JSON.parse(localStorage.getItem("user-provider"))
+                            .email
+                        }
+                      </MenuItem>
+
+                      {JSON.parse(localStorage.getItem("user-provider")).pos ===
+                      "admin" ? (
+                        <>
+                          <MenuItem
+                            onClick={(_) => {
+                              navigate("/admin_home");
+                            }}
+                          >
+                            <AdminPanelSettingsOutlinedIcon /> Admin_Home
+                          </MenuItem>
+                        </>
+                      ) : (
+                        ""
+                      )}
+                      <Divider />
+
+                      <MenuItem onClick={handleCloseLogout}>
+                        <ListItemIcon>
+                          <Logout fontSize="small" />
+                        </ListItemIcon>
+                        Logout
+                      </MenuItem>
+                    </Menu>
+                  </React.Fragment>
+                </>
+              ) : (
+                <React.Fragment>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      textAlign: "center",
+                    }}
+                  >
+                    {/* <Typography sx={{ minWidth: 100 }}>Contact</Typography>
+                  <Typography sx={{ minWidth: 100 }}>Profile</Typography> */}
+                    <Tooltip title="Account settings">
+                      <IconButton
+                        onClick={handleClick}
+                        size="small"
+                        sx={{ ml: 2 }}
+                        aria-controls={open ? "account-menu" : undefined}
+                        aria-haspopup="true"
+                        aria-expanded={open ? "true" : undefined}
+                      >
+                        <Avatar sx={{ width: 32, height: 32 }}></Avatar>
+                      </IconButton>
+                    </Tooltip>
+                  </Box>
+                  <Menu
+                    anchorEl={anchorEl}
+                    id="account-menu"
+                    open={open}
+                    onClose={handleClose}
+                    onClick={handleClose}
+                    PaperProps={{
+                      elevation: 0,
+                      sx: {
+                        overflow: "visible",
+                        filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                        mt: 1.5,
+                        "& .MuiAvatar-root": {
+                          width: 32,
+                          height: 32,
+                          ml: -0.5,
+                          mr: 1,
+                        },
+                        "&::before": {
+                          content: '""',
+                          display: "block",
+                          position: "absolute",
+                          top: 0,
+                          right: 14,
+                          width: 10,
+                          height: 10,
+                          bgcolor: "background.paper",
+                          transform: "translateY(-50%) rotate(45deg)",
+                          zIndex: 0,
+                        },
+                      },
+                    }}
+                    transformOrigin={{ horizontal: "right", vertical: "top" }}
+                    anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+                  >
+                    <MenuItem onClick={handleCloseLogin}>
+                      <ListItemIcon>
+                        <Logout fontSize="small" />
+                      </ListItemIcon>
+                      Login
+                    </MenuItem>
+                  </Menu>
+                </React.Fragment>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </>
+    // <>
+    //   <div className="sticky top-0 bg-white z-50">
+    //     <div className="grid grid-cols-5 gap-1 p-4">
+    //       <img className="ml-24" src={Logo} alt="logo" width={80} height={80} />
+    //       <button
+    //         onClick={() => {
+    //           navigate("/");
+    //         }}
+    //         className="text-gray-600 hover:text-blue-500"
+    //       >
+    //         Home
+    //       </button>
+    //       <button
+    //         onClick={() => {
+    //           navigate("/booking");
+    //         }}
+    //         className="text-gray-600 hover:text-blue-500"
+    //       >
+    //         Booking
+    //       </button>
+    //       <button
+    //         onClick={() => {
+    //           navigate("/history");
+    //         }}
+    //         className="text-gray-600 hover:text-blue-500"
+    //       >
+    //         Order
+    //       </button>
+    //       {localStorage.getItem("token") ? (
+    //         <>
+    //           {/* <button
+    //               className="ext-gray-600 hover:text-blue-500"
+    //               onClick={() => {
+    //                 localStorage.removeItem("token");
+    //                 window.location.reload();
+    //               }}
+    //             >
+    //               Logout {" "} {JSON.parse(localStorage.getItem("user-provider")).email}
+    //             </button> */}
+    //           <React.Fragment>
+    //             <Box
+    //               sx={{
+    //                 display: "flex",
+    //                 alignItems: "center",
+    //                 textAlign: "center",
+    //               }}
+    //             >
+    //               {/* <Typography sx={{ minWidth: 100 }}>Contact</Typography>
+    //                   <Typography sx={{ minWidth: 100 }}>Profile</Typography> */}
+    //               <Tooltip title="Account settings">
+    //                 <IconButton
+    //                   onClick={handleClick}
+    //                   size="small"
+    //                   sx={{ ml: 2 }}
+    //                   aria-controls={open ? "account-menu" : undefined}
+    //                   aria-haspopup="true"
+    //                   aria-expanded={open ? "true" : undefined}
+    //                 >
+    //                   <Avatar sx={{ width: 32, height: 32 }}>
+    //                     {JSON.parse(
+    //                       localStorage.getItem("user-provider")
+    //                     ).email[0].toUpperCase()}
+    //                   </Avatar>
+    //                 </IconButton>
+    //               </Tooltip>
+    //             </Box>
+    //             <Menu
+    //               anchorEl={anchorEl}
+    //               id="account-menu"
+    //               open={open}
+    //               onClose={() => {}}
+    //               onClick={() => {}}
+    //               PaperProps={{
+    //                 elevation: 0,
+    //                 sx: {
+    //                   overflow: "visible",
+    //                   filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+    //                   mt: 1.5,
+    //                   "& .MuiAvatar-root": {
+    //                     width: 32,
+    //                     height: 32,
+    //                     ml: -0.5,
+    //                     mr: 1,
+    //                   },
+    //                   "&::before": {
+    //                     content: '""',
+    //                     display: "block",
+    //                     position: "absolute",
+    //                     top: 0,
+    //                     right: 14,
+    //                     width: 10,
+    //                     height: 10,
+    //                     bgcolor: "background.paper",
+    //                     transform: "translateY(-50%) rotate(45deg)",
+    //                     zIndex: 0,
+    //                   },
+    //                 },
+    //               }}
+    //               transformOrigin={{ horizontal: "right", vertical: "top" }}
+    //               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+    //             >
+    //               <MenuItem onClick={handleClose}>
+    //                 <PermIdentityOutlinedIcon />{" "}
+    //                 {
+    //                   JSON.parse(localStorage.getItem("user-provider"))
+    //                     .first_name
+    //                 }{" "}
+    //                 {
+    //                   JSON.parse(localStorage.getItem("user-provider"))
+    //                     .last_name
+    //                 }
+    //               </MenuItem>
+    //               <MenuItem onClick={handleClose}>
+    //                 <EmailTwoToneIcon />{" "}
+    //                 {JSON.parse(localStorage.getItem("user-provider")).email}
+    //               </MenuItem>
+
+    //               {JSON.parse(localStorage.getItem("user-provider")).pos ===
+    //               "admin" ? (
+    //                 <>
+    //                   <MenuItem
+    //                     onClick={(_) => {
+    //                       navigate("/admin_home");
+    //                     }}
+    //                   >
+    //                     <AdminPanelSettingsOutlinedIcon /> Admin_Home
+    //                   </MenuItem>
+    //                 </>
+    //               ) : (
+    //                 ""
+    //               )}
+    //               <Divider />
+
+    //               <MenuItem onClick={handleCloseLogout}>
+    //                 <ListItemIcon>
+    //                   <Logout fontSize="small" />
+    //                 </ListItemIcon>
+    //                 Logout
+    //               </MenuItem>
+    //             </Menu>
+    //           </React.Fragment>
+    //         </>
+    //       ) : (
+    //         <React.Fragment>
+    //           <Box
+    //             sx={{
+    //               display: "flex",
+    //               alignItems: "center",
+    //               textAlign: "center",
+    //             }}
+    //           >
+    //             {/* <Typography sx={{ minWidth: 100 }}>Contact</Typography>
+    //               <Typography sx={{ minWidth: 100 }}>Profile</Typography> */}
+    //             <Tooltip title="Account settings">
+    //               <IconButton
+    //                 onClick={handleClick}
+    //                 size="small"
+    //                 sx={{ ml: 2 }}
+    //                 aria-controls={open ? "account-menu" : undefined}
+    //                 aria-haspopup="true"
+    //                 aria-expanded={open ? "true" : undefined}
+    //               >
+    //                 <Avatar sx={{ width: 32, height: 32 }}></Avatar>
+    //               </IconButton>
+    //             </Tooltip>
+    //           </Box>
+    //           <Menu
+    //             anchorEl={anchorEl}
+    //             id="account-menu"
+    //             open={open}
+    //             onClose={handleClose}
+    //             onClick={handleClose}
+    //             PaperProps={{
+    //               elevation: 0,
+    //               sx: {
+    //                 overflow: "visible",
+    //                 filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+    //                 mt: 1.5,
+    //                 "& .MuiAvatar-root": {
+    //                   width: 32,
+    //                   height: 32,
+    //                   ml: -0.5,
+    //                   mr: 1,
+    //                 },
+    //                 "&::before": {
+    //                   content: '""',
+    //                   display: "block",
+    //                   position: "absolute",
+    //                   top: 0,
+    //                   right: 14,
+    //                   width: 10,
+    //                   height: 10,
+    //                   bgcolor: "background.paper",
+    //                   transform: "translateY(-50%) rotate(45deg)",
+    //                   zIndex: 0,
+    //                 },
+    //               },
+    //             }}
+    //             transformOrigin={{ horizontal: "right", vertical: "top" }}
+    //             anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+    //           >
+    //             <MenuItem onClick={handleCloseLogin}>
+    //               <ListItemIcon>
+    //                 <Logout fontSize="small" />
+    //               </ListItemIcon>
+    //               Login
+    //             </MenuItem>
+    //           </Menu>
+    //         </React.Fragment>
+    //       )}
+    //     </div>
+    //   </div>
+    // </>
   );
 }

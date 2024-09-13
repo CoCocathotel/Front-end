@@ -4,9 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import Logo from "../cococat-hotel.png";
+import Cat01 from "../assets/image/cat01.png";
+import Feet from "../assets/image/feet.png";
+import CatIcon from "../assets/image/cat_icon.png";
 
 import LoadingSpinner from "./Loading";
-import Appbar from "../Appbar"
+import Appbar from "../Appbar";
 import Appbar_master from "../Appbar_master";
 
 import * as React from "react";
@@ -27,8 +30,7 @@ import Logout from "@mui/icons-material/Logout";
 import SendIcon from "@mui/icons-material/Send";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 
-
-import AdminPanelSettingsOutlinedIcon from '@mui/icons-material/AdminPanelSettingsOutlined';
+import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import EmailTwoToneIcon from "@mui/icons-material/EmailTwoTone";
 import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
 
@@ -199,149 +201,165 @@ export default function Dashboard() {
         </>
       ) : (
         <>
-          <div className="sticky top-0 bg-white z-50">
-          <Appbar_master />
-          </div>
-          <hr />
+          {/* <div className="sticky top-0 bg-white z-50">
+            <Appbar_master />
+          </div> */}
+          {/* <hr /> */}
           <Appbar handleAppbar={(e) => handleTimeChange(e)} />
 
           {/* <h1>Dashboard</h1> */}
 
           {data.map((item, index) => (
-            <div key={index}>
-              <div className="content-out">
-                <div className="bg-white shadow-lg rounded-lg px-4 py-5 w-full h-auto  ml-72 mr-72">
-                  <div className="grid grid-cols-3 gap-2 ">
-                    <div className="col-span-2 flex space-x-10 justify-center">
-                      <img
-                        className="rounded-lg"
-                        key={index}
-                        src={
-                          "https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/rooms/" +
-                          item.type +
-                          "/" +
-                          item.image[0]
-                        }
-                        alt={item.type}
-                        width={150}
-                        height={150}
-                      />
+            <div key={index} className="">
+              <div className={`${index%2==0 ? "bg-[#BCD1D2]": "bg-[#EAEDF1]"} flex py-7 px-4 justify-center items-center align-middle w-full h-full space-x-20`}>
+                <div className="  rounded-lg px-4 py-5 w-full h-auto  ml-72 mr-72">
+                  <div className="flex">
+                    <div className="col-span-2 flex space-x-5 overflow-hidden">
+                      <div className="w-96">
+                        <img
+                          className="rounded-lg h-96 w-full object-cover border-x-orange-500 border-y-orange-900 border-4"
+                          key={index}
+                          src={
+                            "https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/rooms/" +
+                            item.type +
+                            "/" +
+                            item.image[0]
+                          }
+                        />
+                      </div>
+                      {/* <div className="absolute h-96 w-96 items-end justify-end flex">
+                        <img src={Cat01} alt="cat01" className="w-52 " />
+                      </div> */}
 
-                      <div className="">
-                        <h2 className="text-xl mt-4">{item.room_name}</h2>
-                        <div className="mt-5">
-                          <p className="text-xs ">
-                            จำนวนกล้อง : {item.cameras}
-                          </p>
-                          <p className="text-xs ">
-                            จำนวนแมว : {item.number_of_cats} สูงสุด
-                          </p>
+                      <div className="w-full">
+                        <p className="opacity-45 font-extralight">
+                          CoCoCat Hotel
+                        </p>
+                        <h2 className="text-3xl text-bold">{item.room_name}</h2>
+                        <div className="mt-5 space-y-5">
+                          <div className="flex space-x-4">
+                            <img src={Feet} className="w-5  h-5" alt="feet" />
+                            <p className="text-xm ">
+                              สามารถใช้กล้องได้ทั้งหมด {item.cameras} ตัว
+                            </p>
+                          </div>
 
-                          <p className="text-xs ">
-                            {checkroom(item.room_name) >= 0
-                              ? `ห้องที่สามารถจองได้ : ${
-                                  item.number_of_rooms -
-                                    checkroom(item.room_name) >=
-                                  0
-                                    ? item.number_of_rooms -
-                                      checkroom(item.room_name)
-                                    : 0
-                                }`
-                              : `ห้องที่สามารถจองได้ : ${item.number_of_rooms}`}{" "}
-                          </p>
-                          <p className="text-xs ">
-                            คำอธิบาย : {item.description}
-                          </p>
+                          <div className="flex space-x-4">
+                            <img src={Feet} className="w-5  h-5" alt="feet" />
+
+                            <p className="text-xm ">
+                              มีห้องว่างทั้งหมด{" "}
+                              {checkroom(item.room_name) >= 0
+                                ? `${
+                                    item.number_of_rooms -
+                                      checkroom(item.room_name) >=
+                                    0
+                                      ? item.number_of_rooms -
+                                        checkroom(item.room_name)
+                                      : 0
+                                  }`
+                                : `${item.number_of_rooms}`}{" "}
+                              ห้อง
+                            </p>
+                          </div>
+
+                          <div className="flex space-x-4">
+                            <img src={Feet} className="w-5  h-5" alt="feet" />
+
+                            <p className="text-xm ">{item.description}</p>
+                          </div>
+
+                          <div className="w-52 h-14 text-xl text-[#15181C] bg-[#e7ec9d] flex rounded-full items-center text-center justify-center">
+                            <p className="font-semibold">
+                              {item.price} บาท /คืน
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
 
-                    {/* <div className="">
-                      <h2 className="text-xl">{item.room_name}</h2>
-                      <p>จำนวนกล้อง : {item.cameras}</p>
-                      <p>จำนวนแมว : {item.number_of_cats} สูงสุด</p>
-
-                      <p>
-                        {checkroom(item.room_name) >= 0
-                          ? `ห้องที่สามารถจองได้ : ${
-                              item.number_of_rooms -
-                                checkroom(item.room_name) >=
-                              0
-                                ? item.number_of_rooms -
-                                  checkroom(item.room_name)
-                                : 0
-                            }`
-                          : `ห้องที่สามารถจองได้ : ${item.number_of_rooms}`}{" "}
-                      </p>
-                      <p>คำอธิบาย : {item.description}</p>
-                    </div> */}
-
-                    <div className="py-10 px-10 text-center ">
-                      <p>{item.price} บาท /คืน</p>
-
-                      {numcamera >
-                        item.cameras *
-                          Math.ceil(numcat / item.number_of_cats) &&
-                      (numcat >
-                        item.number_of_cats *
-                          (item.number_of_rooms - checkroom(item.room_name)) ||
-                        numcat > item.number_of_cats * item.number_of_rooms) ? (
-                        <button className="btn-primary3">
-                          {"จำนวนกล้องไม่เพียงพอและ " +
-                            `ต้องการ ${Math.ceil(
-                              numcat / item.number_of_cats
-                            )} ห้อง เหลือเพียง  ${
-                              item.number_of_rooms - checkroom(item.room_name)
-                                ? item.number_of_rooms -
-                                    checkroom(item.room_name) >=
-                                  0
-                                  ? item.number_of_rooms -
-                                    checkroom(item.room_name)
-                                  : 0
-                                : item.number_of_rooms
-                            } ห้องว่าง `}
-                        </button>
-                      ) : numcat >
+                    <div className="py-10  px-5 overflow-hidden w-64 h-96 text-center grid grid-cols-1 gap-40 ">
+                      
+                      <div className="">
+                        <p>จำนวนน้องแมว {item.number_of_cats } ตัว </p> 
+                        <div className="flex items-center justify-center ">
+                          {Array.from(
+                            { length: item.number_of_cats },
+                            (_, i) => (
+                              <img src={CatIcon} key={i} className="w-10 h-10 mt-5"/>
+                            )
+                          )}
+                        </div>
+                      </div>
+                      <div>
+                        {numcamera >
+                          item.cameras *
+                            Math.ceil(numcat / item.number_of_cats) &&
+                        (numcat >
                           item.number_of_cats *
                             (item.number_of_rooms -
                               checkroom(item.room_name)) ||
-                        numcat > item.number_of_cats * item.number_of_rooms ? (
-                        <button className="btn-primary3">{` ต้องการ ${Math.ceil(
-                          numcat / item.number_of_cats
-                        )} ห้อง แต่เหลือเพียง ${
-                          item.number_of_rooms - checkroom(item.room_name)
-                            ? item.number_of_rooms -
-                                checkroom(item.room_name) >=
-                              0
-                              ? item.number_of_rooms - checkroom(item.room_name)
-                              : 0
-                            : item.number_of_rooms
-                        } ห้องว่าง `}</button>
-                      ) : numcamera >
-                        item.cameras *
-                          Math.ceil(numcat / item.number_of_cats) ? (
-                        <button className="btn-primary3">
-                          จำนวนกล้องไม่เพียงพอ
-                        </button>
-                      ) : (
-                        <Link to={`/detail/${item.type}`}>
-                          <button
-                            className="bg-blue-400 hover:bg-blue-500 text-white font-bold w-40 mt-4 py-2 px-4 rounded-lg"
-                            onClick={() => {
-                              saveToLocalStorage(index);
-                            }}
-                          >
-                            จองที่พัก
-                          </button>{" "}
-                        </Link>
-                      )}
+                          numcat >
+                            item.number_of_cats * item.number_of_rooms) ? (
+                          <button className="btn-primary3">
+                            {"จำนวนกล้องไม่เพียงพอและ " +
+                              `ต้องการ ${Math.ceil(
+                                numcat / item.number_of_cats
+                              )} ห้อง เหลือเพียง  ${
+                                item.number_of_rooms - checkroom(item.room_name)
+                                  ? item.number_of_rooms -
+                                      checkroom(item.room_name) >=
+                                    0
+                                    ? item.number_of_rooms -
+                                      checkroom(item.room_name)
+                                    : 0
+                                  : item.number_of_rooms
+                              } ห้องว่าง `}
+                          </button>
+                        ) : numcat >
+                            item.number_of_cats *
+                              (item.number_of_rooms -
+                                checkroom(item.room_name)) ||
+                          numcat >
+                            item.number_of_cats * item.number_of_rooms ? (
+                          <button className="btn-primary3">{` ต้องการ ${Math.ceil(
+                            numcat / item.number_of_cats
+                          )} ห้อง แต่เหลือเพียง ${
+                            item.number_of_rooms - checkroom(item.room_name)
+                              ? item.number_of_rooms -
+                                  checkroom(item.room_name) >=
+                                0
+                                ? item.number_of_rooms -
+                                  checkroom(item.room_name)
+                                : 0
+                              : item.number_of_rooms
+                          } ห้องว่าง `}</button>
+                        ) : numcamera >
+                          item.cameras *
+                            Math.ceil(numcat / item.number_of_cats) ? (
+                          <button className="btn-primary3">
+                            จำนวนกล้องไม่เพียงพอ
+                          </button>
+                        ) : (
+                          <Link to={`/detail/${item.type}`}>
+                            <button
+                              className="bg-[#55605B] hover:bg-[#A2A7A7] text-white w-40 mt-4 py-2 px-4 rounded-lg"
+                              onClick={() => {
+                                saveToLocalStorage(index);
+                              }}
+                            >
+                              จองที่พัก
+                            </button>{" "}
+                          </Link>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           ))}
-          <footer className=" bg-[#8CAFCB] p-14  items-center justify-between text-center shadow-lg w-full">
+          {/* <footer className=" bg-[#8CAFCB] p-14  items-center justify-between text-center shadow-lg w-full">
             <h1 className="text-3xl text-left text-white">ติดต่อเรา</h1>
             <div className="flex  text-white justify-between   mt-2 mb-10">
               <div className=" text-left">
@@ -363,7 +381,7 @@ export default function Dashboard() {
             <h1 className="text-left text-white p-5">
               © 2023 All rights Reserved.
             </h1>
-          </footer>
+          </footer> */}
         </>
       )}
     </div>

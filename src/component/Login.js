@@ -35,7 +35,12 @@ export default function Login() {
       if (result.err != "") {
         localStorage.setItem("user-provider", JSON.stringify(result));
         localStorage.setItem("token", result.token);
-        navigate("/");
+        console.log(result)
+        if(result.pos == "admin"){
+          navigate("/admin_home");
+        }else{
+          navigate("/");
+        }
         console.log("Login successful");
       } else {
         console.log("Login failed");

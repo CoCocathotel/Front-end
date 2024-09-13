@@ -84,11 +84,11 @@ export default function Home() {
         </div>
       ) : (
         <div>
-          <div className="sticky top-0 bg-white z-50">
+          {/* <div className="sticky top-0 bg-white z-50">
           <Appbar_master />
-          </div>
+          </div> */}
 
-          <hr />
+          {/* <hr /> */}
 
           <div>
             {/* {หน้า Home โรงแรมแมว} */}
@@ -370,7 +370,7 @@ export default function Home() {
           </div> */}
         </div>
       )}
-      <footer className=" bg-[#8CAFCB] p-14 mt-20  items-center justify-between text-center shadow-lg w-full">
+      {/* <footer className=" bg-[#8CAFCB] p-14 mt-20  items-center justify-between text-center shadow-lg w-full">
         <h1 className="text-3xl text-left text-white">ติดต่อเรา</h1>
         <div className="flex  text-white justify-between   mt-2 mb-10">
           <div className=" text-left">
@@ -392,7 +392,7 @@ export default function Home() {
         <h1 className="text-left text-white p-5">
           © 2023 All rights Reserved.
         </h1>
-      </footer>
+      </footer> */}
     </>
   );
 }
