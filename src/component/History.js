@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Logo from "../cococat-hotel.png";
 import Img_bg from "../cococat_preview.jpg";
@@ -77,15 +77,15 @@ export default function Cart() {
   useEffect(() => {
     let get_user = JSON.parse(localStorage.getItem("user-provider"));
     if (get_user === null || get_user === "") {
-      navigate("/login");
+      navigate("/");
     } else {
       fecthdata();
     }
   }, []);
 
-  let data_information =  status != "" ? data.filter((data) => data.status === status ) : data
- 
- 
+  let data_information =
+    status != "" ? data.filter((data) => data.status === status) : data;
+
   return (
     <>
       {loading ? (
@@ -95,23 +95,83 @@ export default function Cart() {
       ) : (
         <div className="">
           {/* <Appbar_master /> */}
-          <div className="bg-gray-200  flex flex-col h-screen items-center">
+          <div
+            className={`bg-gray-200  flex flex-col  items-center ${
+              data_information.length >= 4 ? "h-auto" : "h-screen"
+            }`}
+          >
             <div className="flex flex-row justify-around bg-white items-center w-1/2 h-20 mt-5 px-4 py-5 z-0 rounded-lg shadow-lg ">
-              <button onClick={(_)=>{setBoxID(0); setStatus("")}} className={`h-20 w-full ${boxid == 0 ? " text-blue-500 border-b-2 border-blue-400": ""}`}>ทั้งหมด</button>
-              <button onClick={(_)=>{setBoxID(1); setStatus("pending")}} className={`h-20 w-full ${boxid == 1 ? " text-blue-500 border-b-2 border-blue-400": ""}`}>กำลังตรวจสอบ</button>
-              <button onClick={(_)=>{setBoxID(2); setStatus("pass")}} className={`h-20 w-full ${boxid == 2 ? " text-blue-500 border-b-2 border-blue-400": ""}`}>สำเร็จ</button>
-              <button onClick={(_)=>{setBoxID(3); setStatus("failed")}} className={`h-20 w-full ${boxid == 3 ? " text-blue-500 border-b-2 border-blue-400": ""}`}>ยกเลิก</button>
+              <button
+                onClick={(_) => {
+                  setBoxID(0);
+                  setStatus("");
+                }}
+                className={`h-20 w-full ${
+                  boxid == 0 ? " text-blue-500 border-b-2 border-blue-400" : ""
+                }`}
+              >
+                ทั้งหมด
+              </button>
+              <button
+                onClick={(_) => {
+                  setBoxID(1);
+                  setStatus("pending");
+                }}
+                className={`h-20 w-full ${
+                  boxid == 1 ? " text-blue-500 border-b-2 border-blue-400" : ""
+                }`}
+              >
+                กำลังตรวจสอบ
+              </button>
+              <button
+                onClick={(_) => {
+                  setBoxID(2);
+                  setStatus("pass");
+                }}
+                className={`h-20 w-full ${
+                  boxid == 2 ? " text-blue-500 border-b-2 border-blue-400" : ""
+                }`}
+              >
+                สำเร็จ
+              </button>
+              <button
+                onClick={(_) => {
+                  setBoxID(3);
+                  setStatus("failed");
+                }}
+                className={`h-20 w-full ${
+                  boxid == 3 ? " text-blue-500 border-b-2 border-blue-400" : ""
+                }`}
+              >
+                ยกเลิก
+              </button>
             </div>
-            {data_information.map((item, index) => (
-              <div className="flex flex-col items-center justify-around  px-4 py-5 w-full h-auto " key={item._id}>
+            {data_information.map((item) => (
+              <div
+                className="flex flex-col items-center justify-around  px-4 py-5 w-full h-auto "
+                key={item._id}
+              >
                 <div className="bg-white p-5 justify-between rounded-lg shadow-lg flex w-1/2 h-44">
-                  <div className="items-center text-sm flex space-x-8">
-                    {item.image !== "" ? (
+                  <div className=" text-sm flex space-x-8 items-end  ">
+                    {/* {item.image !== "" ? (
                       <img src={item.image} alt="Logo" width={60} height={60} />
                     ) : (
                       <img src={Logo} alt="Logo" width={100} height={100} />
-                    )}
-                    
+                    )} */}
+
+                    <img
+                      src={
+                        "https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/rooms/" +
+                        item.type +
+                        "/" +
+                        "0.png"
+                      }
+                      className="rounded-xl shadow-lg"
+                      alt={item.type}
+                      width={80}
+                      height={80}
+                    />
+
                     <div className="overflow-hidden ">
                       <Tooltip title={item.room_name} arrow>
                         <h1 className="text-lg">{item.room_name}</h1>
@@ -134,7 +194,14 @@ export default function Cart() {
                       <Tooltip title={`รูปแบบการชำระ: ${item.pay_way}`} arrow>
                         <h1>รูปแบบการชำระ: {item.pay_way}</h1>
                       </Tooltip>
+
+                     
                     </div>
+                    <Link to={`/history/${item._id}`}>
+                        <button className="hover:bg-[#A2A7A7] bg-[#55605B] text-white p-2   rounded-lg shadow-lg  ">
+                          ดูรายละเอียด
+                        </button>
+                      </Link>
                   </div>
 
                   <div className="justify-between space-y-20 text-right h-auto">
@@ -250,29 +317,6 @@ export default function Cart() {
               </div>
             ))} */}
           </div>
-          {/* <footer className=" bg-[#8CAFCB] p-14  items-center justify-between text-center shadow-lg w-full bottom-0 h-auto">
-            <h1 className="text-3xl text-left text-white">ติดต่อเรา</h1>
-            <div className="flex  text-white justify-between   mt-2 mb-10">
-              <div className=" text-left">
-                <div>
-                  <p>Adress</p>
-                  <p>
-                    121, 105 3 Ban Tungree, Kho Hong, Hat Yai District, Songkhla
-                    90110
-                  </p>
-                </div>
-              </div>
-              <div className=" text-white text-left  items-end justify-end">
-                <p>โทร : 065-384-5659</p>
-                <p>Line : https://lin.ee/8OFTOx2l(@cococathotel)IG</p>
-                <p>Tiktok : cococat.hotelTiktok: cococat.hotel</p>
-              </div>
-            </div>
-            <hr />
-            <h1 className="text-left text-white p-5">
-              © 2023 All rights Reserved.
-            </h1>
-          </footer> */}
         </div>
       )}
     </>

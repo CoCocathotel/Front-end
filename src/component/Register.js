@@ -24,6 +24,7 @@ export default function Register({ handleAppbar }) {
   }
 
   const handleLogin = async () => {
+    handle_value2();
     try {
       const response = await fetch(production_check() + "/v1/register", {
         method: "POST",
@@ -52,7 +53,10 @@ export default function Register({ handleAppbar }) {
   const handle_value = () => {
     handleAppbar(false);
   };
-
+ 
+  const handle_value2 = () => {
+    handleAppbar(true);
+  };
   return (
     <>
       {loading ? (

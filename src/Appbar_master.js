@@ -19,13 +19,13 @@ import Register from "./component/Register";
 import { Button, Modal } from "antd";
 import Feet from "../src/assets/image/feet.png";
 
-
 export default function Appbar_master() {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const [modal1Open, setModal1Open] = useState(false);
   const [modal2Open, setModal2Open] = useState(false);
+  const [load2, SetLoad2] = useState(false);
 
   const [login, SetLogin] = useState(false);
   const [register, SetRegister] = useState(false);
@@ -71,12 +71,28 @@ export default function Appbar_master() {
 
   let handle_login = (e) => {
     console.log(e);
-    setModal1Open(e)
+    setModal1Open(e);
+    if (e) {
+      SetLoad2(e);
+      setTimeout(() => {
+        SetLoad2(!e);
+      }, 1000);
+    } else {
+      SetLoad2(e);
+    }
   };
 
   let handle_register = (e) => {
     console.log(e);
-    setModal2Open(e)
+    setModal2Open(e);
+    if (e) {
+      SetLoad2(e);
+      setTimeout(() => {
+        SetLoad2(!e);
+      }, 1000);
+    } else {
+      SetLoad2(e);
+    }
   };
 
   return (
@@ -254,18 +270,11 @@ export default function Appbar_master() {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
-                <MenuItem onClick={handleClose}>
-                  <EmailTwoToneIcon />{" "}
-                  {JSON.parse(localStorage.getItem("user-provider")).email}
-                </MenuItem>
+                <MenuItem onClick={handleClose}>บัญชีของฉัน</MenuItem>
 
-                <Divider />
-                <MenuItem onClick={handleCloseLogout}>
-                  <ListItemIcon>
-                    <Logout fontSize="small" />
-                  </ListItemIcon>
-                  Logout
-                </MenuItem>
+                <MenuItem onClick={(_)=>{handleClose(); navigate("/history")}}>ประวัติการจอง</MenuItem>
+
+                <MenuItem onClick={handleCloseLogout}>ออกจากระบบ</MenuItem>
               </Menu>
             </React.Fragment>
           </>
@@ -275,7 +284,7 @@ export default function Appbar_master() {
               <button
                 onClick={(_) => {
                   // handle_register(true);
-                  setModal2Open(true)
+                  setModal2Open(true);
                 }}
                 className=" hover:bg-gray-300 transition ease-linear   rounded-md px-4 py-3"
               >
@@ -300,6 +309,7 @@ export default function Appbar_master() {
         open={modal1Open}
         onCancel={() => setModal1Open(false)}
         footer={null}
+        loading={load2}
       >
         <div className="space-y-4">
           <h1 className="text-3xl">เข้าสู่ระบบ</h1>
@@ -308,7 +318,8 @@ export default function Appbar_master() {
             <p className="text-xm ">ยินดีต้อนรับเข้าสู่โรงแรมโคโค่แคท</p>
           </div>
           <hr />
-          <Login  handleAppbar={(e) => handle_login(e)} />
+
+          <Login handleAppbar={(e) => handle_login(e)} />
         </div>
       </Modal>
       <Modal
@@ -316,6 +327,7 @@ export default function Appbar_master() {
         open={modal2Open}
         onCancel={() => setModal2Open(false)}
         footer={null}
+        loading={load2}
       >
         <div className="space-y-4">
           <h1 className="text-3xl">ลงทะเบียน</h1>
@@ -327,7 +339,6 @@ export default function Appbar_master() {
           <Register handleAppbar={(e) => handle_register(e)} />
         </div>
       </Modal>
-    
     </>
   );
 }

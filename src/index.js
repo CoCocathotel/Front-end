@@ -42,6 +42,16 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "history/:id",
+    element: (
+      <>
+        <Appbar_master />
+        <Detail />
+        <Footer />
+      </>
+    ),
+  },
+  {
     path: "/login",
     element: <Login />,
   },
@@ -83,7 +93,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <Appbar_master />
-        <Ad_Edit />
+        <Detail />
       </>
     ),
   },

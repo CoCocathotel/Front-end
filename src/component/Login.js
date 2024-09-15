@@ -24,7 +24,7 @@ export default function Login({ handleAppbar }) {
   }
 
   const handleLogin = async () => {
- 
+    handle_value2();
     try {
       const response = await fetch(production_check() + "/v1/login", {
         method: "POST",
@@ -56,6 +56,10 @@ export default function Login({ handleAppbar }) {
 
   const handle_value = () => {
     handleAppbar(false);
+  };
+
+  const handle_value2 = () => {
+    handleAppbar(true);
   };
 
   return (

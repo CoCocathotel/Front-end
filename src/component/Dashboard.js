@@ -55,6 +55,7 @@ export default function Dashboard() {
   const [endDate, setEndDate] = useState(new Date());
   const [room_overlap, setRoom_overlap] = useState([]);
   const [err_check, setErr_check] = useState(true);
+  const [loac2, SetLoad2] = useState(false);
   const [url, setURL] = useState("");
 
   const [modal1Open, setModal1Open] = useState(false);
@@ -198,6 +199,19 @@ export default function Dashboard() {
     }
   };
 
+  let handle_login = (e) => {
+    console.log(e);
+    setModal1Open(e)
+    if(e){
+      SetLoad2(e);
+      setTimeout(() => {
+        SetLoad2(!e);
+      }, 1000);
+    }else{
+      SetLoad2(e);
+    }
+  };
+
   return (
     <div>
       {loading ? (
@@ -209,48 +223,22 @@ export default function Dashboard() {
           <Appbar handleAppbar={(e) => handleTimeChange(e)} />
 
           <Modal
-            // title="เข้าสู่ระบบ"
-
             style={{ top: 20 }}
             open={modal1Open}
             onCancel={() => setModal1Open(false)}
             footer={null}
+            loading={loac2}
           >
             <div className="space-y-4">
               <h1 className="text-3xl">เข้าสู่ระบบ</h1>
               <div className="flex space-x-4">
                 <img src={Feet} className="w-5  h-5" alt="feet" />
-                <p className="text-xm ">
-                  ยินดีต้อนรับเข้าสู่โรงแรมโคโค่แคท
-                </p>
+                <p className="text-xm ">ยินดีต้อนรับเข้าสู่โรงแรมโคโค่แคท</p>
               </div>
               <hr />
-              <Login />
+              <Login handleAppbar={(e) => handle_login(e)} />
             </div>
           </Modal>
-          {/* <>
-            <Button type="primary" onClick={() => setModal1Open(true)}>
-              Display a modal dialog at 20px to Top
-            </Button>
-           
-            <br />
-            <br />
-            <Button type="primary" onClick={() => setModal2Open(true)}>
-              Vertically centered modal dialog
-            </Button>
-            <Modal
-              title="Vertically centered modal dialog"
-              centered
-              open={modal2Open}
-              onOk={() => setModal2Open(false)}
-              onCancel={() => setModal2Open(false)}
-            >
-              <p>some contents...</p>
-              <p>some contents...</p>
-              <p>some contents...</p>
-            </Modal>
-          </> */}
-
           {data.map((item, index) => (
             <div key={index} className="">
               <div

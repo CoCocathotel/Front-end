@@ -79,6 +79,45 @@ export default function Ad_Home() {
     setAnchorEl(event.currentTarget);
   };
 
+  function production_check() {
+    const isDevelopment =
+      window.location.origin.includes("localhost") ||
+      window.location.origin.includes("127.0.0.1");
+
+    return isDevelopment
+      ? "http://localhost:8700"
+      : "https://cococatbackend.vercel.app";
+  }
+
+
+
+  let proceedWithDelete = async (id) => {
+    try {
+      let item = {
+        _id: id,
+        
+      };
+  
+      const response = await fetch(production_check() + `/v1/delete_book_room`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(item),
+      });
+  
+      const result = await response.json();
+  
+      console.log(result, "result");
+  
+      if (response.status == 200) {
+        fecthdata();
+      }
+    } catch (err) {
+      console.log("An error occurred. Please try again.");
+    }
+  };
+
   const fecthdata = async () => {
     try {
       const response = await fetch(
@@ -109,7 +148,9 @@ export default function Ad_Home() {
     fecthdata();
     // setLoading(false);
   }, []);
+  
 
+  
   const changeStatus = async (id, status) => {
     try {
       const response = await fetch(
@@ -168,7 +209,7 @@ export default function Ad_Home() {
               {data.map((item) => (
                 <div
                   key={item._id}
-                  className="grid grid-cols-12 gap-4 p-4 text-center text-sm mb-4 border-b border-gray-300 "
+                  className="grid grid-cols-12 gap-4 p-4 text-center text-sm mb-4 mt- border-b border-gray-300 "
                 >
                   <div className="flex justify-center h-5 items-center space-x-1 ">
                     <button
@@ -179,7 +220,7 @@ export default function Ad_Home() {
                     >
                       <ModeEditOutlinedIcon />
                     </button>
-                    <button className="col-span-1 hover:bg-gray-50 rounded-lg bg-red-300 h-10 w-10 ">
+                    <button onClick={(_)=>{proceedWithDelete(item._id); setLoading(true);}} className="col-span-1 hover:bg-gray-50 rounded-lg bg-red-300 h-10 w-10 ">
                       <AddOutlinedIcon />
                     </button>
                     <div className="col-span-1 hover:bg-gray-50 rounded-lg bg-green-300">
