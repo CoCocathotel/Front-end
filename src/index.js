@@ -17,6 +17,7 @@ import History from "./component/History";
 import Appbar_master from "./Appbar_master";
 import Ad_Home from "./admin/Ad_Home";
 import Ad_Edit from "./admin/Ad_Edit";
+import Ad_Analytic from "./admin/Ad_Analytic"
 
 import Footer from "./component/Footer";
 
@@ -97,6 +98,15 @@ const router = createBrowserRouter([
       </>
     ),
   },
+  {
+    path:"/ad_analytic",
+    element:(
+    <>
+    <Appbar_master />
+    <Ad_Analytic />
+    </>
+  )
+  }
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

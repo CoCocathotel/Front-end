@@ -124,7 +124,7 @@ export default function Appbar_master() {
               </button>
               <button
                 onClick={() => {
-                  navigate("#");
+                  navigate("/ad_analytic");
                 }}
                 className="text-gray-600 hover:text-blue-500"
               >
