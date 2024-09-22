@@ -4,19 +4,14 @@ import { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import Logo from "../cococat-hotel.png";
 import PromtPay from "../assets/image/promt-pay.png";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import LoadingSpinner from "./Loading";
-import Error from "./Error";
-
-import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import PaymentsIcon from "@mui/icons-material/Payments";
 
 import dayjs from "dayjs";
@@ -39,15 +34,10 @@ export default function Detail() {
   const { Type } = useParams();
   const { id } = useParams();
   const [total, setTotal] = useState(0);
-  const [payWay, setPayWay] = useState("walk-in");
   const [upload, setUpload] = useState(false);
   const [upload_slip, setUpload_slip] = useState(null);
   const [base64img, setBase64IMG] = useState(null);
-
-  const [open_edit, setOpen_edit] = useState(false);
-
   const [pos, setPosition] = useState("");
-
   const [username, setUsername] = useState(null);
   const [email, setEmail] = useState(null);
   const [phone, setPhone] = useState(null);
@@ -467,7 +457,7 @@ export default function Detail() {
                 </div>
                 <div className="px-4 py-2 bg-[#A2A7A7] items-center text-white text-center justify-center flex rounded-lg ">
                   <p className="font-semibold">
-                    {id ? totalday : totalday - 1} คืน
+                    {id ? totalday : totalday} คืน
                   </p>
                 </div>
                 <div>
@@ -739,12 +729,12 @@ export default function Detail() {
                                     </DialogContentText>
 
                                     <div className=" w-full text-center space-y-2 mb-2">
-                                      <div className="flex justify-center space-x-2">
+                                      {/* <div className="flex justify-center space-x-2">
                                         <p className="font-semibold">
                                           ชื่อบัญชี
                                         </p>{" "}
                                         <p>สุประวีร์ ลู่วิ่งเส้นชัย</p>
-                                      </div>
+                                      </div> */}
                                       <div className="flex justify-center space-x-2">
                                         {" "}
                                         <p className="font-semibold">
@@ -833,12 +823,12 @@ export default function Detail() {
                                     </DialogContentText>
 
                                     <div className=" w-full text-center space-y-2 mb-2">
-                                      <div className="flex justify-center space-x-2">
+                                      {/* <div className="flex justify-center space-x-2">
                                         <p className="font-semibold">
                                           ชื่อบัญชี
                                         </p>{" "}
                                         <p>สุประวีร์ ลู่วิ่งเส้นชัย</p>
-                                      </div>
+                                      </div> */}
                                       <div className="flex justify-center space-x-2">
                                         {" "}
                                         <p className="font-semibold">
@@ -940,10 +930,10 @@ export default function Detail() {
                                 </DialogContentText>
 
                                 <div className=" w-full text-center space-y-2 mb-2">
-                                  <div className="flex justify-center space-x-2">
+                                  {/* <div className="flex justify-center space-x-2">
                                     <p className="font-semibold">ชื่อบัญชี</p>{" "}
                                     <p>สุประวีร์ ลู่วิ่งเส้นชัย</p>
-                                  </div>
+                                  </div> */}
                                   <div className="flex justify-center space-x-2">
                                     {" "}
                                     <p className="font-semibold">

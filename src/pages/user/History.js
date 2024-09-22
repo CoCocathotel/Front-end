@@ -1,9 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Logo from "../cococat-hotel.png";
-import Img_bg from "../cococat_preview.jpg";
-import LoadingSpinner from "./Loading";
-import Appbar_master from "../Appbar_master";
+import Logo from "../../cococat-hotel.png";
+import Img_bg from "../../cococat_preview.jpg";
+import LoadingSpinner from "../../component/Loading";
+import Appbar_master from "../../component/AppbarMaster";
 
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import EmailTwoToneIcon from "@mui/icons-material/EmailTwoTone";
@@ -151,7 +151,7 @@ export default function Cart() {
                 className="flex flex-col items-center justify-around  px-4 py-5 w-full h-auto "
                 key={item._id}
               >
-                <div className="bg-white p-5 justify-between rounded-lg shadow-lg flex w-1/2 h-44">
+                <div className="bg-white p-5 justify-between rounded-lg shadow-lg flex w-1/2 h-48">
                   <div className=" text-sm flex space-x-8 items-end  ">
                     {/* {item.image !== "" ? (
                       <img src={item.image} alt="Logo" width={60} height={60} />
@@ -166,10 +166,10 @@ export default function Cart() {
                         "/" +
                         "0.png"
                       }
-                      className="rounded-xl shadow-lg"
+                      className="rounded-xl shadow-lg w-20 h-32 object-cover "
                       alt={item.type}
-                      width={80}
-                      height={80}
+                      // width={80}
+                      // height={80}
                     />
 
                     <div className="overflow-hidden ">
@@ -195,32 +195,50 @@ export default function Cart() {
                         <h1>รูปแบบการชำระ: {item.pay_way}</h1>
                       </Tooltip>
 
-                     
-                    </div>
-                    <Link to={`/history/${item._id}`}>
-                        <button className="hover:bg-[#A2A7A7] bg-[#55605B] text-white p-2   rounded-lg shadow-lg  ">
-                          ดูรายละเอียด
-                        </button>
-                      </Link>
+                      
+                     <div className="flex space-x-1 text-center items-center">
+                     <h1>สถานะการชำเงิน: </h1>
+                     {( item.status === "pending" ? (
+                      <Tooltip title={item.status} arrow>
+                        {/* <button className="bg-yellow-300 p-2 rounded-lg shadow-lg w-1/2"> */}
+                          <h1 className="text-sm bg-yellow-300 p-1 rounded-lg shadow-lg">{item.status}</h1>
+                        {/* </button> */}
+                      </Tooltip>
+                    ) : item.status === "pass" ? (
+                      <Tooltip title={item.status} arrow>
+                        {/* <button className="bg-green-300 p-2 rounded-lg shadow-lg w-1/2"> */}
+                          <h1 className="text-sm bg-green-300 p-1 rounded-lg shadow-lg ">{item.status}</h1>
+                        {/* </button> */}
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title={item.status} arrow>
+                        {/* <button className="bg-red-300 p-2 rounded-lg shadow-lg w-1/2"> */}
+                          <h1 className="text-sm bg-red-300 p-1 rounded-lg shadow-lg">{item.status}</h1>
+                        {/* </button> */}
+                      </Tooltip>
+                    ))}
+                      </div>
+                    </div> 
                   </div>
 
-                  <div className="justify-between space-y-20 text-right h-auto">
-                    <Tooltip
-                      title={`วันที่เช็คอิน: ${formatDate(
-                        dayjs(item.check_in_date)
-                      )} - วันที่เช็คเอาท์: ${formatDate(
-                        dayjs(item.check_out_date)
-                      )}`}
-                      arrow
-                    >
-                      <div className="flex text-xs text-gray-400">
-                        <h1>{formatDate(dayjs(item.check_in_date))}</h1>
-                        <h1>{" - "}</h1>
-                        <h1>{formatDate(dayjs(item.check_out_date))}</h1>
-                      </div>
-                    </Tooltip>
-
-                    {item.status === "pending" ? (
+                  <div className=" text-right grid grid-cols-1 gap-20 h-36">
+                    <div>
+                      <Tooltip
+                        title={`วันที่เช็คอิน: ${formatDate(
+                          dayjs(item.check_in_date)
+                        )} - วันที่เช็คเอาท์: ${formatDate(
+                          dayjs(item.check_out_date)
+                        )}`}
+                        arrow
+                      >
+                        <div className="flex text-xs text-gray-400">
+                          <h1>{formatDate(dayjs(item.check_in_date))}</h1>
+                          <h1>{" - "}</h1>
+                          <h1>{formatDate(dayjs(item.check_out_date))}</h1>
+                        </div>
+                      </Tooltip>
+                    </div>
+                    {/* {item.status === "pending" ? (
                       <Tooltip title={item.status} arrow>
                         <button className="bg-yellow-300 p-2 rounded-lg shadow-lg w-1/2">
                           <h1 className="text-sm">{item.status}</h1>
@@ -238,7 +256,16 @@ export default function Cart() {
                           <h1 className="text-sm">{item.status}</h1>
                         </button>
                       </Tooltip>
-                    )}
+                    )} */}
+                    <div>
+                      <Tooltip title={item.status} arrow>
+                        <Link to={`/history/${item._id}`}>
+                          <button className="hover:bg-[#A2A7A7] bg-[#55605B] text-white p-2  rounded-lg shadow-lg ">
+                            <h1 className="text-sm">ดูรายละเอียด</h1>
+                          </button>
+                        </Link>
+                      </Tooltip>
+                    </div>
                   </div>
                 </div>
               </div>

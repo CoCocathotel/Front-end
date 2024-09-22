@@ -1,16 +1,14 @@
+/* eslint-disable jsx-a11y/alt-text */
 import { Route, Routes, Link, json } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 
 import { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import Logo from "../cococat-hotel.png";
-import Cat01 from "../assets/image/cat01.png";
-import Feet from "../assets/image/feet.png";
-import CatIcon from "../assets/image/cat_icon.png";
+import Feet from "../../assets/image/feet.png";
+import CatIcon from "../../assets/image/cat_icon.png";
 
-import LoadingSpinner from "./Loading";
-import Appbar from "../Appbar";
-import Appbar_master from "../Appbar_master";
+import LoadingSpinner from "../../component/Loading";
+import Appbar from "../../component/Calendar";
 
 import * as React from "react";
 import Menu from "@mui/material/Menu";
@@ -34,13 +32,7 @@ import { Button, Modal } from "antd";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 import EmailTwoToneIcon from "@mui/icons-material/EmailTwoTone";
 import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
-import Login from "../component/Login";
-
-// icons-material/PersonAdd
-// icons-material/Settings
-// mui/icons-material/Logout
-
-import { bottomNavigationActionClasses } from "@mui/material";
+import Login from "../auth/Login";
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -48,48 +40,19 @@ export default function Dashboard() {
   const [data, setData] = useState([]);
   const [booking, setBooking] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [numcat, setNumcat] = useState(1);
   const [numcamera, setNumcamera] = useState(0);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [room_overlap, setRoom_overlap] = useState([]);
-  const [err_check, setErr_check] = useState(true);
   const [loac2, SetLoad2] = useState(false);
-  const [url, setURL] = useState("");
 
   const [modal1Open, setModal1Open] = useState(false);
-  const [modal2Open, setModal2Open] = useState(false);
 
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user-provider");
-    window.location.reload();
-    setAnchorEl(null);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleCloseLogin = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user-provider");
-    // window.location.reload();
-    navigate("/login");
-    setAnchorEl(null);
-  };
+  
 
   useEffect(() => {
     fetchData();
-    // setLoading(false);
   }, []);
 
   function production_check() {
@@ -144,38 +107,20 @@ export default function Dashboard() {
     }, []);
 
     setRoom_overlap(room_overlap);
-    // console.log(room_overlap);
-    //  console.log(room_overlap);
   }, [booking, data, numcat, numcamera, startDate, endDate]);
 
-  // useEffect(() => {
-  //   let num_cat = parseInt(JSON.parse(localStorage.getItem("number_of_cats")));
-  //   let num_camera = parseInt(JSON.parse(localStorage.getItem("number_of_cameras")));
-  //   setNumcat(num_cat);
-  //   setNumcamera(num_camera);
-
-  // },[numcat, numcamera]);
 
   const fetchData = async () => {
-    // let link = "http://localhost:8700/v1/room";
-
-    // console.log(production_check());
-
     axios.get(production_check() + "/v1/room").then((res) => {
       setData(res.data.body.room);
       setBooking(res.data.body.booking);
       setLoading(false);
-      // setTimeout(() => {
-      //   setLoading(false);
-      // }, 2000);
     });
   };
 
   const saveToLocalStorage = (index) => {
     localStorage.setItem("data", JSON.stringify(data[index]));
-
-    const res = JSON.parse(localStorage.getItem("data"));
-    // console.log(index);
+    JSON.parse(localStorage.getItem("data"));
   };
 
   const handleTimeChange = (e) => {
@@ -183,17 +128,10 @@ export default function Dashboard() {
     setNumcamera(e.numcamera);
     setStartDate(e.startDate);
     setEndDate(e.endDate);
-    // console.log("ok ok ok");
-
-    // show circle loading 2 sec
-    // fetchData();
-    // production_check();
-    // console.log(e);
   };
   const checkroom = (room_name) => {
     for (let i = 0; i < room_overlap.length; i++) {
       if (room_overlap[i].room_name === room_name) {
-        // console.log(room_overlap[i].len_room);
         return room_overlap[i].len_room;
       }
     }
@@ -243,7 +181,7 @@ export default function Dashboard() {
             <div key={index} className="">
               <div
                 className={`${
-                  index % 2 == 0 ? "bg-[#BCD1D2]" : "bg-[#EAEDF1]"
+                  index % 2 === 0 ? "bg-[#BCD1D2]" : "bg-[#EAEDF1]"
                 } flex py-7 px-4 justify-center items-center align-middle w-full h-full space-x-20`}
               >
                 <div className="  rounded-lg px-4 py-5 w-full h-auto  ml-72 mr-72">

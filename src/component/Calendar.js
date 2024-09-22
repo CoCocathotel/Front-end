@@ -9,10 +9,7 @@ import GroupOutlinedIcon from "@mui/icons-material/GroupOutlined";
 import InsertInvitationOutlinedIcon from "@mui/icons-material/InsertInvitationOutlined";
 
 import moment from "moment-timezone";
-import Logo from "./cococat-hotel.png";
-import "./App.css";
-import Cat01 from "../src/assets/image/cat01.png"
-import Cat02 from "../src/assets/image/Cat_memes.png"
+import Cat01 from "../assets/image/cat01.png"
 
 dayjs.extend(customParseFormat);
 

@@ -2,22 +2,22 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import Detail from "./component/Detail";
-import Login from "./component/Login";
-import Dashboard from "./component/Dashboard";
-import Home from "./component/Home";
+import Login from "./pages/auth/Login";
+import Dashboard from "./pages/user/Dashboard";
+import Home from "./pages/user/Home";
 import reportWebVitals from "./reportWebVitals";
 import {
   BrowserRouter,
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import Register from "./component/Register";
-import History from "./component/History";
+import Register from "./pages/auth/Register";
+import History from "./pages/user/History";
 
-import Appbar_master from "./Appbar_master";
-import Ad_Home from "./admin/Ad_Home";
-import Ad_Edit from "./admin/Ad_Edit";
-import Ad_Analytic from "./admin/Ad_Analytic"
+import Appbar_master from "./component/AppbarMaster";
+import Ad_Home from "./pages/admin/Ad_Home";
+import Ad_Edit from "./pages/admin/Ad_Edit";
+import Ad_Analytic from "./pages/admin/Ad_Analytic"
 
 import Footer from "./component/Footer";
 

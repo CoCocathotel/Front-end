@@ -1,23 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Logo from "../src/cococat-hotel.png";
-import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
-import EmailTwoToneIcon from "@mui/icons-material/EmailTwoTone";
-import PermIdentityOutlinedIcon from "@mui/icons-material/PermIdentityOutlined";
+import Logo from "../../src/cococat-hotel.png";
 import * as React from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import Logout from "@mui/icons-material/Logout";
-import Login from "../src/component/Login";
-import Register from "./component/Register";
-import { Button, Modal } from "antd";
-import Feet from "../src/assets/image/feet.png";
+import Login from "../pages/auth/Login";
+import Register from "../pages/auth/Register";
+import { Modal } from "antd";
+import Feet from "../../src/assets/image/feet.png";
 
 export default function Appbar_master() {
   const navigate = useNavigate();
@@ -29,13 +23,6 @@ export default function Appbar_master() {
 
   const [login, SetLogin] = useState(false);
   const [register, SetRegister] = useState(false);
-
-  const handleCloseLogin = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user-provider");
-    navigate("/login");
-    setAnchorEl(null);
-  };
 
   const handleCloseLogout = () => {
     localStorage.removeItem("token");
@@ -130,21 +117,21 @@ export default function Appbar_master() {
               >
                 ข้อมูลเชิงวิเคราะห์
               </button>
-              <button
+              {/* <button
                 onClick={() => {
                   navigate("#");
                 }}
                 className="text-gray-600 hover:text-blue-500"
               >
                 เพิ่มห้อง
-              </button>
+              </button> */}
               <button
                 onClick={() => {
                   navigate("#");
                 }}
                 className="text-gray-600 hover:text-blue-500"
               >
-                จัดการโฮมเพจ
+                จัดการหน้า
               </button>
               <button
                 onClick={() => {
@@ -158,15 +145,17 @@ export default function Appbar_master() {
           </>
         ) : (
           <>
-            <div className="grid grid-cols-4 gap-1 p-4 w-full ">
+            <div className="flex w-full">
               <img
-                className="ml-24"
+                className="ml-24 object-contain"
                 src={Logo}
                 alt="logo"
                 width={80}
                 height={80}
               />
-              <button
+             <div className="flex justify-between w-96">
+              <span></span>
+             <button
                 onClick={() => {
                   navigate("/");
                 }}
@@ -184,15 +173,16 @@ export default function Appbar_master() {
               </button>
               <button
                 onClick={() => {
-                  // navigate("/history");
                 }}
                 className="text-gray-600 hover:text-blue-500"
               >
-                โปรโมชั่น
+                ข้อตกลงการเข้าใช้งาน
               </button>
+             </div>
             </div>
           </>
         )}
+        
         {localStorage.getItem("token") ? (
           <>
             <React.Fragment>
@@ -205,7 +195,7 @@ export default function Appbar_master() {
               >
                 <Tooltip title="บัญชีผู้ใช้งาน">
                   <div
-                    className="flex w-44 space-x-2 mr-24   items-center justify-start text-start"
+                    className="flex w-44 space-x-2 mr-24 items-center justify-start text-start"
                     onClick={handleClick}
                   >
                     <IconButton
@@ -280,10 +270,9 @@ export default function Appbar_master() {
           </>
         ) : (
           <>
-            <div className="flex space-x-5 w-96 mr-24   items-center justify-center text-start">
+            <div className="flex space-x-5 w-96 mr-24  items-center justify-center text-start">
               <button
                 onClick={(_) => {
-                  // handle_register(true);
                   setModal2Open(true);
                 }}
                 className=" hover:bg-gray-300 transition ease-linear   rounded-md px-4 py-3"

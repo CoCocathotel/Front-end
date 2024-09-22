@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Logo from "../cococat-hotel.png";
-import Img_bg from "../cococat_preview.jpg";
-import LoadingSpinner from "../component/Loading";
+import Logo from "../../cococat-hotel.png";
+import Img_bg from "../../cococat_preview.jpg";
+import LoadingSpinner from "../../component/Loading";
 
 import DragIndicatorOutlinedIcon from "@mui/icons-material/DragIndicatorOutlined";
 import ModeEditOutlinedIcon from "@mui/icons-material/ModeEditOutlined";
 import ArrowDropDownOutlinedIcon from "@mui/icons-material/ArrowDropDownOutlined";
-import Appbar_master from "../Appbar_master";
+import Appbar_master from "../../component/AppbarMaster";
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";

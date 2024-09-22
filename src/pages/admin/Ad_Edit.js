@@ -9,7 +9,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import moment from "moment-timezone";
 import { DatePicker, Space } from "antd";
 
-import Logo from "../cococat-hotel.png";
+import Logo from "../../cococat-hotel.png";
 
 export default function Ad_Edit() {
   const { id } = useParams();

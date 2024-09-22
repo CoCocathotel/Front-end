@@ -1,8 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Logo from "../cococat-hotel.png";
-import LoadingSpinner from "./Loading";
+import Logo from "../../cococat-hotel.png";
+import LoadingSpinner from "../../component/Loading";
 
 export default function Register({ handleAppbar }) {
   // http://localhost:8700/v1/login

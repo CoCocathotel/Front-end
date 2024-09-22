@@ -5,6 +5,9 @@ module.exports = {
     ],
     theme: {
       extend: {
+        backgroundImage: {
+          'Bg': "url('assets/image/bg.png')",
+        },
         animation: {
           slide: 'slide 100s linear infinite',  
         },
