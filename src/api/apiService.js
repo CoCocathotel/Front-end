@@ -7,7 +7,7 @@ function production_check() {
         window.location.origin.includes("127.0.0.1");
 
     return isDevelopment
-        ? "http://localhost:8700"
+        ? "https://cococatbackend.vercel.app"
         : "https://cococatbackend.vercel.app";
 }
 

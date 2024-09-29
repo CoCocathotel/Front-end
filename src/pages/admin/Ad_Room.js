@@ -100,7 +100,7 @@ export default function Ad_Room() {
 
     axios
       .post(
-        "http://localhost:8700/v1/create_room", // Replace with your API endpoint
+        "https://cococatbackend.vercel.app/v1/create_room", // Replace with your API endpoint
         payload, // Request body (form values and imageBase64)
         {
           headers: {
@@ -146,7 +146,7 @@ export default function Ad_Room() {
     };
 
     axios
-      .post("http://localhost:8700/v1/edit_room", payload)
+      .post("https://cococatbackend.vercel.app/v1/edit_room", payload)
       .then((response) => {
         message.success("Room updated successfully");
         setData((prevData) =>
@@ -176,7 +176,7 @@ export default function Ad_Room() {
 
   const handleDeleteRoom = (roomId) => {
     axios
-      .delete("http://localhost:8700/v1/delete_room", {
+      .delete("https://cococatbackend.vercel.app/v1/delete_room", {
         data: { room_id: roomId },
       })
       .then((response) => {

@@ -29,13 +29,11 @@ export default function Dashboard() {
   const [modal1Open, setModal1Open] = useState(false);
 
   useEffect(() => {
-    AOS.init({ duration: 1000 }); // Initialize AOS for animations
-
+    AOS.init({ duration: 1000 });
     service
       .api("/v1/room")
       .then((res) => {
         setData(res.room);
-        setBooking(res.booking);
       })
       .catch((err) => {
         setError(err.message);

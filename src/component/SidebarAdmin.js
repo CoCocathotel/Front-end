@@ -22,16 +22,16 @@ export default function SidebarAdmin({ page }) {
     "การจอง", // Home
     "กราฟ&สถิติ", // Manage rooms
     "ห้องพัก", // View all rooms
-    "จัดการผู้ใช้งาน", // Manage users
-    "จัดการหน้าเว็บไซต์", // Manage website
+    // "จัดการผู้ใช้งาน", // Manage users
+    // "จัดการหน้าเว็บไซต์", // Manage website
   ];
 
   const items2 = [
     UserOutlined,
     LaptopOutlined,
     NotificationOutlined,
-    UserOutlined,
-    LaptopOutlined,
+    // UserOutlined,
+    // LaptopOutlined,
   ].map((icon, index) => {
     const title = text[index];
     const key = String(index + 1);
