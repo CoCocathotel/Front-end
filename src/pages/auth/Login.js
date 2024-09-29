@@ -39,9 +39,9 @@ export default function Login({ handleAppbar }) {
         handle_value();
         localStorage.setItem("user-provider", JSON.stringify(result));
         localStorage.setItem("token", result.token);
-        console.log(result);
-        if (result.pos == "admin") {
-          navigate("/admin_home");
+        if (result.pos === "admin") {
+          // navigate("/");
+          window.location.reload();
         } else {
           navigate("/");
         }

@@ -21,12 +21,10 @@ export default function Appbar_master() {
   const [modal2Open, setModal2Open] = useState(false);
   const [load2, SetLoad2] = useState(false);
 
-  const [login, SetLogin] = useState(false);
-  const [register, SetRegister] = useState(false);
-
   const handleCloseLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user-provider");
+    navigate('/');
     window.location.reload();
     setAnchorEl(null);
   };
@@ -85,14 +83,14 @@ export default function Appbar_master() {
   return (
     <>
       <div
-        className={`transition ease-linear duration-700 flex border-b w-full h-28 top-0 bg-white z-50 sticky ${
+        className={`transition ease-linear duration-700 flex border-b w-full h-24 top-0 bg-white z-50 sticky  ${
           visible ? "opacity-80" : "opacity-0 invisible"
-        } ${login ? "opacity-50" : ""}  ${register ? "opacity-50" : ""}`}
+        }`}
       >
         {localStorage.getItem("token") &&
         JSON.parse(localStorage.getItem("user-provider")).pos === "admin" ? (
           <>
-            <div className="grid grid-cols-6 w-full gap-1 p-4">
+            <div className="grid grid-cols-6 w-full gap-1 p-2">
               <img
                 className="ml-24"
                 src={Logo}
@@ -100,8 +98,14 @@ export default function Appbar_master() {
                 width={80}
                 height={80}
               />
+{/* 
+              <div
+                className="text-gray-600 hover:text-blue-500"
+              >
+                การจองทั้งหมด
+              </div> */}
 
-              <button
+              {/* <button
                 onClick={() => {
                   navigate("/admin_home");
                 }}
@@ -117,14 +121,6 @@ export default function Appbar_master() {
               >
                 ข้อมูลเชิงวิเคราะห์
               </button>
-              {/* <button
-                onClick={() => {
-                  navigate("#");
-                }}
-                className="text-gray-600 hover:text-blue-500"
-              >
-                เพิ่มห้อง
-              </button> */}
               <button
                 onClick={() => {
                   navigate("#");
@@ -140,7 +136,7 @@ export default function Appbar_master() {
                 className="text-gray-600 hover:text-blue-500"
               >
                 จัดการผู้ใช้งาน
-              </button>
+              </button> */}
             </div>
           </>
         ) : (
@@ -157,7 +153,7 @@ export default function Appbar_master() {
               <span></span>
              <button
                 onClick={() => {
-                  navigate("/");
+                  navigate('/')
                 }}
                 className="text-gray-600 hover:text-blue-500"
               >
@@ -173,6 +169,7 @@ export default function Appbar_master() {
               </button>
               <button
                 onClick={() => {
+                  navigate("/rule");
                 }}
                 className="text-gray-600 hover:text-blue-500"
               >
@@ -260,7 +257,7 @@ export default function Appbar_master() {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
-                <MenuItem onClick={handleClose}>บัญชีของฉัน</MenuItem>
+                <MenuItem onClick={(_)=>{handleClose(); navigate("/account")}}>บัญชีของฉัน</MenuItem>
 
                 <MenuItem onClick={(_)=>{handleClose(); navigate("/history")}}>ประวัติการจอง</MenuItem>
 

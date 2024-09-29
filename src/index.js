@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-pascal-case */
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
@@ -13,13 +14,29 @@ import {
 } from "react-router-dom";
 import Register from "./pages/auth/Register";
 import History from "./pages/user/History";
+import Rule from "./pages/user/Rule";
 
 import Appbar_master from "./component/AppbarMaster";
 import Ad_Home from "./pages/admin/Ad_Home";
 import Ad_Edit from "./pages/admin/Ad_Edit";
-import Ad_Analytic from "./pages/admin/Ad_Analytic"
+import Ad_Analytic from "./pages/admin/Ad_Analytic";
+import Sidebar from "./component/Sidebar";
+import SidebarAdmin from "./component/SidebarAdmin";
+import Ad_Schedule from "./pages/admin/Ad_Schedule";
+import Ad_Room from "./pages/admin/Ad_Room";
 
 import Footer from "./component/Footer";
+import Account from "./pages/user/Account";
+
+let data = JSON.parse(localStorage.getItem("user-provider"));
+
+let positionType = "user";
+
+if (data !== null) {
+  positionType = data.pos;
+}
+
+console.log(positionType);
 
 const router = createBrowserRouter([
   {
@@ -53,6 +70,17 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "account",
+    element: (
+      <>
+        <Appbar_master />
+        <Sidebar />
+        <Account />
+        <Footer />
+      </>
+    ),
+  },
+  {
     path: "/login",
     element: <Login />,
   },
@@ -61,8 +89,25 @@ const router = createBrowserRouter([
     element: (
       <>
         <Appbar_master />
-        <Home />
-        <Footer />
+
+        {positionType !== "admin" ? (
+          <>
+            <Home /> <Footer />
+          </>
+        ) : (
+          <>
+            <SidebarAdmin value={0} page={<Ad_Home />} />
+          </>
+        )}
+      </>
+    ),
+  },
+  {
+    path: "/room",
+    element: (
+      <>
+      <Appbar_master />
+        <SidebarAdmin value={3} page={<Ad_Room />} />
       </>
     ),
   },
@@ -75,7 +120,18 @@ const router = createBrowserRouter([
     element: (
       <>
         <Appbar_master />
+        {/* <Sidebar value={1} /> */}
         <History />
+        <Footer />
+      </>
+    ),
+  },
+  {
+    path: "/rule",
+    element: (
+      <>
+        <Appbar_master />
+        <Rule />
         <Footer />
       </>
     ),
@@ -94,19 +150,29 @@ const router = createBrowserRouter([
     element: (
       <>
         <Appbar_master />
-        <Detail />
+        <SidebarAdmin page={<Detail />} />
       </>
     ),
   },
   {
-    path:"/ad_analytic",
-    element:(
-    <>
-    <Appbar_master />
-    <Ad_Analytic />
-    </>
-  )
-  }
+    path: "/schedule",
+    element: (
+      <>
+        <Appbar_master />
+        <SidebarAdmin page={<Ad_Schedule />} />
+      </>
+    ),
+  },
+  {
+    path: "/ad_analytic",
+    element: (
+      <>
+        <Appbar_master />
+
+        <SidebarAdmin value={2} page={<Ad_Analytic />} />
+      </>
+    ),
+  },
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

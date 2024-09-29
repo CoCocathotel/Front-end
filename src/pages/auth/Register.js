@@ -40,7 +40,7 @@ export default function Register({ handleAppbar }) {
         handle_value();
         localStorage.setItem("user-provider", JSON.stringify(result));
         localStorage.setItem("token", result.token);
-        navigate("/");
+        window.onload.herf('/')
         console.log("Register and Login successful");
       } else {
         console.log("Register failed");

@@ -102,7 +102,7 @@ export default function Detail() {
       content: `ระบบจะกลับไปยังหน้าแรกในอีก ${secondsToGo} วินาที`,
       onOk: () => {
         clearInterval(timer);
-        navigate("/");
+      navigate('/')
       },
     });
 
@@ -116,7 +116,7 @@ export default function Detail() {
     setTimeout(() => {
       clearInterval(timer);
       instance.destroy();
-      navigate("/");
+      navigate('/')
     }, secondsToGo * 1000);
   };
 
@@ -165,10 +165,9 @@ export default function Detail() {
 
       const result = await response.json();
 
-      console.log(result, "result");
-
-      if (response.status == 200) {
-        navigate("/admin_home")
+ 
+      if (response.status === 200) {
+         navigate("/");
       }
     } catch (err) {
       console.log("An error occurred. Please try again.");

@@ -8,6 +8,29 @@
   box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.2); /* Adjust values as needed */
 }
 
+.pagination {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+  list-style-type: none;
+}
+
+.page-item {
+  margin: 0 0.25rem;
+}
+
+.page-link {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.active .page-link {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
 
 
 div{

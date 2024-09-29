@@ -1,12 +1,14 @@
 /* eslint-disable jsx-a11y/alt-text */
-
 import { useEffect, useState, useRef } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css"; // Import AOS CSS
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { Carousel, Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../component/Loading";
 import service from "../../api/apiService";
+import Label from "../../component/Label";
 
 import ImgaeCat from "../../assets/image/hero1.png";
 import ImageCat2 from "../../assets/image/hero2.png";
@@ -19,6 +21,7 @@ import Review1 from "../../assets/image/Review1.png";
 import Review2 from "../../assets/image/Review2.png";
 import Review3 from "../../assets/image/Review3.png";
 import FeetK from "../../assets/image/feet_kuay.png";
+import { BG1, BG2, Star, DogIcon } from "../../constant/SvgImg";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -55,10 +58,10 @@ export default function Home() {
   };
 
   useEffect(() => {
+    AOS.init({ duration: 1000 }); // Initialize AOS for animations
     service
       .api("/v1/room")
       .then((res) => {
-        console.log(res);
         setImgArray([
           ImgaeCat,
           ImageCat2,
@@ -139,12 +142,6 @@ export default function Home() {
         setEffectImg(false);
         setRoom(updatedRoom);
       }, 500);
-
-      console.log(
-        updatedRoom[0].room_name,
-        updatedRoom[1].room_name,
-        updatedRoom[2].room_name
-      );
     } else {
       console.error("Invalid index provided.");
     }
@@ -163,7 +160,7 @@ export default function Home() {
           backgroundPosition: "center",
         }}
       >
-        <div className="relative w-full ">
+        <div className="relative w-full " data-aos="fade-up">
           <Carousel
             autoplay
             ref={carouselRef}
@@ -176,34 +173,37 @@ export default function Home() {
                 <img
                   src={image}
                   alt={`image-${index}`}
-                  className=" max-h-max object-cover rounded-lg shadow-lg"
+                  className="max-h-max object-cover rounded-lg shadow-lg"
                 />
               </div>
             ))}
           </Carousel>
         </div>
 
-        {/* ตัวบ่งชี้การเปลี่ยนสีตามรูป */}
-        <div className="flex p-4 space-x-2 ">
+        {/* Indicator */}
+        <div className="flex p-4 space-x-2" data-aos="fade-up">
           {ImgArray.map((_, index) => (
             <div key={index}>
               <div
                 onClick={() => {
-                  setCurrentIndex(index); // อัปเดต currentIndex
-                  carouselRef.current.goTo(index); // ใช้เมธอด goTo เพื่อเปลี่ยนรูป
+                  setCurrentIndex(index);
+                  carouselRef.current.goTo(index);
                 }}
                 className={
                   currentIndex === index
-                    ? "max-w-md w-10 h-4 bg-[#B6D4F0] rounded-full shadow-lg cursor-pointer" // สีที่เน้นเมื่อตรงกับรูปที่แสดงอยู่
-                    : "max-w-md w-4 h-4 bg-[#d7d7d7] rounded-full shadow-lg cursor-pointer" // สีพื้นหลังปกติ
+                    ? "max-w-md w-10 h-4 bg-[#B6D4F0] rounded-full shadow-lg cursor-pointer"
+                    : "max-w-md w-4 h-4 bg-[#d7d7d7] rounded-full shadow-lg cursor-pointer"
                 }
               ></div>
             </div>
           ))}
         </div>
 
-        {/* cococat label */}
-        <div className="items-center text-2xl flex w-10/12 h-48 mt-4 bg-[#B6D4F0] rounded-full shadow-lg p-4">
+        {/* CoCoCat Label */}
+        <div
+          className="items-center text-2xl flex w-10/12 h-48 mt-4 bg-[#B6D4F0] rounded-full shadow-lg p-4"
+          data-aos="fade-up"
+        >
           <img src={Logo} alt="logo" width={200} height={120} />
           <p>
             Co-Co Cat Hotel โรงแรมแมว โค-โค่ แค็ท หาดใหญ่ ยินดีต้อนรับ {<br />}
@@ -212,22 +212,20 @@ export default function Home() {
           </p>
         </div>
 
-        {/* lable room */}
-        <div className=" justify-start w-full flex mt-20">
-          <div className="items-left items-center w-1/2 flex max-w-md bg-[#3B82F6] rounded-r-full shadow-lg p-4">
-            <p className="text-3xl text-white p-4">ห้องพักน้องแมว</p>
-            <img src={FeetBig} alt="logo2" width={60} height={60} />
-          </div>
-        </div>
+        {/* Room Label */}
+        <Label label="ห้องพักน้องแมว" data-aos="fade-up" />
 
-        {/* detail room */}
+        {/* Room Details */}
         <div className="relative w-full flex items-center justify-center">
-          <div className="absolute flex items-end justify-center ">
+          <div
+            className="absolute flex items-end justify-center"
+            data-aos="fade-up"
+          >
             {room.map((item, index) => (
               <button
                 key={index}
                 onClick={() => handleActiveIndex(index)}
-                className={`relative w-80 transition duration-300 ease-in-out overflow-hidden rounded-lg shadow-lg hover:blur-0   ${
+                className={`relative w-80  transition duration-300 ease-in-out overflow-hidden rounded-lg shadow-lg hover:blur-0 ${
                   effectimg === true
                     ? "blur-sm transition duration-300 ease-in-out scale-75"
                     : ""
@@ -237,6 +235,7 @@ export default function Home() {
                   src={`https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/rooms/${item.type}/${item.image[0]}`}
                   alt={item.room_name}
                   className="w-full h-full object-cover rounded-lg transition duration-300 ease-in-out"
+                  height={500}
                 />
 
                 {index === 1 && (
@@ -261,69 +260,40 @@ export default function Home() {
               </button>
             ))}
           </div>
-
-          <svg
-            width="1027"
-            height="858"
-            viewBox="0 0 1027 858"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M44.0979 654.441C44.0979 654.441 141.652 566.562 307.506 589.556C435.148 607.257 596.787 630.55 826.594 577.253C984.039 540.739 1026.39 633.06 1027 704.001C1027.64 780.021 940.908 837.48 766.419 844.433C597.612 851.154 160.977 874.457 65.4394 838.156C-30.0983 801.845 -6.40474 701.422 44.0979 654.441Z"
-              fill="#B6D4F0"
-            />
-            <path
-              d="M627.409 81.2729C627.409 81.2729 592.376 167.494 621.704 229.687C651.033 291.88 733.323 303.897 777.321 308.131C821.318 312.373 907.166 302.154 947.597 253.553C988.036 204.952 1002.99 134.276 973.666 87.635C944.329 40.9937 888.738 0.140613 809.756 0.000633429C708.973 -0.18134 641.327 38.873 627.409 81.2729Z"
-              fill="#B6D4F0"
-            />
-          </svg>
+          <BG1 />
         </div>
 
-        {/* lable review */}
-        <div className=" justify-start w-full flex">
-          <div className="items-left items-center w-1/2 flex max-w-md bg-[#3B82F6] rounded-r-full shadow-lg p-4">
-            <p className="text-3xl text-white p-4">รีวิวจากลูกค้า</p>
-            <img src={FeetBig} alt="logo2" width={60} height={60} />
-          </div>
-        </div>
+        {/* Review Label */}
+        <Label label="รีวิวจากลูกค้า" data-aos="fade-up" />
 
-        {/* detail review */}
+        {/* Reviews Section */}
+        <div className="relative" data-aos="fade-up">
+          <Star />
 
-        <div className="relative">
           <button
             onClick={handlePrev}
             disabled={currentPage === 0}
-            className={`absolute top-1/3 left-4 p-4 m-5 rounded-full z-30 opacity-80 shadow-md  hover:bg-[#16305C]  ${
+            className={`absolute top-1/3 left-4 p-4 m-5 rounded-full z-30 opacity-80 shadow-md hover:bg-[#16305C] ${
               currentPage === 0 ? "bg-gray-300" : "bg-gray-300"
             } text-white`}
           >
             <ArrowBackIosIcon />
           </button>
-          <svg
-            className="absolute inset-0 items-center justify-center w-full h-full"
-            width="1404"
-            height="484"
-            viewBox="0 0 1404 484"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <rect width="1404" height="484" rx="190" fill="#B6D4F0" />
-          </svg>
+
+          <BG2 />
 
           <button
             onClick={handleNext}
             disabled={currentPage === totalPages - 1}
-            className={`absolute top-1/3 right-4 p-4 m-5 rounded-full z-30 opacity-80 shadow-md  hover:bg-[#16305C] ${
+            className={`absolute top-1/3 right-4 p-4 m-5 rounded-full z-30 opacity-80 shadow-md hover:bg-[#16305C] ${
               currentPage === totalPages - 1 ? "bg-gray-300" : "bg-gray-300"
             } text-white`}
           >
             <ArrowForwardIosIcon />
           </button>
 
+          <DogIcon />
           <div className="relative grid grid-cols-2 gap-4 bg-[#8FA7BD] p-4 m-20 space-x-4 rounded-lg h-full">
-            {/* Main Image Display */}
-
             <div className="h-36 z-10">
               <img src={reviews[activeIndex][slideIndex]} alt="Main Review" />
             </div>
@@ -358,8 +328,9 @@ export default function Home() {
               ))}
             </div>
 
-            <div className="flex items-center justify-center w-full p-4 space-x-4 ">
-              {reviews.map((review, index) => (
+            {/* Pagination */}
+            <div className="flex items-center justify-center w-full p-4 space-x-4">
+              {reviews.map((_, index) => (
                 <div
                   key={index}
                   onClick={() => {
@@ -376,7 +347,8 @@ export default function Home() {
           </div>
         </div>
 
-        <div className=" justify-center w-full flex mt-20 mb-10">
+        {/* Map Section */}
+        <div className="justify-center w-full flex mt-20 mb-10">
           <div className="items-center text-center justify-center w-1/2 flex max-w-md bg-[#3B82F6] rounded-full shadow-lg p-4">
             <p className="text-3xl text-white p-4">แผนที่</p>
             <img src={FeetBig} alt="logo2" width={60} height={60} />
@@ -384,7 +356,11 @@ export default function Home() {
         </div>
 
         <img src={Map} alt="map" width={800} />
-        <div className="items-center w-1/2 text-center  mt-4 bg-[#B6D4F0] rounded-lg shadow-lg p-14">
+
+        <div
+          className="items-center w-1/2 text-center mt-4 bg-[#B6D4F0] rounded-lg shadow-lg p-14"
+          data-aos="fade-up"
+        >
           <h1 className="text-[#16305C] text-2xl">
             Co-Co Cat Hotel โรงแรมแมว โค-โค่ แค็ท
           </h1>
@@ -392,6 +368,7 @@ export default function Home() {
             121, 105 ถนน ทุ่งรี ซอย 3 ตำบล คอหงส์ อำเภอหาดใหญ่ สงขลา 90110
           </p>
         </div>
+
         <span className="mb-40"></span>
       </div>
     </>

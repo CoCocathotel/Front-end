@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Sidebar from "../../component/Sidebar";
 import Logo from "../../cococat-hotel.png";
 import Img_bg from "../../cococat_preview.jpg";
 import LoadingSpinner from "../../component/Loading";
@@ -77,7 +78,7 @@ export default function Cart() {
   useEffect(() => {
     let get_user = JSON.parse(localStorage.getItem("user-provider"));
     if (get_user === null || get_user === "") {
-      navigate("/");
+      window.onload.herf('/')
     } else {
       fecthdata();
     }
@@ -89,7 +90,7 @@ export default function Cart() {
   return (
     <>
       {loading ? (
-        <div>
+        <div className="bg-gray-200">
           <LoadingSpinner />
         </div>
       ) : (
@@ -97,7 +98,7 @@ export default function Cart() {
           {/* <Appbar_master /> */}
           <div
             className={`bg-gray-200  flex flex-col  items-center ${
-              data_information.length >= 4 ? "h-auto" : "h-screen"
+              data_information.length >= 3 ? "h-auto" : "h-screen"
             }`}
           >
             <div className="flex flex-row justify-around bg-white items-center w-1/2 h-20 mt-5 px-4 py-5 z-0 rounded-lg shadow-lg ">

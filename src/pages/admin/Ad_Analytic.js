@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
+import AOS from "aos";
+import "aos/dist/aos.css"; // Import AOS CSS
 import {
+  Cell,
   CartesianGrid,
   XAxis,
   YAxis,
@@ -14,18 +17,17 @@ import {
   LineChart,
 } from "recharts";
 import LoadingSpinner from "../../component/Loading";
-
-import { DatePicker, Space } from "antd";
-import { Button, Flex } from "antd";
+import { DatePicker } from "antd";
+import Card from "./Card.tsx";
 
 const { RangePicker } = DatePicker;
 
 export default function Ad_Analytic() {
   const [data, setData] = useState([]);
-  const [filteredData, setFilteredData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    AOS.init({ duration: 1000 }); // Initialize AOS for animations
     fetchData();
   }, []);
 
@@ -63,24 +65,222 @@ export default function Ad_Analytic() {
     }
   };
 
+  if (loading || data.length === 0) {
+    return <LoadingSpinner />;
+  }
+
+  const profitData = data.map((entry) => ({
+    date: entry.check_in_date.substring(0, 4),
+    profit: entry.total_price,
+  }));
+
+  const profitByYear = profitData.reduce((acc, curr) => {
+    const year = curr.date;
+
+    if (!acc[year]) {
+      acc[year] = { date: year, profit: 0 };
+    }
+
+    acc[year].profit += curr.profit;
+
+    return acc;
+  }, {});
+
+  const groupedProfitData = Object.values(profitByYear);
+
+  const roomData = [
+    {
+      name: "Available",
+      value: data.filter((entry) => entry.status === "pass").length,
+    },
+    {
+      name: "Cancelled",
+      value: data.filter((entry) => entry.status === "failed").length,
+    },
+    {
+      name: "Pending",
+      value: data.filter((entry) => entry.status === "pending").length,
+    },
+  ];
+
+  const roomTypeData = data.reduce((acc, curr) => {
+    const roomType = curr.room_name;
+
+    if (!acc[roomType]) {
+      acc[roomType] = { roomType, count: 0 };
+    }
+
+    acc[roomType].count += 1;
+
+    return acc;
+  }, {});
+
+  const groupedRoomTypeData = Object.values(roomTypeData);
+
+  const totalProfit = groupedProfitData.reduce(
+    (acc, curr) => acc + curr.profit,
+    0
+  );
+  const averageProfit = totalProfit / groupedProfitData.length;
+
+  const latestYearData = groupedProfitData[groupedProfitData.length - 1];
+  const latestYearProfit = latestYearData.profit;
+  const latestYear = latestYearData.date;
+
+  const totalBookings = roomData.reduce((acc, curr) => acc + curr.value, 0);
+  const availableBookings = roomData.find(
+    (entry) => entry.name === "Available"
+  ).value;
+  const availablePercentage = (
+    (availableBookings / totalBookings) *
+    100
+  ).toFixed(2);
+
+  const mostBookedRoom = groupedRoomTypeData.reduce((prev, current) =>
+    prev.count > current.count ? prev : current
+  );
+
+  const leastBookedRoom = groupedRoomTypeData.reduce((prev, current) =>
+    prev.count < current.count ? prev : current
+  );
+
   return (
     <div className="container mx-auto p-6">
-      <h1 className="text-3xl font-bold text-center mb-6">
-        Data Analytics Dashboard
-      </h1>
       {loading ? (
         <LoadingSpinner />
       ) : (
         <>
-          <div className="mb-4 flex">
-            <RangePicker renderExtraFooter={() => "extra footer"} />
-            <Flex gap="small" wrap>
-              <Button type="primary">Primary Button</Button>
-              <Button>Default Button</Button>
-              <Button type="dashed">Dashed Button</Button>
-              <Button type="text">Text Button</Button>
-              <Button type="link">Link Button</Button>
-            </Flex>
+          <h1
+            className="text-3xl font-bold text-center mb-6"
+            data-aos="fade-up"
+          >
+            กราฟและสถิติ
+          </h1>
+          <div className="flex justify-between mb-8" data-aos="fade-up">
+            <Card
+              title="จำนวนการจอง"
+              data={data.length}
+              change={0}
+              color="bg-blue-50"
+            />
+            <Card
+              title="รอการอนุมัติ"
+              data={data.filter((value) => value.status === "pending").length}
+              change={0}
+              color="bg-yellow-50"
+            />
+            <Card
+              title="จำนวนอนุมัติ"
+              data={data.filter((value) => value.status === "pass").length}
+              change={0}
+              color="bg-green-50"
+            />
+            <Card
+              title="จำนวนยกเลิก"
+              data={data.filter((value) => value.status === "failed").length}
+              change={0}
+              color="bg-red-50"
+            />
+          </div>
+
+          <div className="flex items-center" data-aos="fade-up">
+            <div className="w-1/2 m-5">
+              <h2 className="text-xl font-bold mb-4 ">กำไร - ขาดทุน (บาท)</h2>
+              <ResponsiveContainer width="100%" height={400}>
+                <LineChart data={groupedProfitData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="profit" stroke="#8884d8" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="text-2xl">
+              จากการคำนวน รายได้ของปี {latestYear}
+              {latestYearProfit > averageProfit
+                ? " มีค่าสูงกว่า"
+                : " มีค่าต่ำกว่า"}{" "}
+              โดยเฉลี่ย
+            </div>
+          </div>
+
+          <div className="flex items-center" data-aos="fade-up">
+            <div className="w-1/2 m-5">
+              <h2 className="text-xl font-bold mb-4">การจองทั้งหมด</h2>
+              <ResponsiveContainer width="50%" height={400}>
+                <PieChart>
+                  <Pie
+                    dataKey="value"
+                    data={roomData}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={150}
+                    label
+                  >
+                    {roomData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={
+                          entry.name === "Cancelled"
+                            ? "#D1695B"
+                            : entry.name === "Available"
+                            ? "#82ca9d"
+                            : "#ffc658"
+                        }
+                      />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="text-2xl">
+              สถานะการจองที่อนุมัติ คิดเป็น {availablePercentage}% ของการจองทั้งหมด
+            </div>
+          </div>
+
+          <div className="flex items-center" data-aos="fade-up">
+            <div className="m-4 w-1/2">
+              <h2 className="text-xl font-bold mb-4">
+                จำนวนการจองตามประเภทห้อง
+              </h2>
+              <ResponsiveContainer width="50%" height={400}>
+                <BarChart data={groupedRoomTypeData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="roomType" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Bar dataKey="count">
+                    {groupedRoomTypeData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={
+                          index === 0
+                            ? "#8884d8"
+                            : index === 1
+                            ? "#82ca9d"
+                            : index === 2
+                            ? "#ffc658"
+                            : index === 3
+                            ? "#ff8042"
+                            : "#d0ed57"
+                        }
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+
+            <div className="text-2xl">
+              ประเภทห้องที่ได้รับการจองสูงสุดคือ {mostBookedRoom.roomType}{" "}
+              และประเภทห้องที่ได้รับการจองต่ำสุดคือ {leastBookedRoom.roomType}
+            </div>
           </div>
         </>
       )}
