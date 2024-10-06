@@ -25,39 +25,39 @@ export default function Login({ handleAppbar }) {
   }
 
 
-const handleLogin = async () => {
-  handle_value2();
-  try {
-    const response = await axios.post(production_check() + "/v1/login", {
-      email,
-      password,
-    }, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+  const handleLogin = async () => {
+    handle_value2();
+    try {
+      const response = await axios.post(production_check() + "/v1/login", {
+        email,
+        password,
+      }, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
-    const result = response.data;
+      const result = response.data;
 
-    if (result.err !== "") {
-      handle_value();
-      localStorage.setItem("user-provider", JSON.stringify(result));
-      localStorage.setItem("token", result.token);
+      if (result.status === 200) {
+        handle_value();
+        localStorage.setItem("user-provider", JSON.stringify(result));
+        localStorage.setItem("token", result.token);
 
-      if (result.pos === "admin") {
-        window.location.reload();  // สำหรับผู้ใช้ admin ให้โหลดหน้าใหม่
+        if (result.pos === "admin") {
+          window.location.reload();  // สำหรับผู้ใช้ admin ให้โหลดหน้าใหม่
+        } else {
+          navigate("/");  // สำหรับผู้ใช้ทั่วไปให้ไปยังหน้าใหม่
+        }
+
+        console.log("Login successful");
       } else {
-        navigate("/");  // สำหรับผู้ใช้ทั่วไปให้ไปยังหน้าใหม่
+        console.log("Login failed");
       }
-
-      console.log("Login successful");
-    } else {
-      console.log("Login failed");
+    } catch (err) {
+      console.log("An error occurred. Please try again.", err);
     }
-  } catch (err) {
-    console.log("An error occurred. Please try again.", err);
-  }
-};
+  };
 
   const handle_value = () => {
     handleAppbar(false);
