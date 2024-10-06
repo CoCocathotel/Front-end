@@ -51,14 +51,26 @@ export default function Cart() {
 
   const [data, setData] = useState([]);
 
+  function productionCheck() {
+    const isDevelopment =
+      window.location.origin.includes("localhost") ||
+      window.location.origin.includes("127.0.0.1");
+
+    return isDevelopment
+      ? "http://localhost:8700"
+      : "https://cococatbackend.vercel.app";
+  }
+
+
   const fecthdata = async () => {
     try {
       const response = await fetch(
-        "https://cococatbackend.vercel.app/v1/cart",
+        productionCheck()+"/v1/cart",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            'Access-Control-Allow-Origin': '*',
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
           body: JSON.stringify({

@@ -156,9 +156,11 @@ export default function Detail() {
       };
 
       const response = await fetch(production_check() + `/v1/edit_book_room`, {
+        noCors: true,
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Access-Control-Allow-Origin': '*',
         },
         body: JSON.stringify(item),
       });
@@ -351,6 +353,7 @@ export default function Detail() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          'Access-Control-Allow-Origin': '*',
         },
         body: JSON.stringify(item),
       });

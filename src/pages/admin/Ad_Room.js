@@ -98,13 +98,25 @@ export default function Ad_Room() {
       image: [imageBase64],
     };
 
+
+    function productionCheck() {
+      const isDevelopment =
+        window.location.origin.includes("localhost") ||
+        window.location.origin.includes("127.0.0.1");
+  
+      return isDevelopment
+        ? "http://localhost:8700"
+        : "https://cococatbackend.vercel.app";
+    }
+
     axios
       .post(
-        "https://cococatbackend.vercel.app/v1/create_room", // Replace with your API endpoint
+        productionCheck()+"/v1/create_room", // Replace with your API endpoint
         payload, // Request body (form values and imageBase64)
         {
           headers: {
             "Content-Type": "application/json", // Specify that the payload is in JSON format
+            'Access-Control-Allow-Origin': '*',
           },
         }
       )
@@ -145,8 +157,24 @@ export default function Ad_Room() {
       image: [imageBase64],
     };
 
+    function productionCheck() {
+      const isDevelopment =
+        window.location.origin.includes("localhost") ||
+        window.location.origin.includes("127.0.0.1");
+  
+      return isDevelopment
+        ? "http://localhost:8700"
+        : "https://cococatbackend.vercel.app";
+    }
+
+  
     axios
-      .post("https://cococatbackend.vercel.app/v1/edit_room", payload)
+      .post(productionCheck()+"/v1/edit_room", payload, {
+        headers: {
+          "Content-Type": "application/json",
+          'Access-Control-Allow-Origin': '*',
+        },
+      })
       .then((response) => {
         message.success("Room updated successfully");
         setData((prevData) =>
@@ -167,6 +195,7 @@ export default function Ad_Room() {
         form.resetFields();
       });
   };
+  
 
   const handleRoomNameChange = (e) => {
     const roomName = e.target.value;
