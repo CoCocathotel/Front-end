@@ -39,15 +39,15 @@ export default function Login({ handleAppbar }) {
 
       const result = response.data;
 
-      if (result.status === 200) {
+      if (result.err !== "") {
         handle_value();
         localStorage.setItem("user-provider", JSON.stringify(result));
         localStorage.setItem("token", result.token);
 
         if (result.pos === "admin") {
-          window.location.reload();  // สำหรับผู้ใช้ admin ให้โหลดหน้าใหม่
+          window.location.reload();  
         } else {
-          navigate("/");  // สำหรับผู้ใช้ทั่วไปให้ไปยังหน้าใหม่
+          navigate("/");   
         }
 
         console.log("Login successful");
