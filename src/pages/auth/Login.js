@@ -28,13 +28,14 @@ export default function Login({ handleAppbar }) {
   const handleLogin = async () => {
     handle_value2();
     try {
-      const response = await axios.post(production_check()+"/v1/login", {
+      const response = await axios.post(production_check() + "/v1/login", {
         email,
         password,
       }, {
         headers: {
           "Content-Type": "application/json",
         },
+        withCredentials: true,
       });
 
       const result = response.data;
@@ -45,9 +46,9 @@ export default function Login({ handleAppbar }) {
         localStorage.setItem("token", result.token);
 
         if (result.pos === "admin") {
-          window.location.reload();  
+          window.location.reload();
         } else {
-          navigate("/");   
+          navigate("/");
         }
 
         console.log("Login successful");
