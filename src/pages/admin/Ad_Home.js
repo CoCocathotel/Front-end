@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import LoadingSpinner from "../../component/Loading";
 import Detail from "../../component/Detail";
-
+import axios from 'axios';
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -61,65 +61,61 @@ export default function Ad_Home() {
   }
 
 
+
+
   const fecthdata = async () => {
     try {
-      const response = await fetch(
-        productionCheck()+"/v1/cart",
+      const response = await axios.post(
+        productionCheck() + "/v1/cart",
         {
-          method: "POST",
+          email: JSON.parse(localStorage.getItem("user-provider")).email,
+          pos: "admin",
+        },
+        {
           headers: {
             "Content-Type": "application/json",
-            // 'Access-Control-Allow-Origin': '*',
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
-          body: JSON.stringify({
-            email: JSON.parse(localStorage.getItem("user-provider")).email,
-            pos: "admin",
-          }),
         }
       );
-
-      const result = await response.json();
-
+  
       // สมมติว่าข้อมูลมีฟิลด์ `check_in_date` ที่เราจะใช้ในการจัดเรียง
-      // let x_data = result.body.sort((a, b) => {
+      // let x_data = response.data.body.sort((a, b) => {
       //   const dateA = new Date(a.check_in_date); // เปลี่ยนเป็นฟิลด์วันที่ที่ถูกต้อง
       //   const dateB = new Date(b.check_in_date);
-
+  
       //   return dateA - dateB; // จัดเรียงตามลำดับวันที่จากเก่าไปใหม่
       // });
-
-      setData(result.body);
+  
+      setData(response.data.body);
       setLoading(false);
     } catch (err) {
       console.log("An error occurred. Please try again.");
     }
   };
-
+  
   const changeStatus = async (id, status) => {
     try {
-      const response = await fetch(
-         productionCheck()+"/v1/update-status",
+      const response = await axios.post(
+        productionCheck() + "/v1/update-status",
         {
-          method: "POST",
+          id: id,
+          status: status,
+        },
+        {
           headers: {
             "Content-Type": "application/json",
-            // 'Access-Control-Allow-Origin': '*',
             Authorization: "Bearer " + localStorage.getItem("token"),
           },
-          body: JSON.stringify({
-            id: id,
-            status: status,
-          }),
         }
       );
-      const result = await response.json();
-      console.log(result);
+      console.log(response.data);
       fecthdata();
     } catch (err) {
       console.log("An error occurred. Please try again.");
     }
   };
+  
 
   const [statusList] = useState(["pending", "pass", "failed"]);
 
