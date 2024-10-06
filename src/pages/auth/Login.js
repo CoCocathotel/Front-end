@@ -35,7 +35,6 @@ export default function Login({ handleAppbar }) {
         headers: {
           "Content-Type": "application/json",
         },
-        withCredentials: true,
       });
 
       const result = response.data;
