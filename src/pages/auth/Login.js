@@ -28,7 +28,7 @@ export default function Login({ handleAppbar }) {
   const handleLogin = async () => {
     handle_value2();
     try {
-      const response = await axios.post(production_check() + "/v1/login", {
+      const response = await axios.post(production_check()+"/v1/login", {
         email,
         password,
       }, {
