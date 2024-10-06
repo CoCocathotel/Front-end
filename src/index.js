@@ -74,7 +74,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <Appbar_master />
-        <Sidebar />
+        <Sidebar value={0}/>
         <Account />
         <Footer />
       </>
@@ -120,7 +120,7 @@ const router = createBrowserRouter([
     element: (
       <>
         <Appbar_master />
-        {/* <Sidebar value={1} /> */}
+        <Sidebar value={1} />
         <History />
         <Footer />
       </>
