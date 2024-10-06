@@ -60,7 +60,7 @@ export default function Home() {
   useEffect(() => {
     AOS.init({ duration: 1000 }); // Initialize AOS for animations
     service
-      .api("/")
+      .api("/v1/room")
       .then((res) => {
         setImgArray([
           ImgaeCat,

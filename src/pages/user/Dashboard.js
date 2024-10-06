@@ -31,7 +31,7 @@ export default function Dashboard() {
   useEffect(() => {
     AOS.init({ duration: 1000 });
     service
-      .api("/")
+      .api("/v1/room")
       .then((res) => {
         setData(res.room);
       })

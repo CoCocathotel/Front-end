@@ -39,7 +39,7 @@ export default function Rule() {
     AOS.init({ duration: 1000 }); // Initialize AOS for animations
 
     service
-      .api("/")
+      .api("/v1/room")
       .then((res) => {
         setTitle([
           "น้องแมวทุกตัวมีอายุ 4 เดือนขึ้นไป",
