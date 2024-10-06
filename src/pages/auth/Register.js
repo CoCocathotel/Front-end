@@ -30,6 +30,7 @@ export default function Register({ handleAppbar }) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          
         },
         body: JSON.stringify({ email, password, first_name, last_name }),
       });

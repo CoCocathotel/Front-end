@@ -5,33 +5,33 @@
   "dependencies": {
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
-    "@headlessui/react": "^2.1.5",
+    "@headlessui/react": "^2.1.9",
     "@material/tooltip": "^14.0.0",
-    "@mui/icons-material": "^5.16.7",
-    "@mui/material": "^5.16.7",
-    "@mui/styled-engine-sc": "^6.0.0-alpha.18",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "antd": "^5.20.0",
+    "@mui/icons-material": "^6.1.2",
+    "@mui/material": "^6.1.2",
+    "@mui/styled-engine-sc": "^6.1.2",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/user-event": "^14.5.2",
+    "antd": "^5.21.2",
     "aos": "^2.3.4",
-    "axios": "^1.7.3",
+    "axios": "^1.7.7",
     "material-ui-confirm": "^3.0.16",
-    "material-ui-popup-state": "^5.1.2",
+    "material-ui-popup-state": "^5.3.1",
     "moment": "^2.30.1",
-    "moment-timezone": "^0.5.45",
-    "nodemon": "^3.1.4",
+    "moment-timezone": "^0.5.46",
+    "nodemon": "^3.1.7",
     "react": "^18.3.1",
-    "react-datepicker": "^7.3.0",
+    "react-datepicker": "^7.4.0",
     "react-dom": "^18.3.1",
     "react-draggable": "^4.4.6",
     "react-paginate": "^8.2.0",
-    "react-router-dom": "^6.26.0",
-    "react-scripts": "5.0.1",
+    "react-router-dom": "^6.26.2",
+    "react-scripts": "^5.0.1",
     "recharts": "^2.12.7",
     "slugify": "^1.6.6",
-    "styled-components": "^6.1.12",
-    "web-vitals": "^2.1.4"
+    "styled-components": "^6.1.13",
+    "web-vitals": "^4.2.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -59,6 +59,6 @@
     ]
   },
   "devDependencies": {
-    "tailwindcss": "^3.4.9"
+    "tailwindcss": "^3.4.13"
   }
 }
