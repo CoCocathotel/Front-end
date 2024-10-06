@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Logo from "../../cococat-hotel.png";
 import LoadingSpinner from "../../component/Loading";
+import axios from 'axios';
 
 
 export default function Login({ handleAppbar }) {
@@ -23,37 +24,40 @@ export default function Login({ handleAppbar }) {
       : "https://cococatbackend.vercel.app";
   }
 
-  const handleLogin = async () => {
-    handle_value2();
-    try {
-      const response = await fetch(production_check() + "/v1/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // 'Access-Control-Allow-Origin': '*',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      const result = await response.json();
-     
-      if (result.err != "") {
-        handle_value();
-        localStorage.setItem("user-provider", JSON.stringify(result));
-        localStorage.setItem("token", result.token);
-        if (result.pos === "admin") {
-          // navigate("/");
-          window.location.reload();
-        } else {
-          navigate("/");
-        }
-        console.log("Login successful");
+
+const handleLogin = async () => {
+  handle_value2();
+  try {
+    const response = await axios.post(production_check() + "/v1/login", {
+      email,
+      password,
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const result = response.data;
+
+    if (result.err !== "") {
+      handle_value();
+      localStorage.setItem("user-provider", JSON.stringify(result));
+      localStorage.setItem("token", result.token);
+
+      if (result.pos === "admin") {
+        window.location.reload();  // สำหรับผู้ใช้ admin ให้โหลดหน้าใหม่
       } else {
-        console.log("Login failed");
+        navigate("/");  // สำหรับผู้ใช้ทั่วไปให้ไปยังหน้าใหม่
       }
-    } catch (err) {
-      console.log("An error occurred. Please try again.");
+
+      console.log("Login successful");
+    } else {
+      console.log("Login failed");
     }
-  };
+  } catch (err) {
+    console.log("An error occurred. Please try again.", err);
+  }
+};
 
   const handle_value = () => {
     handleAppbar(false);
