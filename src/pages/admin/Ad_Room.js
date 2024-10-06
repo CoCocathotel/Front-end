@@ -116,7 +116,7 @@ export default function Ad_Room() {
         {
           headers: {
             "Content-Type": "application/json", // Specify that the payload is in JSON format
-            'Access-Control-Allow-Origin': '*',
+            // 'Access-Control-Allow-Origin': '*',
           },
         }
       )
@@ -172,7 +172,7 @@ export default function Ad_Room() {
       .post(productionCheck()+"/v1/edit_room", payload, {
         headers: {
           "Content-Type": "application/json",
-          'Access-Control-Allow-Origin': '*',
+          // 'Access-Control-Allow-Origin': '*',
         },
       })
       .then((response) => {

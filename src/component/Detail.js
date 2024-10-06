@@ -160,7 +160,7 @@ export default function Detail() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'Access-Control-Allow-Origin': '*',
+          // 'Access-Control-Allow-Origin': '*',
         },
         body: JSON.stringify(item),
       });
@@ -353,7 +353,7 @@ export default function Detail() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'Access-Control-Allow-Origin': '*',
+          
         },
         body: JSON.stringify(item),
       });
