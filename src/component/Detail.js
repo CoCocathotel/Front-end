@@ -19,7 +19,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import moment from "moment-timezone";
 
 import { Button, Modal } from "antd";
-
+ 
 dayjs.extend(customParseFormat);
 
 const dateFormat = "YYYY-MM-DD";
@@ -140,9 +140,6 @@ export default function Detail() {
       console.log("An error occurred. Please try again.");
     }
   };
-  
-// delete_book_room
-
 
   let proceedWithEdit = async (img) => {
     try {
@@ -200,30 +197,30 @@ export default function Detail() {
         setEmail(get_user.email);
         setPhone(get_user.phone);
 
-        console.log(error);
+ 
+        getRoom(); 
 
-        let getdata = getRoom();
 
-        let num;
+        // let num;
 
-        if (Type === "fan-room") {
-          num = numcat;
-        } else if (Type === "ac-standard-room") {
-          num = Math.ceil(numcat / 2);
-        } else if (Type === "ac-connecting-room") {
-          num = Math.ceil(numcat / 4);
-        }
+        // if (Type === "fan-room") {
+        //   num = numcat;
+        // } else if (Type === "ac-standard-room") {
+        //   num = Math.ceil(numcat / 2);
+        // } else if (Type === "ac-connecting-room") {
+        //   num = Math.ceil(numcat / 4);
+        // }
 
         // console.log(Type, num, numcat);
-
-        if (start && end && numcat && getdata) {
+        console.log(start, end, numcat, totalday, numcamera, total);
+        if (start && end && numcat) {
           // setData(getdata);
           setStartDate(start);
           setEndDate(end);
           setNumcat(numcat);
           setTotalday(totalday);
           setNumcamera(numcamera);
-          setTotal(num);
+          // setTotal(num);
         }
       }
     }
@@ -279,7 +276,10 @@ export default function Detail() {
 
       setError(null);
       setData(response.data.body[0]);
-      // console.log(response.data.body[0]);
+
+      setTotal(Math.ceil(nunmcat / response.data.body[0].number_of_cats));
+ 
+    
       return response.data.body[0];
     } catch (error) {
       setError(error);
@@ -349,6 +349,8 @@ export default function Detail() {
         image: selectedPayment === "credit" ? img : "",
       };
 
+      console.log(item);
+
       const response = await fetch(production_check() + `/v1/book_room`, {
         method: "POST",
         headers: {
@@ -358,6 +360,7 @@ export default function Detail() {
         body: JSON.stringify(item),
       });
 
+ 
       // setLoading(true);
       const result = await response.json();
 
@@ -597,7 +600,7 @@ export default function Detail() {
               <div class=" items-center space-y-2 mb-4">
                 <div className="flex justify-between space-x-24">
                   <p class="text-gray-500 text-sm">
-                    {1} ห้อง {" - "}
+                    {total} ห้อง {" - "}
                     {id ? totalday : totalday - 1} คืน
                   </p>
                   <p class="text-gray-500 text-sm">

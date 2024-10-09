@@ -20,16 +20,17 @@ import LoadingSpinner from "../../component/Loading";
 import { DatePicker } from "antd";
 import Card from "./Card.tsx";
 
-const { RangePicker } = DatePicker;
+const { MonthPicker } = DatePicker;
 
 export default function Ad_Analytic() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
   useEffect(() => {
     AOS.init({ duration: 1000 }); // Initialize AOS for animations
     fetchData();
-  }, []);
+  }, [selectedYear]);
 
   function productionCheck() {
     const isDevelopment =
@@ -70,41 +71,45 @@ export default function Ad_Analytic() {
     return <LoadingSpinner />;
   }
 
-  const profitData = data.map((entry) => ({
-    date: entry.check_in_date.substring(0, 4),
+  const filteredData = data.filter(
+    (entry) => new Date(entry.check_in_date).getFullYear() === selectedYear
+  );
+
+  const profitData = filteredData.map((entry) => ({
+    date: new Date(entry.check_in_date).getMonth() + 1,
     profit: entry.total_price,
   }));
 
-  const profitByYear = profitData.reduce((acc, curr) => {
-    const year = curr.date;
+  const profitByMonth = profitData.reduce((acc, curr) => {
+    const month = curr.date;
 
-    if (!acc[year]) {
-      acc[year] = { date: year, profit: 0 };
+    if (!acc[month]) {
+      acc[month] = { date: month, profit: 0 };
     }
 
-    acc[year].profit += curr.profit;
+    acc[month].profit += curr.profit;
 
     return acc;
   }, {});
 
-  const groupedProfitData = Object.values(profitByYear);
+  const groupedProfitData = Object.values(profitByMonth);
 
   const roomData = [
     {
       name: "Available",
-      value: data.filter((entry) => entry.status === "pass").length,
+      value: filteredData.filter((entry) => entry.status === "pass").length,
     },
     {
       name: "Cancelled",
-      value: data.filter((entry) => entry.status === "failed").length,
+      value: filteredData.filter((entry) => entry.status === "failed").length,
     },
     {
       name: "Pending",
-      value: data.filter((entry) => entry.status === "pending").length,
+      value: filteredData.filter((entry) => entry.status === "pending").length,
     },
   ];
 
-  const roomTypeData = data.reduce((acc, curr) => {
+  const roomTypeData = filteredData.reduce((acc, curr) => {
     const roomType = curr.room_name;
 
     if (!acc[roomType]) {
@@ -124,9 +129,9 @@ export default function Ad_Analytic() {
   );
   const averageProfit = totalProfit / groupedProfitData.length;
 
-  const latestYearData = groupedProfitData[groupedProfitData.length - 1];
-  const latestYearProfit = latestYearData.profit;
-  const latestYear = latestYearData.date;
+  const latestMonthData = groupedProfitData[groupedProfitData.length - 1];
+  const latestMonthProfit = latestMonthData.profit;
+  const latestMonth = latestMonthData.date;
 
   const totalBookings = roomData.reduce((acc, curr) => acc + curr.value, 0);
   const availableBookings = roomData.find(
@@ -160,25 +165,25 @@ export default function Ad_Analytic() {
           <div className="flex justify-between mb-8" data-aos="fade-up">
             <Card
               title="จำนวนการจอง"
-              data={data.length}
+              data={filteredData.length}
               change={0}
               color="bg-blue-50"
             />
             <Card
               title="รอการอนุมัติ"
-              data={data.filter((value) => value.status === "pending").length}
+              data={filteredData.filter((value) => value.status === "pending").length}
               change={0}
               color="bg-yellow-50"
             />
             <Card
               title="จำนวนอนุมัติ"
-              data={data.filter((value) => value.status === "pass").length}
+              data={filteredData.filter((value) => value.status === "pass").length}
               change={0}
               color="bg-green-50"
             />
             <Card
               title="จำนวนยกเลิก"
-              data={data.filter((value) => value.status === "failed").length}
+              data={filteredData.filter((value) => value.status === "failed").length}
               change={0}
               color="bg-red-50"
             />
@@ -200,10 +205,10 @@ export default function Ad_Analytic() {
             </div>
 
             <div className="text-2xl">
-              จากการคำนวน รายได้ของปี {latestYear}
-              {latestYearProfit > averageProfit
+              จากการคำนวน รายได้ของเดือน {latestMonth}
+              {latestMonthProfit > averageProfit
                 ? " มีค่าสูงกว่า"
-                : " มีค่าต่ำกว่า"}{" "}
+                : " มีค่าต่ำกว่า"} {" "}
               โดยเฉลี่ย
             </div>
           </div>
@@ -282,6 +287,16 @@ export default function Ad_Analytic() {
               ประเภทห้องที่ได้รับการจองสูงสุดคือ {mostBookedRoom.roomType}{" "}
               และประเภทห้องที่ได้รับการจองต่ำสุดคือ {leastBookedRoom.roomType}
             </div>
+          </div>
+
+          <div className="flex justify-center mt-8">
+            <MonthPicker
+              onChange={(date, dateString) =>
+                setSelectedYear(date ? date.year() : new Date().getFullYear())
+              }
+              picker="year"
+              placeholder="เลือกปีที่ต้องการ"
+            />
           </div>
         </>
       )}

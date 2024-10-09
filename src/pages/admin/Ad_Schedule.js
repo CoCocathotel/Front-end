@@ -1,5 +1,5 @@
 import * as React from "react";
-
+import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import LoadingSpinner from "../../component/Loading";
@@ -53,7 +53,7 @@ export default function Ad_Schedule() {
   };
 
 
-  
+
   function productionCheck() {
     const isDevelopment =
       window.location.origin.includes("localhost") ||
@@ -67,7 +67,7 @@ export default function Ad_Schedule() {
   const fecthdata = async () => {
     try {
       const response = await fetch(
-        productionCheck()+"/v1/cart",
+        productionCheck() + "/v1/cart",
         {
           method: "POST",
           headers: {
@@ -95,7 +95,7 @@ export default function Ad_Schedule() {
   const changeStatus = async (id, status) => {
     try {
       const response = await fetch(
-        productionCheck()+"/v1/update-status",
+        productionCheck() + "/v1/update-status",
         {
           method: "POST",
           headers: {
@@ -132,22 +132,22 @@ export default function Ad_Schedule() {
   const handleNextDay = () => {
     setToday(today.add(1, "day"));
   };
- 
-const calculateChanges = (current, previous, status) => {
-  const previousDay = today.subtract(1, "day");
 
-  const currentCount = current.filter(
-    (item) => item.status === status && formatDate(today) === formatDate(dayjs(item.check_in_date))
-  ).length;
+  const calculateChanges = (current, previous, status) => {
+    const previousDay = today.subtract(1, "day");
 
-  const previousCount = previous.filter(
-    (item) => item.status === status &&  formatDate(previousDay) === formatDate(dayjs(item.check_in_date))
-  ).length;
+    const currentCount = current.filter(
+      (item) => item.status === status && formatDate(today) === formatDate(dayjs(item.check_in_date))
+    ).length;
 
-  const change =  previousCount;
-//   console.log(currentCount, previousCount)
-  return { currentCount, change };
-};
+    const previousCount = previous.filter(
+      (item) => item.status === status && formatDate(previousDay) === formatDate(dayjs(item.check_in_date))
+    ).length;
+
+    const change = previousCount;
+    //   console.log(currentCount, previousCount)
+    return { currentCount, change };
+  };
 
   const pendingStats = calculateChanges(data, previousData, "pending");
   const passStats = calculateChanges(data, previousData, "pass");
@@ -232,7 +232,6 @@ const calculateChanges = (current, previous, status) => {
                 {[
                   "ลำดับ",
                   "ห้อง",
-                  "",
                   "สถานะ",
                   "วิธีการชำระเงิน",
                   "เช็คอิน",
@@ -242,6 +241,7 @@ const calculateChanges = (current, previous, status) => {
                   "เบอร์โทร",
                   "ชื่อผู้รับ/ฝาก",
                   "เบอร์โทรผู้รับ/ฝาก",
+                  // "ดูรายละเอียด",
                 ].map((header) => (
                   <h1 key={header} className="font-bold text-sm">
                     {header}
@@ -271,63 +271,6 @@ const calculateChanges = (current, previous, status) => {
                         <span className="truncate ...">{item.room_name}</span>
                       </Tooltip>
 
-                      <Tooltip>
-                        <span>
-                          <div className="col-span-1 rounded-lg ">
-                            <PopupState
-                              variant="popover"
-                              popupId="demo-popup-menu"
-                            >
-                              {(popupState) => (
-                                <React.Fragment>
-                                  <button>
-                                    <MoreVertIcon
-                                      {...bindTrigger(popupState)}
-                                    />
-                                  </button>
-                                  <Menu
-                                    {...bindMenu(popupState)}
-                                    PaperProps={{
-                                      style: {
-                                        maxHeight: 48 * 4.5,
-                                        width: "10ch",
-                                      },
-                                    }}
-                                  >
-                                    <MenuItem
-                                      onClick={() => {
-                                        // changeStatus(item._id, "pass");
-                                        // setEditId(item._id);
-                                        popupState.close();
-                                        navigate("/admin_edit/" + item._id);
-                                        window.location.reload();
-                                        // showModal();
-                                        // setLoading(true);
-                                      }}
-                                    >
-                                      <Typography variant="inherit">
-                                        <div>Edit</div>
-                                      </Typography>
-                                    </MenuItem>
-                                    {/* <MenuItem
-                                    onClick={() => {
-                                      // changeStatus(item._id, "pending");
-                                      proceedWithDelete(item._id);
-                                      popupState.close();
-                                      setLoading(true);
-                                    }}
-                                  >
-                                    <Typography variant="inherit">
-                                      <div>Delete</div>
-                                    </Typography>
-                                  </MenuItem> */}
-                                  </Menu>
-                                </React.Fragment>
-                              )}
-                            </PopupState>
-                          </div>
-                        </span>
-                      </Tooltip>
 
                       <div>
                         <select
@@ -336,21 +279,20 @@ const calculateChanges = (current, previous, status) => {
                             changeStatus(item._id, e.target.value);
                             setLoading(true);
                           }}
-                          className={`${
-                            item.status === "pending"
+                          className={`${item.status === "pending"
                               ? "bg-yellow-200"
                               : item.status === "failed"
-                              ? "bg-red-200"
-                              : "bg-green-200"
-                          } p-2 rounded-lg transition-colors duration-200 ease-in-out focus:bg-white hover:bg-white`}
+                                ? "bg-red-200"
+                                : "bg-green-200"
+                            } p-2 rounded-lg transition-colors duration-200 ease-in-out focus:bg-white hover:bg-white`}
                         >
                           {statusList.map((status) => (
                             <option key={status} value={status}>
                               {status === "pending"
                                 ? "ตรวจสอบ"
                                 : status === "pass"
-                                ? "ยืนยัน"
-                                : "ลบข้อมูล"}
+                                  ? "ยืนยัน"
+                                  : "ลบข้อมูล"}
                             </option>
                           ))}
                         </select>
@@ -389,6 +331,23 @@ const calculateChanges = (current, previous, status) => {
                       <Tooltip title={item.phone_2} arrow>
                         <span className="truncate ...">{item.phone_2}</span>
                       </Tooltip>
+
+
+                      <Tooltip title="ดูรายละเอียด" arrow>
+                        <span>
+                          <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            onClick={() => { 
+                              navigate("/admin_edit/" + item._id) 
+
+                              window.location.reload();
+                              
+                              }} >
+                            ดูรายละเอียด
+                          </button>
+                        </span>
+                      </Tooltip>
+
                     </div>
                   </div>
                 ))}

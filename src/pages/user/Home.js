@@ -171,7 +171,7 @@ export default function Home() {
             {ImgArray.map((image, index) => (
               <div key={index}>
                 <img
-                  src={image}
+                  src={`https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/homePage/heroImage/hero1.png`}
                   alt={`image-${index}`}
                   className="max-h-max object-cover rounded-lg shadow-lg"
                 />

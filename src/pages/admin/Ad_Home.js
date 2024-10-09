@@ -14,6 +14,7 @@ import PaginationItem from "@mui/material/PaginationItem";
 import Stack from "@mui/material/Stack";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import Card from "./Card.tsx";
 
 import Typography from "@mui/material/Typography";
 import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
@@ -31,7 +32,7 @@ export default function Ad_Home() {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [today, setToday] = useState(dayjs());
-
+  const [previousData, setPreviousData] = useState([]);
   const [open, setOpen] = useState(false);
 
   dayjs.extend(customParseFormat);
@@ -78,22 +79,22 @@ export default function Ad_Home() {
           },
         }
       );
-  
+
       // สมมติว่าข้อมูลมีฟิลด์ `check_in_date` ที่เราจะใช้ในการจัดเรียง
       // let x_data = response.data.body.sort((a, b) => {
       //   const dateA = new Date(a.check_in_date); // เปลี่ยนเป็นฟิลด์วันที่ที่ถูกต้อง
       //   const dateB = new Date(b.check_in_date);
-  
+
       //   return dateA - dateB; // จัดเรียงตามลำดับวันที่จากเก่าไปใหม่
       // });
-  
+
       setData(response.data.body);
       setLoading(false);
     } catch (err) {
       console.log("An error occurred. Please try again.");
     }
   };
-  
+
   const changeStatus = async (id, status) => {
     try {
       const response = await axios.post(
@@ -115,9 +116,36 @@ export default function Ad_Home() {
       console.log("An error occurred. Please try again.");
     }
   };
-  
+
 
   const [statusList] = useState(["pending", "pass", "failed"]);
+
+
+  
+  const calculateChanges = (current, previous, status) => {
+    const previousDay = today.subtract(1, "day");
+
+    const currentCount = current.filter(
+      (item) => item.status === status && formatDate(today) === formatDate(dayjs(item.check_in_date))
+    ).length;
+
+    const previousCount = previous.filter(
+      (item) => item.status === status && formatDate(previousDay) === formatDate(dayjs(item.check_in_date))
+    ).length;
+
+    const change = previousCount;
+    //   console.log(currentCount, previousCount)
+    return { currentCount, change };
+  };
+
+  const pendingStats = calculateChanges(data, previousData, "pending");
+  const passStats = calculateChanges(data, previousData, "pass");
+  const failedStats = calculateChanges(data, previousData, "failed");
+
+  useEffect(() => {
+    fecthdata();
+  }, [today]);
+
 
   useEffect(() => {
     fecthdata();
@@ -150,11 +178,49 @@ export default function Ad_Home() {
                 </div>
               </div> */}
 
+
+              <div className="flex justify-between mb-8">
+                <Card
+                  title="จำนวนการจอง"
+                  data={data
+                    .filter(
+                      (value) =>
+                        value.status !== "failed" &&
+                        formatDate(today) === formatDate(dayjs(value.check_in_date))
+                    ).length
+                  }
+                  change={data
+                    .filter(
+                      (value) =>
+                        value.status !== "failed" &&
+                        formatDate(today.subtract(1, "day")) === formatDate(dayjs(value.check_in_date))
+                    ).length}
+                  color="bg-blue-50"
+                />
+                <Card
+                  title="รอการอนุมัติ"
+                  data={pendingStats.currentCount}
+                  change={pendingStats.change}
+                  color="bg-yellow-50"
+                />
+                <Card
+                  title="จำนวนอนุมัติ"
+                  data={passStats.currentCount}
+                  change={passStats.change}
+                  color="bg-green-50"
+                />
+                <Card
+                  title="จำนวนยกเลิก"
+                  data={failedStats.currentCount}
+                  change={failedStats.change}
+                  color="bg-red-50"
+                />
+              </div>
+
               <div className="grid grid-cols-12 gap-1 text-center mb-4">
                 {[
                   "ลำดับ",
                   "ห้อง",
-                  "",
                   "สถานะ",
                   "วิธีการชำระเงิน",
                   "เช็คอิน",
@@ -164,6 +230,7 @@ export default function Ad_Home() {
                   "เบอร์โทร",
                   "ชื่อผู้รับ/ฝาก",
                   "เบอร์โทรผู้รับ/ฝาก",
+                  "ดูรายละเอียด",
                 ].map((header) => (
                   <h1 key={header} className="font-bold text-sm">
                     {header}
@@ -181,7 +248,7 @@ export default function Ad_Home() {
                     key={item._id}
                     className="grid grid-cols-12 gap-4 p-2 h-14 text-center items-center text-sm  border-b border-gray-300 hover:bg-blue-50 "
                   >
-                    <div className="col-span-12 grid grid-cols-12 gap-4 text-gray-700  text-center items-center">
+                    <div className=" col-span-12 grid grid-cols-12 gap-4 text-gray-700  text-center items-center" >
                       <Tooltip>
                         <span>{index + 1}</span>
                       </Tooltip>
@@ -189,7 +256,7 @@ export default function Ad_Home() {
                         <span className="truncate ...">{item.room_name}</span>
                       </Tooltip>
 
-                      <Tooltip>
+                      {/* <Tooltip>
                         <span>
                           <div className="col-span-1 rounded-lg ">
                             <PopupState
@@ -217,7 +284,7 @@ export default function Ad_Home() {
                                         // changeStatus(item._id, "pass");
                                         // setEditId(item._id);
                                         popupState.close();
-                                        navigate("/admin_edit/" + item._id);
+                                      
                                         // showModal();
                                         // setLoading(true);
                                       }}
@@ -226,25 +293,14 @@ export default function Ad_Home() {
                                         <div>Edit</div>
                                       </Typography>
                                     </MenuItem>
-                                    {/* <MenuItem
-                                    onClick={() => {
-                                      // changeStatus(item._id, "pending");
-                                      proceedWithDelete(item._id);
-                                      popupState.close();
-                                      setLoading(true);
-                                    }}
-                                  >
-                                    <Typography variant="inherit">
-                                      <div>Delete</div>
-                                    </Typography>
-                                  </MenuItem> */}
+                                   
                                   </Menu>
                                 </React.Fragment>
                               )}
                             </PopupState>
                           </div>
                         </span>
-                      </Tooltip>
+                      </Tooltip> */}
 
                       <div>
                         <select
@@ -253,20 +309,19 @@ export default function Ad_Home() {
                             changeStatus(item._id, e.target.value);
                             setLoading(true);
                           }}
-                          className={`${
-                            item.status === "pending"
-                              ? "bg-yellow-200"
-                              : item.status === "failed"
+                          className={`${item.status === "pending"
+                            ? "bg-yellow-200"
+                            : item.status === "failed"
                               ? "bg-red-200"
                               : "bg-green-200"
-                          } p-2 rounded-lg transition-colors duration-200 ease-in-out focus:bg-white hover:bg-white`}>
+                            } p-2 rounded-lg transition-colors duration-200 ease-in-out focus:bg-white hover:bg-white`}>
                           {statusList.map((status) => (
                             <option key={status} value={status}>
                               {status === "pending"
                                 ? "ตรวจสอบ"
                                 : status === "pass"
-                                ? "ยืนยัน"
-                                : "ลบข้อมูล"}
+                                  ? "ยืนยัน"
+                                  : "ลบข้อมูล"}
                             </option>
                           ))}
                         </select>
@@ -304,6 +359,17 @@ export default function Ad_Home() {
                       </Tooltip>
                       <Tooltip title={item.phone_2} arrow>
                         <span className="truncate ...">{item.phone_2}</span>
+                      </Tooltip>
+                      <Tooltip title="ดูรายละเอียด" arrow>
+                        <span>
+                          <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            onClick={() => {
+                              navigate("/admin_edit/" + item._id);
+                            }} >
+                            ดูรายละเอียด
+                          </button>
+                        </span>
                       </Tooltip>
                     </div>
                   </div>

@@ -34,6 +34,7 @@ export default function Dashboard() {
       .api("/")
       .then((res) => {
         setData(res.room);
+        setBooking(res.booking);
       })
       .catch((err) => {
         setError(err.message);
@@ -150,7 +151,7 @@ export default function Dashboard() {
       </Modal>
 
       {data.map((item, index) => (
-        <div key={index} className="container mx-auto">
+        <div key={index} className="container mx-auto  ">
           <div
             className={`${
               index % 2 === 0 ? "bg-[#B6D4F0]" : "bg-[#f2f4f6]"
