@@ -23,14 +23,14 @@ export default function SidebarAdmin({ page }) {
     "กราฟ&สถิติ", // Manage rooms
     "ห้องพัก", // View all rooms
     // "จัดการผู้ใช้งาน", // Manage users
-    // "จัดการหน้าเว็บไซต์", // Manage website
+    "จัดการหน้าเว็บไซต์", // Manage website
   ];
 
   const items2 = [
     UserOutlined,
     LaptopOutlined,
     NotificationOutlined,
-    // UserOutlined,
+    UserOutlined,
     // LaptopOutlined,
   ].map((icon, index) => {
     const title = text[index];
@@ -80,6 +80,11 @@ export default function SidebarAdmin({ page }) {
         navigate("/room", { replace: true });
         // navigate(<Ad_Analytic />);
         window.location.reload();
+        break;
+        case "4":
+          navigate("/ad_custom", { replace: true });
+          // navigate(<Ad_Analytic />);
+          window.location.reload();
         break;
       //   case "3":
       //     navigate("/schedule", { replace: true });

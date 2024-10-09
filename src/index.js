@@ -27,6 +27,7 @@ import Ad_Room from "./pages/admin/Ad_Room";
 
 import Footer from "./component/Footer";
 import Account from "./pages/user/Account";
+import Ad_Custom from "./pages/admin/Ad_Custome";
 
 let data = JSON.parse(localStorage.getItem("user-provider"));
 
@@ -170,6 +171,16 @@ const router = createBrowserRouter([
         <Appbar_master />
 
         <SidebarAdmin value={2} page={<Ad_Analytic />} />
+      </>
+    ),
+  },
+  {
+    path: "/ad_custom",
+    element: (
+      <>
+        <Appbar_master />
+
+        <SidebarAdmin value={4} page={<Ad_Custom />} />
       </>
     ),
   },
