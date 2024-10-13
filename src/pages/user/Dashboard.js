@@ -13,7 +13,7 @@ import service from "../../api/apiService";
 import { Modal } from "antd";
 
 import Login from "../auth/Login";
-
+ 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
@@ -30,6 +30,8 @@ export default function Dashboard() {
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
+       
+
     service
       .api("/")
       .then((res) => {

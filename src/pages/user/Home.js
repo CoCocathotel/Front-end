@@ -22,6 +22,7 @@ import Review2 from "../../assets/image/Review2.png";
 import Review3 from "../../assets/image/Review3.png";
 import FeetK from "../../assets/image/feet_kuay.png";
 import { BG1, BG2, Star, DogIcon } from "../../constant/SvgImg";
+import api from "../../utils/api";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -37,6 +38,7 @@ export default function Home() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [slideIndex, setSlideIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
+  const [data, setData] = useState([]);
 
   const itemsPerPage = 9;
   const totalPages = Math.ceil(reviews.flat().length / itemsPerPage);
@@ -56,63 +58,95 @@ export default function Home() {
       setCurrentPage(currentPage - 1);
     }
   };
+ 
 
   useEffect(() => {
-    AOS.init({ duration: 1000 }); // Initialize AOS for animations
-    service
-      .api("/")
-      .then((res) => {
-        setImgArray([
-          ImgaeCat,
-          ImageCat2,
-          ImgaeCat,
-          ImageCat2,
-          ImgaeCat,
-          ImageCat2,
-        ]);
-        setReviews([
-          [
-            Review1,
-            Review1,
-            Review2,
-            Review2,
-            Review1,
-            Review3,
-            Review1,
-            Review2,
-            Review3,
-          ],
-          [
-            Review1,
-            Review2,
-            Review2,
-            Review1,
-            Review2,
-            Review2,
-            Review1,
-            Review2,
-            Review2,
-          ],
-          [
-            Review1,
-            Review2,
-            Review3,
-            Review1,
-            Review2,
-            Review3,
-            Review1,
-            Review2,
-            Review3,
-          ],
-        ]);
-        setRoom(res.room);
-      })
-      .catch((err) => {
-        setError(err.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    AOS.init({ duration: 1000 });
+
+    api.getRoom().then((res) => {
+      setRoom(res.data.body);
+      // console.log(res.data.body);
+    }).catch((err) => {
+      setError(err.message);
+    }).finally(() => {
+      setLoading(false);
+    });
+    api.getHome().then((res) => {
+      var data = res.data.body[0];
+      setData(data);
+      setImgArray(data.heroImage.map((item) => item));
+      let temp = [];
+
+      setReviews(data.reviewImage.map((item, index) => {
+        if (index % 3 === 0) {
+          temp.push(item);
+        }
+        // console.log(temp);
+        return temp;
+      }));
+
+    }).catch((err) => {
+      setError(err.message);
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+
+ 
+    // service
+    //   .api("/")
+    //   .then((res) => {
+    //     setImgArray([
+    //       ImgaeCat,
+    //       ImageCat2,
+    //       ImgaeCat,
+    //       ImageCat2,
+    //       ImgaeCat,
+    //       ImageCat2,
+    //     ]);
+    //     setReviews([
+    //       [
+    //         Review1,
+    //         Review1,
+    //         Review2,
+    //         Review2,
+    //         Review1,
+    //         Review3,
+    //         Review1,
+    //         Review2,
+    //         Review3,
+    //       ],
+    //       [
+    //         Review1,
+    //         Review2,
+    //         Review2,
+    //         Review1,
+    //         Review2,
+    //         Review2,
+    //         Review1,
+    //         Review2,
+    //         Review2,
+    //       ],
+    //       [
+    //         Review1,
+    //         Review2,
+    //         Review3,
+    //         Review1,
+    //         Review2,
+    //         Review3,
+    //         Review1,
+    //         Review2,
+    //         Review3,
+    //       ],
+    //     ]);
+    //     setRoom(res.room);
+    //   })
+    //   .catch((err) => {
+    //     setError(err.message);
+    //   })
+    //   .finally(() => {
+    //     setLoading(false);
+    //   });
   }, []);
 
   const handleCarouselChange = (current) => {
@@ -171,7 +205,7 @@ export default function Home() {
             {ImgArray.map((image, index) => (
               <div key={index}>
                 <img
-                  src={`https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/homePage/heroImage/hero1.png`}
+                  src={`${image}`}
                   alt={`image-${index}`}
                   className="max-h-max object-cover rounded-lg shadow-lg"
                 />
@@ -206,9 +240,7 @@ export default function Home() {
         >
           <img src={Logo} alt="logo" width={200} height={120} />
           <p>
-            Co-Co Cat Hotel โรงแรมแมว โค-โค่ แค็ท หาดใหญ่ ยินดีต้อนรับ {<br />}
-            ต้องเดินทางไกลช่วงไหน…ฝากน้องแมวไว้กับเรา ดูแลน้องแมวห่วงใย
-            ปลอดภัยโดยมืออาชีพ
+            {data.title}
           </p>
         </div>
 
@@ -223,21 +255,21 @@ export default function Home() {
           >
             {room.map((item, index) => (
               <button
-                key={index}
+                key={item._id}
                 onClick={() => handleActiveIndex(index)}
-                className={`relative w-80  transition duration-300 ease-in-out overflow-hidden rounded-lg shadow-lg hover:blur-0 ${
-                  effectimg === true
-                    ? "blur-sm transition duration-300 ease-in-out scale-75"
-                    : ""
-                } ${index === 1 ? "scale-100 " : "scale-75 blur-sm "}`}
+                className={`relative w-80  transition duration-300 ease-in-out overflow-hidden rounded-lg shadow-lg hover:blur-0 ${effectimg === true
+                  ? "blur-sm transition duration-300 ease-in-out scale-75"
+                  : ""
+                  } ${index === 1 ? "scale-100 " : "scale-75 blur-sm "}`}
               >
                 <img
-                  src={`https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/rooms/${item.type}/${item.image[0]}`}
+                  src={item.image[0]}
                   alt={item.room_name}
                   className="w-full h-full object-cover rounded-lg transition duration-300 ease-in-out"
                   height={500}
                 />
 
+ 
                 {index === 1 && (
                   <div className="absolute bottom-0 w-full bg-[rgba(22, 48, 131, 0.8)] backdrop-blur-sm p-4 flex items-center justify-between">
                     <div className="w-52">
@@ -273,9 +305,8 @@ export default function Home() {
           <button
             onClick={handlePrev}
             disabled={currentPage === 0}
-            className={`absolute top-1/3 left-4 p-4 m-5 rounded-full z-30 opacity-80 shadow-md hover:bg-[#16305C] ${
-              currentPage === 0 ? "bg-gray-300" : "bg-gray-300"
-            } text-white`}
+            className={`absolute top-1/3 left-4 p-4 m-5 rounded-full z-30 opacity-80 shadow-md hover:bg-[#16305C] ${currentPage === 0 ? "bg-gray-300" : "bg-gray-300"
+              } text-white`}
           >
             <ArrowBackIosIcon />
           </button>
@@ -285,9 +316,8 @@ export default function Home() {
           <button
             onClick={handleNext}
             disabled={currentPage === totalPages - 1}
-            className={`absolute top-1/3 right-4 p-4 m-5 rounded-full z-30 opacity-80 shadow-md hover:bg-[#16305C] ${
-              currentPage === totalPages - 1 ? "bg-gray-300" : "bg-gray-300"
-            } text-white`}
+            className={`absolute top-1/3 right-4 p-4 m-5 rounded-full z-30 opacity-80 shadow-md hover:bg-[#16305C] ${currentPage === totalPages - 1 ? "bg-gray-300" : "bg-gray-300"
+              } text-white`}
           >
             <ArrowForwardIosIcon />
           </button>
@@ -330,20 +360,24 @@ export default function Home() {
 
             {/* Pagination */}
             <div className="flex items-center justify-center w-full p-4 space-x-4">
-              {reviews.map((_, index) => (
-                <div
-                  key={index}
-                  onClick={() => {
-                    setCurrentPage(index);
-                  }}
-                  className={
-                    index === currentPage
-                      ? "max-w-md w-10 h-4 bg-[#B6D4F0] rounded-full shadow-lg cursor-pointer"
-                      : "max-w-md w-4 h-4 bg-[#d7d7d7] rounded-full shadow-lg cursor-pointer"
-                  }
-                ></div>
-              ))}
+              {reviews
+                .filter((_, index) => (index) % 9 === 0)
+                .map((_, index) => (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      setCurrentPage(index);
+                    }}
+                    className={
+                      index === currentPage
+                        ? "max-w-md w-10 h-4 bg-[#B6D4F0] rounded-full shadow-lg cursor-pointer"
+                        : "max-w-md w-4 h-4 bg-[#d7d7d7] rounded-full shadow-lg cursor-pointer"
+                    }
+                  >
+                  </div>
+                ))}
             </div>
+
           </div>
         </div>
 
@@ -355,7 +389,7 @@ export default function Home() {
           </div>
         </div>
 
-        <img src={Map} alt="map" width={800} />
+        <img src={data.mapImage} alt="map" width={800} />
 
         <div
           className="items-center w-1/2 text-center mt-4 bg-[#B6D4F0] rounded-lg shadow-lg p-14"
@@ -365,7 +399,7 @@ export default function Home() {
             Co-Co Cat Hotel โรงแรมแมว โค-โค่ แค็ท
           </h1>
           <p className="text-[#0A1629] text-lg">
-            121, 105 ถนน ทุ่งรี ซอย 3 ตำบล คอหงส์ อำเภอหาดใหญ่ สงขลา 90110
+            {data.mapDetail}
           </p>
         </div>
 

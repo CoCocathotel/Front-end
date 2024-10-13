@@ -46,15 +46,14 @@ export default function Ad_Custom() {
     // Function to handle API call for updating home data
     const handleUpdate = async (formData) => {
         try {
-            const config = {
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            };
-            let response = await axios.patch(
-                productionCheck() + "/updateHome",
+              let response = await axios.patch(
+                productionCheck() + `/home/updateHome/${formData._id}`,
                 formData,
-                config
+                {
+                    headers: { 
+                        'Content-Type': 'application/json',
+                    }
+                }
             );
             if (response.status === 200) {
                 fetchData();
@@ -117,10 +116,16 @@ export default function Ad_Custom() {
                 }
             };
             let response = await axios.post(
-                productionCheck() + "/addHome",
+                productionCheck() + "/home/createHome",
                 formData,
-                config
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
             );
+            console.log(formData);
+            console.log(response);
             if (response.status === 200) {
                 fetchData();
                 setOpen(false);
@@ -137,7 +142,7 @@ export default function Ad_Custom() {
 
     const fetchData = async () => {
         try {
-            const response = await fetch(productionCheck() + "/getHome");
+            const response = await fetch(productionCheck() + "/home");
 
             if (response.status === 200) {
                 const result = await response.json();
@@ -200,19 +205,19 @@ export default function Ad_Custom() {
                     uid: index,
                     name: `Hero Image ${index + 1}`,
                     status: 'done',
-                    url: `https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/homePage/${url}`
+                    url: `${url}`
                 })) : [],
                 reviewImage: item.reviewImage ? item.reviewImage.map((url, index) => ({
                     uid: index,
                     name: `Review Image ${index + 1}`,
                     status: 'done',
-                    url: `https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/homePage/${url}`
+                    url: `${url}`
                 })) : [],
                 mapImage: item.mapImage ? [{
                     uid: 1,
                     name: 'Map Image',
                     status: 'done',
-                    url: `https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/homePage/${item.mapImage}`
+                    url: `${item.mapImage}`
                 }] : [],
             });
         } else {
@@ -240,7 +245,7 @@ export default function Ad_Custom() {
                                     {data.map((item, index) => (
                                         <div key={index}>
                                             <div className="flex justify-between items-center border p-4 my-4 rounded shadow-sm ">
-                                                <img src={`https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/homePage/${item.mapImage}`} alt="map" className="w-1/4 h-1/4" />
+                                                <img src={`${item.mapImage}`} alt="map" className="w-1/4 h-1/4" />
                                                 <p className="p-4">{item.mapDetail}</p>
                                                 <div>
                                                     <button
@@ -281,6 +286,13 @@ export default function Ad_Custom() {
                         label="_id"
                         hidden={true}
                     >
+                    </Form.Item>
+                    <Form.Item
+                        name="title"
+                        label="Title"
+                        rules={[{ required: true, message: "Please enter the title" }]}
+                    >
+                        <Input.TextArea placeholder="Title" />
                     </Form.Item>
                     <Form.Item
                         name="heroImage"
@@ -335,6 +347,8 @@ export default function Ad_Custom() {
                     >
                         <Input.TextArea placeholder="Map Detail" />
                     </Form.Item>
+
+            
                 </Form>
             </Modal>
         </>

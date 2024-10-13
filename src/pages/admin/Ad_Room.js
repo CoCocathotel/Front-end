@@ -8,6 +8,7 @@ import { Modal, Input, Button, Form, Upload, message, Image } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import slugify from "slugify";
 import axios from "axios";
+import api from "../../utils/api";
 
 export default function Ad_Room() {
   const [data, setData] = useState([]);
@@ -24,17 +25,14 @@ export default function Ad_Room() {
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
-    service
-      .api("/")
-      .then((res) => {
-        setData(res.room);
-      })
-      .catch((err) => {
-        setError(err.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    api.getRoom().then((res) => {
+      setData(res.data.body);
+      // console.log(res.data.body);
+    }).catch((err) => {
+      setError(err.message);
+    }).finally(() => {
+      setLoading(false);
+    });
   }, []);
 
   const handleAddRoom = () => {
@@ -58,20 +56,17 @@ export default function Ad_Room() {
     setPreviewOpen(true);
   };
 
-  // Helper function for Base64 conversion
   const getBase64 = (file) =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result); // This resolves the Base64 string
-      reader.onerror = (error) => reject(error); // Handle error if conversion fails
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = (error) => reject(error);
     });
 
-  // Function to handle file changes and preview the Base64 image
   const handleFileChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
 
-    // Convert the first image to Base64 if it exists
     if (newFileList.length > 0) {
       const file = newFileList[0].originFileObj || newFileList[0];
       getBase64(file).then((image) => {
@@ -99,55 +94,62 @@ export default function Ad_Room() {
     };
 
 
-    function productionCheck() {
-      const isDevelopment =
-        window.location.origin.includes("localhost") ||
-        window.location.origin.includes("127.0.0.1");
-  
-      return isDevelopment
-        ? "http://localhost:8700"
-        : "https://cococatbackend.vercel.app";
-    }
-
-    axios
-      .post(
-        productionCheck()+"/v1/create_room", // Replace with your API endpoint
-        payload, // Request body (form values and imageBase64)
-        {
-          headers: {
-            "Content-Type": "application/json", // Specify that the payload is in JSON format
-            // 'Access-Control-Allow-Origin': '*',
-          },
+    api.createRoom(payload)
+      .then((res) => {
+        if (res.status === 201 || res.status === 200) {
+          message.success("Room added successfully");
+          setData(res.data.body);
         }
-      )
-      .then((response) => {
-        message.success("Room added successfully"); // Display success message
-        // setData([...data, response.data.room]); // Add the new room to the list
-      })
-      .catch((error) => {
-        // Handle error correctly by displaying the message or response status
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.message
-        ) {
-          // If API sends an error message
-          message.error(`Error: ${error.response.data.message}`);
-        } else if (error.message) {
-          // If Axios fails
-          message.error(`Error: ${error.message}`);
-        } else {
-          message.error("An unknown error occurred");
-        }
-      })
-      .finally(() => {
-        setIsModalOpen(false); // Close modal
-        setImageBase64(""); // Reset image
-        setFileList([]); // Clear file list
-        setPreviewImage(""); // Clear preview image
+      }).catch((err) => {
+        setError(err.message);
+      }).finally(() => {
+        setIsModalOpen(false);
+        setImageBase64("");
+        setFileList([]);
+        setPreviewImage("");
         setConfirmLoading(false);
-        form.resetFields(); // Reset form fields
+        form.resetFields();
+        setLoading(false);
       });
+
+    // axios
+    //   .post(
+    //     productionCheck() + "/v1/create_room",
+    //     payload,
+    //     {
+    //       headers: {
+    //         "Content-Type": "application/json",
+
+    //       },
+    //     }
+    //   )
+    //   .then((response) => {
+    //     message.success("Room added successfully"); // Display success message
+    //     // setData([...data, response.data.room]); // Add the new room to the list
+    //   })
+    //   .catch((error) => {
+    //     if (
+    //       error.response &&
+    //       error.response.data &&
+    //       error.response.data.message
+    //     ) {
+    //       // If API sends an error message
+    //       message.error(`Error: ${error.response.data.message}`);
+    //     } else if (error.message) {
+    //       // If Axios fails
+    //       message.error(`Error: ${error.message}`);
+    //     } else {
+    //       message.error("An unknown error occurred");
+    //     }
+    //   })
+    //   .finally(() => {
+    //     setIsModalOpen(false); // Close modal
+    //     setImageBase64(""); // Reset image
+    //     setFileList([]); // Clear file list
+    //     setPreviewImage(""); // Clear preview image
+    //     setConfirmLoading(false);
+    //     form.resetFields(); // Reset form fields
+    //   });
   };
 
   const handleFormSubmitEdit = (values) => {
@@ -161,19 +163,18 @@ export default function Ad_Room() {
       const isDevelopment =
         window.location.origin.includes("localhost") ||
         window.location.origin.includes("127.0.0.1");
-  
+
       return isDevelopment
         ? "http://localhost:8700"
         : "https://cococatbackend.vercel.app";
     }
 
-  
+
     axios
-      .post(productionCheck()+"/v1/edit_room", payload, {
+      .post(productionCheck() + "/v1/edit_room", payload, {
         headers: {
           "Content-Type": "application/json",
-          // 'Access-Control-Allow-Origin': '*',
-        },
+         },
       })
       .then((response) => {
         message.success("Room updated successfully");
@@ -187,7 +188,7 @@ export default function Ad_Room() {
       .catch((error) => {
         message.error(
           "Failed to update room: " +
-            (error.response?.data?.message || error.message)
+          (error.response?.data?.message || error.message)
         );
       })
       .finally(() => {
@@ -195,7 +196,7 @@ export default function Ad_Room() {
         form.resetFields();
       });
   };
-  
+
 
   const handleRoomNameChange = (e) => {
     const roomName = e.target.value;
@@ -215,7 +216,7 @@ export default function Ad_Room() {
       .catch((error) => {
         message.error(
           "Failed to delete room: " +
-            (error.response?.data?.message || error.message)
+          (error.response?.data?.message || error.message)
         );
       });
   };
@@ -247,11 +248,11 @@ export default function Ad_Room() {
             data-aos="fade-up"
           >
             <img
-              src={`https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/rooms/${room.type}/${room.image[0]}`}
+              src={room.image[0]}
               alt={room.room_name}
               className="w-full h-44 object-cover"
             />
-    
+
             <div className="">
               <div className="p-4 h-24">
                 <h2 className="text-lg font-semibold mb-2">{room.room_name}</h2>
