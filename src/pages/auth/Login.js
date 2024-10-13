@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Logo from "../../cococat-hotel.png";
 import LoadingSpinner from "../../component/Loading";
 import axios from 'axios';
+import api from "../../utils/api";
 
 
 export default function Login({ handleAppbar }) {
@@ -14,49 +15,58 @@ export default function Login({ handleAppbar }) {
   const value_x = false;
   const navigate = useNavigate();
 
-  function production_check() {
-    const isDevelopment =
-      window.location.origin.includes("localhost") ||
-      window.location.origin.includes("127.0.0.1");
-
-    return isDevelopment
-      ? "http://localhost:8700"
-      : "https://cococatbackend.vercel.app";
-  }
-
-
   const handleLogin = async () => {
     handle_value2();
-    try {
-      const response = await axios.post(production_check() + "/v1/login", {
-        email,
-        password,
-      }, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
+    api.userLogin({ email, password }).then((response) => {
       const result = response.data;
 
       if (result.err !== "") {
         handle_value();
         localStorage.setItem("user-provider", JSON.stringify(result));
         localStorage.setItem("token", result.token);
-
+        navigate("/");
         if (result.pos === "admin") {
           window.location.reload();
-        } else {
-          navigate("/");
         }
-
-        console.log("Login successful");
-      } else {
-        console.log("Login failed");
       }
-    } catch (err) {
-      console.log("An error occurred. Please try again.", err);
-    }
+    })
+      .catch((err) => {
+        console.log("An error occurred. Please try again.", err);
+      })
+      .finally(() => {
+        handle_value();
+      });
+
+    // try {
+    //   const response = await axios.post(production_check() + "/v1/login", {
+    //     email,
+    //     password,
+    //   }, {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //   });
+
+    //   const result = response.data;
+
+    //   if (result.err !== "") {
+    //     handle_value();
+    //     localStorage.setItem("user-provider", JSON.stringify(result));
+    //     localStorage.setItem("token", result.token);
+
+    //     if (result.pos === "admin") {
+    //       window.location.reload();
+    //     } else {
+    //       navigate("/");
+    //     }
+
+    //     console.log("Login successful");
+    //   } else {
+    //     console.log("Login failed");
+    //   }
+    // } catch (err) {
+    //   console.log("An error occurred. Please try again.", err);
+    // }
   };
 
   const handle_value = () => {

@@ -69,7 +69,6 @@ export default function Home() {
     }).catch((err) => {
       setError(err.message);
     }).finally(() => {
-      setLoading(false);
     });
     api.getHome().then((res) => {
       var data = res.data.body[0];
@@ -181,7 +180,7 @@ export default function Home() {
     }
   };
 
-  if (loading) return <LoadingSpinner />;
+  if (loading && reviews) return <LoadingSpinner />;
   if (error) return <p className="text-red-500">Error: {error}</p>;
 
   return (

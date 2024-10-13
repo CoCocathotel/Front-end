@@ -11,9 +11,9 @@ import LoadingSpinner from "../../component/Loading";
 import Appbar from "../../component/Calendar";
 import service from "../../api/apiService";
 import { Modal } from "antd";
-
+import api from "../../utils/api";
 import Login from "../auth/Login";
- 
+
 export default function Dashboard() {
   const navigate = useNavigate();
   const [data, setData] = useState([]);
@@ -30,20 +30,22 @@ export default function Dashboard() {
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
-       
-
-    service
-      .api("/")
-      .then((res) => {
-        setData(res.room);
-        setBooking(res.booking);
-      })
-      .catch((err) => {
-        setError(err.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    api.getBooking().then((res) => {
+      setBooking(res.data.body);
+      console.log(res.data.body);
+    }).catch((err) => {
+      setError(err.message);
+    }).finally(() => {
+      setLoading(false);
+    });
+    api.getRoom().then((res) => {
+      setData(res.data.body);
+      console.log(res.data.body);
+    }).catch((err) => {
+      setError(err.message);
+    }).finally(() => {
+      setLoading(false);
+    });
   }, []);
 
   useEffect(() => {
@@ -153,11 +155,10 @@ export default function Dashboard() {
       </Modal>
 
       {data.map((item, index) => (
-        <div key={index} className="container mx-auto  ">
+        <div key={index} className="mx-auto">
           <div
-            className={`${
-              index % 2 === 0 ? "bg-[#B6D4F0]" : "bg-[#f2f4f6]"
-            } flex py-7 px-4 justify-center items-center align-middle w-full h-full space-x-20`}
+            className={`${index % 2 === 0 ? "bg-[#B6D4F0]" : "bg-[#f2f4f6]"
+              } flex p-7 justify-center items-center align-middle w-screen h-full`}
           >
             <div
               className="rounded-lg px-4 py-5 w-full h-auto ml-72 mr-72"
@@ -167,9 +168,9 @@ export default function Dashboard() {
                 <div className="col-span-2 flex space-x-5 overflow-hidden">
                   <div className="w-96">
                     <img
-                      className="rounded-lg h-96 w-full object-cover border-gray-400 border-4"
+                      className="rounded-lg scale-95 object-cover border-gray-400 border-4"
                       key={index}
-                      src={`https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/rooms/${item.type}/${item.image[0]}`}
+                      src={`${item.image[0]}`}
                       alt={item.room_name}
                     />
                   </div>
@@ -184,20 +185,25 @@ export default function Dashboard() {
                           สามารถใช้กล้องได้ทั้งหมด {item.cameras} ตัว
                         </p>
                       </div>
+                      <div className="flex space-x-4">
+                        <img src={Feet} className="w-5 h-5" alt="feet" />
+                        <p className="text-xm ">
+                          <p>จำนวนน้องแมว {item.number_of_cats} ตัว </p>
+                        </p>
+                      </div>
 
                       <div className="flex space-x-4">
                         <img src={Feet} className="w-5 h-5" alt="feet" />
                         <p className="text-xm ">
                           มีห้องว่างทั้งหมด{" "}
                           {checkroom(item.room_name) >= 0
-                            ? `${
-                                item.number_of_rooms -
-                                  checkroom(item.room_name) >=
-                                0
-                                  ? item.number_of_rooms -
-                                    checkroom(item.room_name)
-                                  : 0
-                              }`
+                            ? `${item.number_of_rooms -
+                              checkroom(item.room_name) >=
+                              0
+                              ? item.number_of_rooms -
+                              checkroom(item.room_name)
+                              : 0
+                            }`
                             : `${item.number_of_rooms}`}{" "}
                           ห้อง
                         </p>
@@ -205,7 +211,8 @@ export default function Dashboard() {
 
                       <div className="flex space-x-4">
                         <img src={Feet} className="w-5 h-5" alt="feet" />
-                        <p className="text-xm ">{item.description}</p>
+                        <p className="text-xm break-words">
+                          {item.description}</p>
                       </div>
 
                       <div className="w-52 h-14 text-xl text-black bg-[#e8f773] hover:bg-[#f4f0af] flex rounded-full items-center text-center justify-center">
@@ -215,56 +222,42 @@ export default function Dashboard() {
                   </div>
                 </div>
 
-                <div className="py-10 px-5 overflow-hidden w-64 h-96 text-center grid grid-cols-1 gap-40">
-                  <div>
-                    <p>จำนวนน้องแมว {item.number_of_cats} ตัว </p>
-                    <div className="flex items-center justify-center ">
-                      {Array.from({ length: item.number_of_cats }, (_, i) => (
-                        <img
-                          src={CatIcon}
-                          key={i}
-                          className="w-10 h-10 mt-5"
-                          alt={`cat-icon-${i}`}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                <div className="bottom-0 justify-end items-end flex h-96">
+                  <span></span>
                   <div>
                     {numcamera >
                       item.cameras * Math.ceil(numcat / item.number_of_cats) &&
-                    (numcat >
-                      item.number_of_cats *
+                      (numcat >
+                        item.number_of_cats *
                         (item.number_of_rooms - checkroom(item.room_name)) ||
-                      numcat > item.number_of_cats * item.number_of_rooms) ? (
+                        numcat > item.number_of_cats * item.number_of_rooms) ? (
                       <button className="btn-primary3">
                         {"จำนวนกล้องไม่เพียงพอและ " +
                           `ต้องการ ${Math.ceil(
                             numcat / item.number_of_cats
-                          )} ห้อง เหลือเพียง ${
-                            item.number_of_rooms - checkroom(item.room_name)
+                          )} ห้อง เหลือเพียง ${item.number_of_rooms - checkroom(item.room_name)
+                            ? item.number_of_rooms -
+                              checkroom(item.room_name) >=
+                              0
                               ? item.number_of_rooms -
-                                  checkroom(item.room_name) >=
-                                0
-                                ? item.number_of_rooms -
-                                  checkroom(item.room_name)
-                                : 0
-                              : item.number_of_rooms
+                              checkroom(item.room_name)
+                              : 0
+                            : item.number_of_rooms
                           } ห้องว่าง `}
                       </button>
                     ) : numcat >
-                        item.number_of_cats *
-                          (item.number_of_rooms - checkroom(item.room_name)) ||
+                      item.number_of_cats *
+                      (item.number_of_rooms - checkroom(item.room_name)) ||
                       numcat > item.number_of_cats * item.number_of_rooms ? (
                       <button className="btn-primary3">{` ต้องการ ${Math.ceil(
                         numcat / item.number_of_cats
-                      )} ห้อง แต่เหลือเพียง ${
-                        item.number_of_rooms - checkroom(item.room_name)
-                          ? item.number_of_rooms - checkroom(item.room_name) >=
-                            0
-                            ? item.number_of_rooms - checkroom(item.room_name)
-                            : 0
-                          : item.number_of_rooms
-                      } ห้องว่าง `}</button>
+                      )} ห้อง แต่เหลือเพียง ${item.number_of_rooms - checkroom(item.room_name)
+                        ? item.number_of_rooms - checkroom(item.room_name) >=
+                          0
+                          ? item.number_of_rooms - checkroom(item.room_name)
+                          : 0
+                        : item.number_of_rooms
+                        } ห้องว่าง `}</button>
                     ) : numcamera >
                       item.cameras * Math.ceil(numcat / item.number_of_cats) ? (
                       <button className="btn-primary3">

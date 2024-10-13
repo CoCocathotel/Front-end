@@ -14,11 +14,19 @@ export default{
 //   Home
   getHome: (data) => service.get('/home', data),
 
+// Booking
+  getBooking: (data) => service.get('/booking', data),
+  createBooking: (data) => service.post('/booking/createBooking', data),
 
 
 //   Room
   getRoom: (data) => service.get('/room', data),
   createRoom: (data) => service.post('/room/createRoom', data),
+  getOneRoom: (type) => service.get(`/room/${type}`),
+
+
+//User
+  userLogin: (data) => service.post('/user/login', data),
 }
 
 

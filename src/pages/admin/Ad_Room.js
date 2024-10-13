@@ -14,14 +14,14 @@ export default function Ad_Room() {
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false); // For managing modal state
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [form] = Form.useForm(); // Ant Design form instance
   const [imageBase64, setImageBase64] = useState("");
   const [fileList, setFileList] = useState([]);
   const [previewImage, setPreviewImage] = useState("");
   const [previewOpen, setPreviewOpen] = useState(false);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [editingRoom, setEditingRoom] = useState(null); // To track if we're editing a room
+  const [editingRoom, setEditingRoom] = useState(null);
 
   useEffect(() => {
     AOS.init({ duration: 1000 });

@@ -18,7 +18,6 @@ export default function Ad_Custom() {
 
     dayjs.extend(customParseFormat);
 
-    // Function to handle form submission
     const handleOk = async () => {
         try {
             const values = await form.validateFields();

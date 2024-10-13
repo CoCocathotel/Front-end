@@ -98,7 +98,7 @@ export default function Appbar_master() {
                 width={80}
                 height={80}
               />
-{/* 
+              {/* 
               <div
                 className="text-gray-600 hover:text-blue-500"
               >

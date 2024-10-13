@@ -13,6 +13,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import PaymentsIcon from "@mui/icons-material/Payments";
+import api from "../utils/api";
 
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
@@ -191,28 +192,23 @@ export default function Detail() {
       if (get_user === null || get_user === "") {
         navigate("/login");
       } else {
-        console.log(get_user);
-
+        // console.log('Type', Type)
+        api.getOneRoom(Type)
+        .then((response) => {
+          console.log(response.data.body);
+          setTotal(Math.ceil(numcat / response.data.body.number_of_cats));
+          setData(response.data.body);
+        })
+        .catch((err) => {
+          console.log("An error occurred. Please try again.", err);
+        })
+        .finally(() => {
+          setLoading(false);
+ 
+        
         setUsername(get_user.first_name + " " + get_user.last_name);
         setEmail(get_user.email);
         setPhone(get_user.phone);
-
- 
-        getRoom(); 
-
-
-        // let num;
-
-        // if (Type === "fan-room") {
-        //   num = numcat;
-        // } else if (Type === "ac-standard-room") {
-        //   num = Math.ceil(numcat / 2);
-        // } else if (Type === "ac-connecting-room") {
-        //   num = Math.ceil(numcat / 4);
-        // }
-
-        // console.log(Type, num, numcat);
-        console.log(start, end, numcat, totalday, numcamera, total);
         if (start && end && numcat) {
           // setData(getdata);
           setStartDate(start);
@@ -222,12 +218,13 @@ export default function Detail() {
           setNumcamera(numcamera);
           // setTotal(num);
         }
+      });
       }
     }
   }, []);
 
   let fecth_detail = async () => {
-    const response = await fetch(production_check() + `/v1/booking/${id}`, {
+    const response = await fetch(production_check() + `/booking/${id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -266,25 +263,7 @@ export default function Detail() {
     }
   };
 
-  const getRoom = async () => {
-    try {
-      const response = await axios.get(production_check() + `/v1/room/${Type}`);
-      // set time intervale
-      setTimeout(() => {
-        setLoading(false);
-      }, 2000);
-
-      setError(null);
-      setData(response.data.body[0]);
-
-      setTotal(Math.ceil(nunmcat / response.data.body[0].number_of_cats));
  
-    
-      return response.data.body[0];
-    } catch (error) {
-      setError(error);
-    }
-  };
 
   useEffect(() => {
     // console.log("base64: ", base64img);
@@ -328,7 +307,7 @@ export default function Detail() {
   };
 
   let proceedWithPurchase = async (img) => {
-    try {
+   
       let item = {
         room_name: data.room_name,
         type: data.type,
@@ -351,30 +330,38 @@ export default function Detail() {
 
       console.log(item);
 
-      const response = await fetch(production_check() + `/v1/book_room`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          
-        },
-        body: JSON.stringify(item),
+      api.createBooking(item)
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((err) => {
+        console.log("An error occurred. Please try again.", err);
+      }).finally(() => {
+        setLoading(false);
+        countDown();
       });
 
+      // const response = await fetch(production_check() + `/v1/book_room`, {
+      //   method: "POST",
+      //   headers: {
+      //     "Content-Type": "application/json",
+          
+      //   },
+      //   body: JSON.stringify(item),
+      // });
+
  
-      // setLoading(true);
-      const result = await response.json();
+      // // setLoading(true);
+      // const result = await response.json();
 
-      console.log(result, "result");
+      // console.log(result, "result");
 
-      if (response.status == 201) {
-        countDown();
-        // setTimeout(() => {
-        //   setLoading(false);
-        // }, 5*1000);
-      }
-    } catch (err) {
-      console.log("An error occurred. Please try again.");
-    }
+      // if (response.status == 201) {
+      //   countDown();
+      //   // setTimeout(() => {
+      //   //   setLoading(false);
+      //   // }, 5*1000);
+  
   };
 
   return (
@@ -389,19 +376,19 @@ export default function Detail() {
           <div className="p-20 bg-[#EAEDF1] flex justify-center items-start">
             <div className=" w-1/2 ">
               <div className="flex items-center justify-between text-center">
-                <div className="items-start text-left">
+                <div className="items-start text-left mr-20">
                   <h1 className="text-3xl">
-                    {data.room_name ?? data[0].room_name}
+                    {data.room_name ?? data.room_name}
                   </h1>
                   <p className="text-xs text-gray-600">
-                    ห้องพัก {data.room_name ?? data[0].room_name}
+                    ห้องพัก {data.room_name ?? data.room_name}
                   </p>
                   <p className="text-xs text-gray-600">
                     เริ่มเช็คอิน : จาก: 08:00 ถึง เวลาเช็คเอาท์ : 17:00
                   </p>
                   <p className="text-xs text-gray-600">
                     {" "}
-                    โดย {data.description ?? data[0].description}
+                    โดย {data.description ?? data.description}
                   </p>
                 </div>
                 {data.image && data.image.length > 0 ? (
@@ -409,12 +396,7 @@ export default function Detail() {
                     {data.image.map((img, index) => (
                       <img
                         key={index}
-                        src={
-                          "https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/rooms/" +
-                          data.type +
-                          "/" +
-                          img
-                        }
+                        src={img}
                         className="rounded-xl shadow-lg"
                         alt={data.type}
                         width={150}
@@ -428,12 +410,7 @@ export default function Detail() {
                       <>
                         <img
                           key={0}
-                          src={
-                            "https://hiykwrlgoinmxgqczucv.supabase.co/storage/v1/object/public/rooms/" +
-                            data[0].type +
-                            "/" +
-                            "0.png"
-                          }
+                          src={data.image}
                           className="rounded-xl shadow-lg"
                           alt={data[0].type}
                           width={150}
