@@ -18,7 +18,7 @@ import {
 } from "recharts";
 import LoadingSpinner from "../../component/Loading";
 import { DatePicker } from "antd";
-import Card from "./Card.tsx";
+import Card from "../../component/Card";
 
 const { MonthPicker } = DatePicker;
 

@@ -4,27 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
 import LoadingSpinner from "../../component/Loading";
 import Detail from "../../component/Detail";
-import Card from "./Card.tsx";
-
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
+import Card from "./Card";
 import Tooltip from "@mui/material/Tooltip";
-import Pagination from "@mui/material/Pagination";
-import PaginationItem from "@mui/material/PaginationItem";
-import Stack from "@mui/material/Stack";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-
-import Typography from "@mui/material/Typography";
-import PopupState, { bindTrigger, bindMenu } from "material-ui-popup-state";
-
 import { Modal } from "antd";
-import Draggable from "react-draggable";
-
+import api from "../../utils/api";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-// import { newDate } from "react-datepicker/dist/date_utils";
 
 export default function Ad_Schedule() {
   const navigate = useNavigate();
@@ -54,68 +41,88 @@ export default function Ad_Schedule() {
 
 
 
-  function productionCheck() {
-    const isDevelopment =
-      window.location.origin.includes("localhost") ||
-      window.location.origin.includes("127.0.0.1");
-
-    return isDevelopment
-      ? "http://localhost:8700"
-      : "https://cococatbackend.vercel.app";
-  }
-
   const fecthdata = async () => {
-    try {
-      const response = await fetch(
-        productionCheck() + "/v1/cart",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            // 'Access-Control-Allow-Origin': '*',
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-          body: JSON.stringify({
-            email: JSON.parse(localStorage.getItem("user-provider")).email,
-            pos: "admin",
-          }),
-        }
-      );
-
-      const result = await response.json();
-
-      setData(result.body);
-
-      setLoading(false);
-    } catch (err) {
-      console.log("An error occurred. Please try again.");
-    }
+    api.getAllEvent({ role: 'admin' })
+      .then((res) => {
+        setData(res.data.body);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      })
   };
 
   const changeStatus = async (id, status) => {
-    try {
-      const response = await fetch(
-        productionCheck() + "/v1/update-status",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            // 'Access-Control-Allow-Origin': '*',
-            Authorization: "Bearer " + localStorage.getItem("token"),
-          },
-          body: JSON.stringify({
-            id: id,
-            status: status,
-          }),
-        }
-      );
-      const result = await response.json();
-      console.log(result);
-      fecthdata();
-    } catch (err) {
-      console.log("An error occurred. Please try again.");
-    }
+    api.changeStatus(
+      {
+        id: id,
+        status: status,
+      },)
+      .then((res) => {
+       
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        fecthdata();
+      })
   };
+
+  // const fecthdata = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       productionCheck() + "/v1/cart",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           // 'Access-Control-Allow-Origin': '*',
+  //           Authorization: "Bearer " + localStorage.getItem("token"),
+  //         },
+  //         body: JSON.stringify({
+  //           email: JSON.parse(localStorage.getItem("user-provider")).email,
+  //           pos: "admin",
+  //         }),
+  //       }
+  //     );
+
+  //     const result = await response.json();
+
+  //     setData(result.body);
+
+  //     setLoading(false);
+  //   } catch (err) {
+  //     console.log("An error occurred. Please try again.");
+  //   }
+  // };
+
+  // const changeStatus = async (id, status) => {
+  //   try {
+  //     const response = await fetch(
+  //       productionCheck() + "/v1/update-status",
+  //       {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //           // 'Access-Control-Allow-Origin': '*',
+  //           Authorization: "Bearer " + localStorage.getItem("token"),
+  //         },
+  //         body: JSON.stringify({
+  //           id: id,
+  //           status: status,
+  //         }),
+  //       }
+  //     );
+  //     const result = await response.json();
+  //     console.log(result);
+  //     fecthdata();
+  //   } catch (err) {
+  //     console.log("An error occurred. Please try again.");
+  //   }
+  // };
 
   const [statusList] = useState(["pending", "pass", "failed"]);
 

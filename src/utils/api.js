@@ -13,6 +13,8 @@ export default{
   
 //   Home
   getHome: (data) => service.get('/home', data),
+  createHome: (data) => service.post('/home/createHome', data),
+  updateHome: (id,data) => service.patch(`/home/updateHome/${id}`, data),
 
 // Booking
   getBooking: (data) => service.get('/booking', data),
@@ -27,6 +29,10 @@ export default{
 
 //User
   userLogin: (data) => service.post('/user/login', data),
+
+//  AdminHome
+  getAllEvent: (data) => service.post('/booking/getAllEvent', data),
+  changeStatus: (data) => service.patch(`/booking/changeStatus`, data),
 }
 
 

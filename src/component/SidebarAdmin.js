@@ -31,7 +31,6 @@ export default function SidebarAdmin({ page }) {
     LaptopOutlined,
     NotificationOutlined,
     UserOutlined,
-    // LaptopOutlined,
   ].map((icon, index) => {
     const title = text[index];
     const key = String(index + 1);
@@ -43,6 +42,13 @@ export default function SidebarAdmin({ page }) {
       children = [
         { key: `${key}-all`, label: "จองล่าสุด" },
         { key: `${key}-schedule`, label: "กำหนดการวันนี้" },
+      ];
+    }
+
+    if (index === 3) {
+      children = [
+        { key: `${key}-home`, label: "หน้าหลัก" },
+        { key: `${key}-footer`, label: "ฟุตเตอร์" },
       ];
     }
 
@@ -63,33 +69,28 @@ export default function SidebarAdmin({ page }) {
     switch (e.key) {
       case "1-all":
         navigate("/", { replace: true });
-        // navigate(<Ad_Home />);
         window.location.reload();
         break;
       case "1-schedule":
         navigate("/schedule", { replace: false });
-        // navigate(<Ad_Home />);
         window.location.reload();
         break;
       case "2":
         navigate("/ad_analytic", { replace: true });
-        // navigate(<Ad_Analytic />);
         window.location.reload();
         break;
       case "3":
         navigate("/room", { replace: true });
-        // navigate(<Ad_Analytic />);
         window.location.reload();
         break;
-        case "4":
+      case "4-home":
           navigate("/ad_custom", { replace: true });
-          // navigate(<Ad_Analytic />);
           window.location.reload();
-        break;
-      //   case "3":
-      //     navigate("/schedule", { replace: true });
-      //     // navigate(<Ad_Analytic />);
-      //     break;
+      break;
+      case "4-footer":
+        navigate("/footer", { replace: true });
+        window.location.reload();
+      break;
       default:
         console.log("#");
         break;
@@ -97,7 +98,7 @@ export default function SidebarAdmin({ page }) {
   };
 
   const {
-    token: { colorBgContainer, colorPrimary },
+    token: { colorBgContainer },
   } = theme.useToken();
 
   return (

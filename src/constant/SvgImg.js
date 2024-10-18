@@ -1,4 +1,6 @@
 import React from "react";
+
+
 export const BG1 = () => {
   return (
     <svg

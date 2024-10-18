@@ -8,7 +8,7 @@ import axios from "axios";
 import api from "../../utils/api";
 import { convertFilesToBase64, handleFileChange } from "../../utils/helpers";
 
-export default function Ad_Custom() {
+export default function Ad_Footer() {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);          
     const [data, setData] = useState([]);
@@ -18,17 +18,7 @@ export default function Ad_Custom() {
 
     const handleOk = async () => {
         try {
-            const values = await form.validateFields();
-            const heroImageBase64 = values.heroImage.length > 0 ? await convertFilesToBase64(values.heroImage) : [];
-            const reviewImageBase64 = values.reviewImage.length > 0 ? await convertFilesToBase64(values.reviewImage) : [];
-            const mapImageBase64 = values.mapImage.length > 0 ? await convertFilesToBase64(values.mapImage) : [];
-
-            const formData = {
-                ...values,
-                heroImage: heroImageBase64.length > 0 ? heroImageBase64 : undefined,
-                reviewImage: reviewImageBase64.length > 0 ? reviewImageBase64 : undefined,
-                mapImage: mapImageBase64.length > 0 ? mapImageBase64[0] : undefined
-            };
+            const formData = await form.validateFields();
 
             if (isEdit) {
                 await handleUpdate(formData);
@@ -41,7 +31,7 @@ export default function Ad_Custom() {
     };
 
     const handleUpdate = async (formData) => {
-        api.updateHome(formData._id, formData)
+        api.updateFooter(formData._id, formData)
             .then(res => {
                 fetchData();
             })
@@ -54,7 +44,7 @@ export default function Ad_Custom() {
     };
 
     const handleCreate = async (formData) => {
-        api.createHome(formData)
+        api.createFooter(formData)
             .then(res => {
                 fetchData();
             })
@@ -67,7 +57,7 @@ export default function Ad_Custom() {
     };
 
     const fetchData = async () => {
-        api.getHome()
+        api.getFooter()
             .then(res => {
                 setData(res?.data?.body || []);
             })
@@ -83,25 +73,7 @@ export default function Ad_Custom() {
         setIsEdit(!!item);
         if (item) {
             form.setFieldsValue({
-                ...item,
-                heroImage: item.heroImage ? item.heroImage.map((url, index) => ({
-                    uid: index,
-                    name: `Hero Image ${index + 1}`,
-                    status: 'done',
-                    url: `${url}`
-                })) : [],
-                reviewImage: item.reviewImage ? item.reviewImage.map((url, index) => ({
-                    uid: index,
-                    name: `Review Image ${index + 1}`,
-                    status: 'done',
-                    url: `${url}`
-                })) : [],
-                mapImage: item.mapImage ? [{
-                    uid: 1,
-                    name: 'Map Image',
-                    status: 'done',
-                    url: `${item.mapImage}`
-                }] : [],
+                item : [],
             });
         } else {
             form.resetFields();
@@ -129,7 +101,7 @@ export default function Ad_Custom() {
                                             <div className="flex justify-between items-center border p-4 my-4 rounded shadow-sm ">
                                                 <ul className="flex space-x-4">
                                                     <li>1</li>
-                                                    <li>Home</li>
+                                                    <li>Footer</li>
                                                 </ul>
                                                 <div>
                                                     <button
@@ -148,7 +120,7 @@ export default function Ad_Custom() {
                                     <div className="flex justify-between items-center border p-4 my-4 rounded shadow-sm ">
                                          <ul className="flex space-x-4">
                                                     <li>1</li>
-                                                    <li className="text-red-400">You can create Home Section</li>
+                                                    <li className="text-red-400">You can create Footer Section</li>
                                                 </ul>
                                         <div>
                                             <button

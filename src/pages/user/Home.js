@@ -1,27 +1,19 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { useEffect, useState, useRef } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css"; // Import AOS CSS
+import "aos/dist/aos.css";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Carousel, Button } from "antd";
+import { Carousel } from "antd";
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../component/Loading";
-import service from "../../api/apiService";
 import Label from "../../component/Label";
-
-import ImgaeCat from "../../assets/image/hero1.png";
-import ImageCat2 from "../../assets/image/hero2.png";
 import Logo from "../../cococat-hotel.png";
 import FeetBig from "../../assets/image/feetBig.png";
-import Map from "../../assets/image/map.png";
 import Bg from "../../assets/image/bg.png";
 import FeetBlue from "../../assets/image/feet_blue.png";
-import Review1 from "../../assets/image/Review1.png";
-import Review2 from "../../assets/image/Review2.png";
-import Review3 from "../../assets/image/Review3.png";
 import FeetK from "../../assets/image/feet_kuay.png";
-import { BG1, BG2, Star, DogIcon } from "../../constant/SvgImg";
+ import { BG1, BG2, Star, DogIcon,  } from "../../constant/SvgImg";
 import api from "../../utils/api";
 
 export default function Home() {
@@ -65,7 +57,6 @@ export default function Home() {
 
     api.getRoom().then((res) => {
       setRoom(res.data.body);
-      // console.log(res.data.body);
     }).catch((err) => {
       setError(err.message);
     }).finally(() => {
@@ -80,7 +71,6 @@ export default function Home() {
         if (index % 3 === 0) {
           temp.push(item);
         }
-        // console.log(temp);
         return temp;
       }));
 
@@ -90,62 +80,6 @@ export default function Home() {
     .finally(() => {
       setLoading(false);
     });
-
- 
-    // service
-    //   .api("/")
-    //   .then((res) => {
-    //     setImgArray([
-    //       ImgaeCat,
-    //       ImageCat2,
-    //       ImgaeCat,
-    //       ImageCat2,
-    //       ImgaeCat,
-    //       ImageCat2,
-    //     ]);
-    //     setReviews([
-    //       [
-    //         Review1,
-    //         Review1,
-    //         Review2,
-    //         Review2,
-    //         Review1,
-    //         Review3,
-    //         Review1,
-    //         Review2,
-    //         Review3,
-    //       ],
-    //       [
-    //         Review1,
-    //         Review2,
-    //         Review2,
-    //         Review1,
-    //         Review2,
-    //         Review2,
-    //         Review1,
-    //         Review2,
-    //         Review2,
-    //       ],
-    //       [
-    //         Review1,
-    //         Review2,
-    //         Review3,
-    //         Review1,
-    //         Review2,
-    //         Review3,
-    //         Review1,
-    //         Review2,
-    //         Review3,
-    //       ],
-    //     ]);
-    //     setRoom(res.room);
-    //   })
-    //   .catch((err) => {
-    //     setError(err.message);
-    //   })
-    //   .finally(() => {
-    //     setLoading(false);
-    //   });
   }, []);
 
   const handleCarouselChange = (current) => {
