@@ -4,8 +4,6 @@ import api from "../utils/api";
 import { FeetTop, FeetBottom } from "../constant/SvgImg";
 
 export default function Footer() {
-
-
   const [data, setData] = useState([]);
 
   useEffect(() => {
