@@ -1,10 +1,9 @@
 import * as React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../../component/Loading";
 import { Modal, Form, Input, Button, Upload, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
-import axios from "axios";
 import api from "../../utils/api";
 import { convertFilesToBase64, handleFileChange } from "../../utils/helpers";
 
@@ -121,7 +120,6 @@ export default function Ad_Custom() {
                         <LoadingSpinner />
                     ) : (
                         <div>
-                            {/* <h4>Home Section</h4> */}
                             {data.length > 0 ? (
                                 <>
                                     {data.map((item, index) => (

@@ -2,14 +2,11 @@
 import { Route, Routes, Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useRef } from "react";
-import axios from "axios";
 import AOS from "aos";
-import "aos/dist/aos.css"; // Import AOS CSS
+import "aos/dist/aos.css";
 import Feet from "../../assets/image/feet.png";
-import CatIcon from "../../assets/image/cat_icon.png";
 import LoadingSpinner from "../../component/Loading";
 import Appbar from "../../component/Calendar";
-import service from "../../api/apiService";
 import { Modal } from "antd";
 import api from "../../utils/api";
 import Login from "../auth/Login";

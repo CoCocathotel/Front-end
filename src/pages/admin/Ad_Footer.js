@@ -1,12 +1,9 @@
 import * as React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../../component/Loading";
 import { Modal, Form, Input, Button, Upload, message } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import axios from "axios";
 import api from "../../utils/api";
-import { convertFilesToBase64, handleFileChange } from "../../utils/helpers";
 
 export default function Ad_Footer() {
     const navigate = useNavigate();
@@ -19,7 +16,7 @@ export default function Ad_Footer() {
     const handleOk = async () => {
         try {
             const formData = await form.validateFields();
-
+            console.log(formData);
             if (isEdit) {
                 await handleUpdate(formData);
             } else {
@@ -33,6 +30,7 @@ export default function Ad_Footer() {
     const handleUpdate = async (formData) => {
         api.updateFooter(formData._id, formData)
             .then(res => {
+                console.log('formData._id', formData._id);
                 fetchData();
             })
             .catch(err => {
@@ -46,6 +44,7 @@ export default function Ad_Footer() {
     const handleCreate = async (formData) => {
         api.createFooter(formData)
             .then(res => {
+                console.log(res);
                 fetchData();
             })
             .catch(err => {
@@ -59,6 +58,7 @@ export default function Ad_Footer() {
     const fetchData = async () => {
         api.getFooter()
             .then(res => {
+                console.log(1231231, res);
                 setData(res?.data?.body || []);
             })
             .catch(err => {
@@ -73,14 +73,18 @@ export default function Ad_Footer() {
         setIsEdit(!!item);
         if (item) {
             form.setFieldsValue({
-                item : [],
+                _id: item._id,
+                headFooter: item.headFooter,
+                addressFooter: item.addressFooter,
+                phoneFooter: item.phoneFooter,
+                lineFooter: item.lineFooter,
+                tiktokFooter: item.tiktokFooter,
             });
         } else {
             form.resetFields();
         }
         setOpen(true);
     };
-
     useEffect(() => {
         fetchData();
     }, []);
@@ -93,7 +97,6 @@ export default function Ad_Footer() {
                         <LoadingSpinner />
                     ) : (
                         <div>
-                            {/* <h4>Home Section</h4> */}
                             {data.length > 0 ? (
                                 <>
                                     {data.map((item, index) => (
@@ -138,14 +141,13 @@ export default function Ad_Footer() {
                     )}
                 </div>
             </div>
-
             <Modal
                 open={open}
                 onOk={handleOk}
                 onCancel={(_) => setOpen(false)}
                 width="50vw"
                 centered={true}
-                title={isEdit ? "Update Home" : "Add Home"}
+                title={isEdit ? "Update Footer" : "Add Footer"}
             >
                 <Form form={form} layout="vertical">
                     <Form.Item
@@ -155,64 +157,39 @@ export default function Ad_Footer() {
                     >
                     </Form.Item>
                     <Form.Item
-                        name="title"
-                        label="Title"
-                        rules={[{ required: true, message: "Please enter the title" }]}
+                        name="headFooter"
+                        label="HeadFooter"
+                        rules={[{ required: true, message: "Please enter the headFooter" }]}
                     >
-                        <Input.TextArea placeholder="Title" />
+                    <Input.TextArea placeholder="headFooter" />
                     </Form.Item>
                     <Form.Item
-                        name="heroImage"
-                        label="Hero Image"
-                        rules={[{ required: true, message: "Please upload a hero image" }]}
+                        name="addressFooter"
+                        label="Address Footer"
+                        rules={[{ required: true, message: "Please enter the address footer" }]}
                     >
-                        <Upload
-                            listType="picture"
-                            defaultFileList={form.getFieldValue('heroImage')}
-                            beforeUpload={() => false}
-                            onChange={(info) => handleFileChange(info, 'heroImage', form)}
-                        >
-                            <Button icon={<UploadOutlined />}>Upload Hero Image(s)</Button>
-                        </Upload>
+                        <Input.TextArea placeholder="Address Footer" />
                     </Form.Item>
-
                     <Form.Item
-                        name="reviewImage"
-                        label="Review Image"
-                        rules={[{ required: true, message: "Please upload a review image" }]}
+                        name="phoneFooter"
+                        label="Phone Footer"
+                        rules={[{ required: true, message: "Please enter the phone footer" }]}
                     >
-                        <Upload
-                            listType="picture"
-                            defaultFileList={form.getFieldValue('reviewImage')}
-                            beforeUpload={() => false}
-                            onChange={(info) => handleFileChange(info, 'reviewImage', form)}
-                        >
-                            <Button icon={<UploadOutlined />}>Upload Review Image(s)</Button>
-                        </Upload>
+                        <Input placeholder="Phone Footer" />
                     </Form.Item>
-
                     <Form.Item
-                        name="mapImage"
-                        label="Map Image"
-                        rules={[{ required: true, message: "Please upload a map image" }]}
+                        name="lineFooter"
+                        label="Line Footer"
+                        rules={[{ required: true, message: "Please enter the line footer" }]}
                     >
-                        <Upload
-                            listType="picture"
-                            defaultFileList={form.getFieldValue('mapImage')}
-                            maxCount={1}
-                            beforeUpload={() => false}
-                            onChange={(info) => handleFileChange(info, 'mapImage', form)}
-                        >
-                            <Button icon={<UploadOutlined />}>Upload Map Image</Button>
-                        </Upload>
+                        <Input placeholder="Line Footer" />
                     </Form.Item>
-
                     <Form.Item
-                        name="mapDetail"
-                        label="Map Detail"
-                        rules={[{ required: true, message: "Please enter the map detail" }]}
+                        name="tiktokFooter"
+                        label="Tiktok Footer"
+                        rules={[{ required: true, message: "Please enter the tiktok footer" }]}
                     >
-                        <Input.TextArea placeholder="Map Detail" />
+                        <Input placeholder="Tiktok Footer" />
                     </Form.Item>
                 </Form>
             </Modal>

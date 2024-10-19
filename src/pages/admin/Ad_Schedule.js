@@ -70,60 +70,6 @@ export default function Ad_Schedule() {
         fecthdata();
       })
   };
-
-  // const fecthdata = async () => {
-  //   try {
-  //     const response = await fetch(
-  //       productionCheck() + "/v1/cart",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           // 'Access-Control-Allow-Origin': '*',
-  //           Authorization: "Bearer " + localStorage.getItem("token"),
-  //         },
-  //         body: JSON.stringify({
-  //           email: JSON.parse(localStorage.getItem("user-provider")).email,
-  //           pos: "admin",
-  //         }),
-  //       }
-  //     );
-
-  //     const result = await response.json();
-
-  //     setData(result.body);
-
-  //     setLoading(false);
-  //   } catch (err) {
-  //     console.log("An error occurred. Please try again.");
-  //   }
-  // };
-
-  // const changeStatus = async (id, status) => {
-  //   try {
-  //     const response = await fetch(
-  //       productionCheck() + "/v1/update-status",
-  //       {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //           // 'Access-Control-Allow-Origin': '*',
-  //           Authorization: "Bearer " + localStorage.getItem("token"),
-  //         },
-  //         body: JSON.stringify({
-  //           id: id,
-  //           status: status,
-  //         }),
-  //       }
-  //     );
-  //     const result = await response.json();
-  //     console.log(result);
-  //     fecthdata();
-  //   } catch (err) {
-  //     console.log("An error occurred. Please try again.");
-  //   }
-  // };
-
   const [statusList] = useState(["pending", "pass", "failed"]);
 
   useEffect(() => {
@@ -338,8 +284,6 @@ export default function Ad_Schedule() {
                       <Tooltip title={item.phone_2} arrow>
                         <span className="truncate ...">{item.phone_2}</span>
                       </Tooltip>
-
-
                       <Tooltip title="ดูรายละเอียด" arrow>
                         <span>
                           <button
@@ -347,8 +291,7 @@ export default function Ad_Schedule() {
                             onClick={() => { 
                               navigate("/admin_edit/" + item._id) 
 
-                              window.location.reload();
-                              
+                              window.location.reload();                  
                               }} >
                             ดูรายละเอียด
                           </button>

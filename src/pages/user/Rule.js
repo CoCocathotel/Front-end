@@ -4,28 +4,14 @@ import AOS from "aos";
 import "aos/dist/aos.css"; // Import AOS CSS
 import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../../component/Loading";
-import service from "../../api/apiService";
 import Label from "../../component/Label";
-import ImgaeCat from "../../assets/image/hero1.png";
-import ImageCat2 from "../../assets/image/hero2.png";
-import Logo from "../../cococat-hotel.png";
-import FeetBig from "../../assets/image/feetBig.png";
-import Map from "../../assets/image/map.png";
 import Bg from "../../assets/image/bg.png";
-import FeetBlue from "../../assets/image/feet_blue.png";
-import Review1 from "../../assets/image/Review1.png";
-import Review2 from "../../assets/image/Review2.png";
-import Review3 from "../../assets/image/Review3.png";
-import FeetK from "../../assets/image/feet_kuay.png";
 import BgRule from "../../assets/image/bg-rule.png";
 import CardCat from "../../assets/image/cardcat.png";
 import CardFood from "../../assets/image/cardfood.png";
 import CardSand from "../../assets/image/cardsand.png";
 import Card from "../../component/Card";
-import { FeetIcon, FeetIcon2, Star } from "../../constant/SvgImg";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { Carousel, Button, Result } from "antd";
+import { FeetIcon } from "../../constant/SvgImg";
 
 export default function Rule() {
   const navigate = useNavigate();
@@ -36,38 +22,29 @@ export default function Rule() {
   const [timeCheckout, setTimCheckOut] = useState([]);
 
   useEffect(() => {
-    AOS.init({ duration: 1000 }); // Initialize AOS for animations
-
-    service
-      .api("/")
-      .then((res) => {
-        setTitle([
-          "น้องแมวทุกตัวมีอายุ 4 เดือนขึ้นไป",
-          "ฉีดวัคซีนรวม (ไข้หัด-หวัดแมว) ป้องกันพิษสุนัขบ้า มีสมุดวัคซีน",
-          "ไม่มีเห็บ-หมัด หยอดยาป้องกันเห็บ-หมัดมาแล้ว",
-          "ไม่ป่วยเป็นโรคติดต่อ เช่น เชื้อรา ไรขี้เรื้อน เป็นต้น",
-          "ขอสงวนสิทธิ์ งดรับน้องแมวที่กำลังเป็นสัด หรือตั้งท้องแก่เข้าพัก",
-        ]);
-        setTimCheckIn([
-          {
-            checkin: "09:30 - 20:00",
-            result: "",
-          },
-        ]);
-        setTimCheckOut([
-          { checkcout: "9:30 - 13:00 น.", result: "ไม่คิดเงินวันสุดท้าย" },
-          {
-            checkcout: "13:00 - 20:00 น.",
-            result: " คิดค่าบริการเพิ่ม 1/2 ของราคาห้องพัก",
-          },
-        ]);
-      })
-      .catch((err) => {
-        setError(err.message);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    AOS.init({ duration: 1000 });
+    setTitle([
+      "น้องแมวทุกตัวมีอายุ 4 เดือนขึ้นไป",
+      "ฉีดวัคซีนรวม (ไข้หัด-หวัดแมว) ป้องกันพิษสุนัขบ้า มีสมุดวัคซีน",
+      "ไม่มีเห็บ-หมัด หยอดยาป้องกันเห็บ-หมัดมาแล้ว",
+      "ไม่ป่วยเป็นโรคติดต่อ เช่น เชื้อรา ไรขี้เรื้อน เป็นต้น",
+      "ขอสงวนสิทธิ์ งดรับน้องแมวที่กำลังเป็นสัด หรือตั้งท้องแก่เข้าพัก",
+    ]);
+    setTimCheckIn([
+      {
+        checkin: "09:30 - 20:00",
+        result: "",
+      },
+    ]);
+    
+    setTimCheckOut([
+      { checkcout: "9:30 - 13:00 น.", result: "ไม่คิดเงินวันสุดท้าย" },
+      {
+        checkcout: "13:00 - 20:00 น.",
+        result: " คิดค่าบริการเพิ่ม 1/2 ของราคาห้องพัก",
+      },
+    ]);
+    setLoading(false);
   }, []);
 
   if (loading) return <LoadingSpinner />;

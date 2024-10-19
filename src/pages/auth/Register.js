@@ -1,55 +1,59 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import Logo from "../../cococat-hotel.png";
+import { useState } from "react";
 import LoadingSpinner from "../../component/Loading";
+import api from "../../utils/api";
 
 export default function Register({ handleAppbar }) {
-  // http://localhost:8700/v1/login
   const [email, setEmail] = useState("");
   const [first_name, setFirst_name] = useState("");
   const [last_name, setLast_name] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-
-  function production_check() {
-    const isDevelopment =
-      window.location.origin.includes("localhost") ||
-      window.location.origin.includes("127.0.0.1");
-
-    return isDevelopment
-      ? "http://localhost:8700"
-      : "https://cococatbackend.vercel.app";
-  }
 
   const handleLogin = async () => {
     handle_value2();
-    try {
-      const response = await fetch(production_check()+"/v1/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // 'Access-Control-Allow-Origin': '*',
-
-        },
-        body: JSON.stringify({ email, password, first_name, last_name }),
-      });
-      const result = await response.json();
-
-
-      if (result.err != "") {
-        handle_value();
+    api.userRegister({ email, password, first_name, last_name })
+    .then((response) => {
+      const result = response.data;
+      if (result.err !== "") {
         localStorage.setItem("user-provider", JSON.stringify(result));
         localStorage.setItem("token", result.token);
         window.onload.herf('/')
         console.log("Register and Login successful");
-      } else {
-        console.log("Register failed");
       }
-    } catch (err) {
-      console.log("An error occurred. Please try again.");
-    }
+    })
+      .catch((err) => {
+        console.log("An error occurred. Please try again.", err);
+      })
+      .finally(() => {
+        handle_value();
+      });
+
+    // try {
+    //   const response = await fetch(production_check()+"/v1/register", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //       // 'Access-Control-Allow-Origin': '*',
+
+    //     },
+    //     body: JSON.stringify({ email, password, first_name, last_name }),
+    //   });
+    //   const result = await response.json();
+
+
+    //   if (result.err != "") {
+    //     handle_value();
+    //     localStorage.setItem("user-provider", JSON.stringify(result));
+    //     localStorage.setItem("token", result.token);
+    //     window.onload.herf('/')
+    //     console.log("Register and Login successful");
+    //   } else {
+    //     console.log("Register failed");
+    //   }
+    // } catch (err) {
+    //   console.log("An error occurred. Please try again.");
+    // }
   };
 
   const handle_value = () => {

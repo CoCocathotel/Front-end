@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import LoadingSpinner from "../../component/Loading";
 import Tooltip from "@mui/material/Tooltip";
 import Card from "./Card";
@@ -246,7 +246,10 @@ export default function Ad_Home() {
                           <button
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                             onClick={() => {
-                              navigate("/admin_edit/" + item._id);
+                              navigate("/admin_edit/" + item._id) 
+
+                              window.location.reload();
+                              
                             }} >
                             ดูรายละเอียด
                           </button>

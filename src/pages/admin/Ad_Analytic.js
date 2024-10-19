@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import AOS from "aos";
-import "aos/dist/aos.css"; // Import AOS CSS
+import "aos/dist/aos.css";
 import {
   Cell,
   CartesianGrid,
@@ -18,7 +18,8 @@ import {
 } from "recharts";
 import LoadingSpinner from "../../component/Loading";
 import { DatePicker } from "antd";
-import Card from "../../component/Card";
+import Card from "./Card";
+import api from "../../utils/api";
 
 const { MonthPicker } = DatePicker;
 
@@ -43,37 +44,48 @@ export default function Ad_Analytic() {
   }
 
   const fetchData = async () => {
-    try {
-      const response = await fetch(productionCheck() + "/v1/cart", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // 'Access-Control-Allow-Origin': '*',
-          Authorization: "Bearer " + localStorage.getItem("token"),
-        },
-        body: JSON.stringify({
-          email: JSON.parse(localStorage.getItem("user-provider")).email,
-          pos: "admin",
-        }),
-      });
-      const result = await response.json();
-      let x_data = result.body.reverse();
-
-      setData(x_data);
-      setLoading(false);
-    } catch (err) {
-      console.log("An error occurred. Please try again.");
-      setLoading(false);
-    }
+    api.getAllEvent({ role: 'admin' })
+      .then((res) => {
+        setData(res.data.body);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      })
   };
 
-  if (loading || data.length === 0) {
+  if (loading) {
     return <LoadingSpinner />;
   }
 
   const filteredData = data.filter(
     (entry) => new Date(entry.check_in_date).getFullYear() === selectedYear
   );
+
+  // Check if filteredData is empty
+  if (filteredData.length === 0) {
+    return (
+      <div className="container mx-auto p-6 text-center">
+        <h1 className="text-3xl font-bold mb-6" data-aos="fade-up">
+          กราฟและสถิติ
+        </h1>
+        <div className="text-lg">
+          ไม่มีข้อมูลสำหรับปี {selectedYear} กรุณาเลือกปีอื่น
+        </div>
+        <div className="flex justify-center mt-8">
+        <MonthPicker
+          onChange={(date, dateString) =>
+            setSelectedYear(date ? date.year() : new Date().getFullYear())
+          }
+          picker="year"
+          placeholder="เลือกปีที่ต้องการ"
+        />
+      </div>
+      </div>
+    );
+  }
 
   const profitData = filteredData.map((entry) => ({
     date: new Date(entry.check_in_date).getMonth() + 1,
@@ -152,154 +164,145 @@ export default function Ad_Analytic() {
 
   return (
     <div className="container mx-auto p-6">
-      {loading ? (
-        <LoadingSpinner />
-      ) : (
-        <>
-          <h1
-            className="text-3xl font-bold text-center mb-6"
-            data-aos="fade-up"
-          >
-            กราฟและสถิติ
-          </h1>
-          <div className="flex justify-between mb-8" data-aos="fade-up">
-            <Card
-              title="จำนวนการจอง"
-              data={filteredData.length}
-              change={0}
-              color="bg-blue-50"
-            />
-            <Card
-              title="รอการอนุมัติ"
-              data={filteredData.filter((value) => value.status === "pending").length}
-              change={0}
-              color="bg-yellow-50"
-            />
-            <Card
-              title="จำนวนอนุมัติ"
-              data={filteredData.filter((value) => value.status === "pass").length}
-              change={0}
-              color="bg-green-50"
-            />
-            <Card
-              title="จำนวนยกเลิก"
-              data={filteredData.filter((value) => value.status === "failed").length}
-              change={0}
-              color="bg-red-50"
-            />
-          </div>
+      <h1 className="text-3xl font-bold text-center mb-6" data-aos="fade-up">
+        กราฟและสถิติ
+      </h1>
+      <div className="flex justify-between mb-8" data-aos="fade-up">
+        <Card
+          title="จำนวนการจอง"
+          data={filteredData.length}
+          change={0}
+          color="bg-blue-50"
+        />
+        <Card
+          title="รอการอนุมัติ"
+          data={filteredData.filter((value) => value.status === "pending").length}
+          change={0}
+          color="bg-yellow-50"
+        />
+        <Card
+          title="จำนวนอนุมัติ"
+          data={filteredData.filter((value) => value.status === "pass").length}
+          change={0}
+          color="bg-green-50"
+        />
+        <Card
+          title="จำนวนยกเลิก"
+          data={filteredData.filter((value) => value.status === "failed").length}
+          change={0}
+          color="bg-red-50"
+        />
+      </div>
 
-          <div className="flex items-center" data-aos="fade-up">
-            <div className="w-1/2 m-5">
-              <h2 className="text-xl font-bold mb-4 ">กำไร - ขาดทุน (บาท)</h2>
-              <ResponsiveContainer width="100%" height={400}>
-                <LineChart data={groupedProfitData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line type="monotone" dataKey="profit" stroke="#8884d8" />
-                </LineChart>
-              </ResponsiveContainer>
-            </div>
+      <div className="flex justify-center mt-8">
+        <MonthPicker
+          onChange={(date, dateString) =>
+            setSelectedYear(date ? date.year() : new Date().getFullYear())
+          }
+          picker="year"
+          placeholder="เลือกปีที่ต้องการ"
+        />
+      </div>
+      
+      <div className="flex items-center" data-aos="fade-up">
+        <div className="w-1/2 m-5">
+          <h2 className="text-xl font-bold mb-4 ">กำไร - ขาดทุน (บาท)</h2>
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart data={groupedProfitData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="date" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="profit" stroke="#8884d8" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
 
-            <div className="text-2xl">
-              จากการคำนวน รายได้ของเดือน {latestMonth}
-              {latestMonthProfit > averageProfit
-                ? " มีค่าสูงกว่า"
-                : " มีค่าต่ำกว่า"} {" "}
-              โดยเฉลี่ย
-            </div>
-          </div>
+        <div className="text-2xl">
+          จากการคำนวน รายได้ของเดือน {latestMonth}
+          {latestMonthProfit > averageProfit
+            ? " มีค่าสูงกว่า"
+            : " มีค่าต่ำกว่า"} {" "}
+          โดยเฉลี่ย
+        </div>
+      </div>
 
-          <div className="flex items-center" data-aos="fade-up">
-            <div className="w-1/2 m-5">
-              <h2 className="text-xl font-bold mb-4">การจองทั้งหมด</h2>
-              <ResponsiveContainer width="50%" height={400}>
-                <PieChart>
-                  <Pie
-                    dataKey="value"
-                    data={roomData}
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={150}
-                    label
-                  >
-                    {roomData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={
-                          entry.name === "Cancelled"
-                            ? "#D1695B"
-                            : entry.name === "Available"
-                            ? "#82ca9d"
-                            : "#ffc658"
-                        }
-                      />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
+      <div className="flex items-center" data-aos="fade-up">
+        <div className="w-1/2 m-5">
+          <h2 className="text-xl font-bold mb-4">การจองทั้งหมด</h2>
+          <ResponsiveContainer width="50%" height={400}>
+            <PieChart>
+              <Pie
+                dataKey="value"
+                data={roomData}
+                cx="50%"
+                cy="50%"
+                outerRadius={150}
+                label
+              >
+                {roomData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={
+                      entry.name === "Cancelled"
+                        ? "#D1695B"
+                        : entry.name === "Available"
+                        ? "#82ca9d"
+                        : "#ffc658"
+                    }
+                  />
+                ))}
+              </Pie>
+              <Tooltip />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
 
-            <div className="text-2xl">
-              สถานะการจองที่อนุมัติ คิดเป็น {availablePercentage}% ของการจองทั้งหมด
-            </div>
-          </div>
+        <div className="text-2xl">
+          สถานะการจองที่อนุมัติ คิดเป็น {availablePercentage}% ของการจองทั้งหมด
+        </div>
+      </div>
 
-          <div className="flex items-center" data-aos="fade-up">
-            <div className="m-4 w-1/2">
-              <h2 className="text-xl font-bold mb-4">
-                จำนวนการจองตามประเภทห้อง
-              </h2>
-              <ResponsiveContainer width="50%" height={400}>
-                <BarChart data={groupedRoomTypeData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="roomType" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Bar dataKey="count">
-                    {groupedRoomTypeData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={
-                          index === 0
-                            ? "#8884d8"
-                            : index === 1
-                            ? "#82ca9d"
-                            : index === 2
-                            ? "#ffc658"
-                            : index === 3
-                            ? "#ff8042"
-                            : "#d0ed57"
-                        }
-                      />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
+      <div className="flex items-center" data-aos="fade-up">
+        <div className="m-4 w-1/2">
+          <h2 className="text-xl font-bold mb-4">
+            จำนวนการจองตามประเภทห้อง
+          </h2>
+          <ResponsiveContainer width="50%" height={400}>
+            <BarChart data={groupedRoomTypeData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="roomType" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="count">
+                {groupedRoomTypeData.map((entry, index) => (
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={
+                      index === 0
+                        ? "#8884d8"
+                        : index === 1
+                        ? "#82ca9d"
+                        : index === 2
+                        ? "#ffc658"
+                        : index === 3
+                        ? "#ff8042"
+                        : "#d0ed57"
+                    }
+                  />
+                ))}
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
 
-            <div className="text-2xl">
-              ประเภทห้องที่ได้รับการจองสูงสุดคือ {mostBookedRoom.roomType}{" "}
-              และประเภทห้องที่ได้รับการจองต่ำสุดคือ {leastBookedRoom.roomType}
-            </div>
-          </div>
-
-          <div className="flex justify-center mt-8">
-            <MonthPicker
-              onChange={(date, dateString) =>
-                setSelectedYear(date ? date.year() : new Date().getFullYear())
-              }
-              picker="year"
-              placeholder="เลือกปีที่ต้องการ"
-            />
-          </div>
-        </>
-      )}
+        <div className="text-2xl">
+          ประเภทห้องที่ได้รับการจองสูงสุดคือ {mostBookedRoom.roomType}{" "}
+          และประเภทห้องที่ได้รับการจองต่ำสุดคือ {leastBookedRoom.roomType}
+        </div>
+      </div>
     </div>
   );
 }

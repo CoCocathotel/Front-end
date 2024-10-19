@@ -1,12 +1,9 @@
 import React from "react";
 import { useEffect, useState, useRef } from "react";
-import axios from "axios";
 import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import moment from "moment-timezone";
 import { DatePicker, Space } from "antd";
 
 import Logo from "../../cococat-hotel.png";

@@ -37,7 +37,7 @@ export default function Teacher() {
             ),
         },
         {
-            path: "/detail/:Type",
+            path: "/detail/:type",
             element: (
                 <>
                     <Appbar_master />

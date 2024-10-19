@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css"; // Import AOS styles
-import service from "../../api/apiService";
 import Loading from "../../component/Loading";
 import Error from "../../component/Error";
 import { Modal, Input, Button, Form, Upload, message, Image } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import slugify from "slugify";
-import axios from "axios";
 import api from "../../utils/api";
 
 export default function Ad_Room() {
@@ -15,7 +13,7 @@ export default function Ad_Room() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [form] = Form.useForm(); // Ant Design form instance
+  const [form] = Form.useForm();
   const [imageBase64, setImageBase64] = useState("");
   const [fileList, setFileList] = useState([]);
   const [previewImage, setPreviewImage] = useState("");
@@ -25,27 +23,30 @@ export default function Ad_Room() {
 
   useEffect(() => {
     AOS.init({ duration: 1000 });
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
     api.getRoom().then((res) => {
       setData(res.data.body);
-      // console.log(res.data.body);
     }).catch((err) => {
       setError(err.message);
     }).finally(() => {
       setLoading(false);
     });
-  }, []);
+  };
 
   const handleAddRoom = () => {
-    setEditingRoom(null); // Clear editing state
-    setIsModalOpen(true); // Open modal when "เพิ่มห้อง" is clicked
+    setEditingRoom(null);
+    setIsModalOpen(true);
   };
 
   const handleCancel = () => {
-    setIsModalOpen(false); // Close modal on cancel
+    setIsModalOpen(false);
     setImageBase64("");
     setFileList([]);
     setPreviewImage("");
-    form.resetFields(); // Reset form fields
+    form.resetFields();
   };
 
   const handlePreview = async (file) => {
@@ -66,21 +67,21 @@ export default function Ad_Room() {
 
   const handleFileChange = ({ fileList: newFileList }) => {
     setFileList(newFileList);
-
     if (newFileList.length > 0) {
       const file = newFileList[0].originFileObj || newFileList[0];
       getBase64(file).then((image) => {
-        setImageBase64(image); // Set Base64 string without a timestamp
+        setImageBase64(image);
       });
     } else {
-      setImageBase64(""); // Reset if no image is uploaded
+      setImageBase64("");
     }
   };
 
   const onFinish = (values) => {
-    const data = { ...values, image: imageBase64 };
+    const data = { ...values, image: imageBase64 !== null && imageBase64 !== '' ? [imageBase64] : null };
     setConfirmLoading(true);
     if (editingRoom) {
+      console.log('editingRoom11111', editingRoom);
       handleFormSubmitEdit(data);
     } else {
       handleFormSubmitCreate(data);
@@ -153,85 +154,131 @@ export default function Ad_Room() {
   };
 
   const handleFormSubmitEdit = (values) => {
-    const payload = {
-      ...values,
-      room_id: editingRoom._id, // Include the room ID for editing
-      image: [imageBase64],
-    };
 
-    function productionCheck() {
-      const isDevelopment =
-        window.location.origin.includes("localhost") ||
-        window.location.origin.includes("127.0.0.1");
-
-      return isDevelopment
-        ? "http://localhost:8700"
-        : "https://cococatbackend.vercel.app";
-    }
-
-
-    axios
-      .post(productionCheck() + "/v1/edit_room", payload, {
-        headers: {
-          "Content-Type": "application/json",
-         },
-      })
-      .then((response) => {
+    api.updateRoom(editingRoom._id, values)
+      .then((res) => {
         message.success("Room updated successfully");
-        setData((prevData) =>
-          prevData.map((room) =>
-            room._id === response.data._id ? response.data : room
-          )
-        );
-        setIsModalOpen(false);
+        fetchData();
       })
-      .catch((error) => {
-        message.error(
-          "Failed to update room: " +
-          (error.response?.data?.message || error.message)
-        );
+      .catch((err) => {
+        setError(err.message);
       })
       .finally(() => {
+        setIsModalOpen(false);
+        setImageBase64("");
+        setFileList([]);
+        setPreviewImage("");
         setConfirmLoading(false);
         form.resetFields();
+        setLoading(false);
       });
-  };
 
+
+    // const payload = {
+    //   ...values,
+    //   room_id: editingRoom._id,
+    //   image: [imageBase64],
+    // };
+
+    // function productionCheck() {
+    //   const isDevelopment =
+    //     window.location.origin.includes("localhost") ||
+    //     window.location.origin.includes("127.0.0.1");
+
+    //   return isDevelopment
+    //     ? "http://localhost:8700"
+    //     : "https://cococatbackend.vercel.app";
+    // }
+
+
+    // axios
+    //   .post(productionCheck() + "/v1/edit_room", payload, {
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //      },
+    //   })
+    //   .then((response) => {
+    //     message.success("Room updated successfully");
+    //     setData((prevData) =>
+    //       prevData.map((room) =>
+    //         room._id === response.data._id ? response.data : room
+    //       )
+    //     );
+    //     setIsModalOpen(false);
+    //   })
+    //   .catch((error) => {
+    //     message.error(
+    //       "Failed to update room: " +
+    //       (error.response?.data?.message || error.message)
+    //     );
+    //   })
+    //   .finally(() => {
+    //     setConfirmLoading(false);
+    //     form.resetFields();
+    //   });
+  };
 
   const handleRoomNameChange = (e) => {
     const roomName = e.target.value;
-    const roomTypeSlug = slugify(roomName, { lower: true }); // ใช้ slugify โดยตรง
+    const roomTypeSlug = slugify(roomName, { lower: true });
     form.setFieldsValue({ type: roomTypeSlug });
   };
 
   const handleDeleteRoom = (roomId) => {
-    axios
-      .delete("https://cococatbackend.vercel.app/v1/delete_room", {
-        data: { room_id: roomId },
-      })
-      .then((response) => {
-        message.success("Room deleted successfully");
-        setData((prevData) => prevData.filter((room) => room._id !== roomId));
-      })
-      .catch((error) => {
-        message.error(
-          "Failed to delete room: " +
-          (error.response?.data?.message || error.message)
-        );
-      });
+    api.deleteRoom(roomId)
+    .then((res) => {
+      message.success("Room deleted successfully");
+      fetchData();
+    })
+    .catch((err) => {
+      setError(err.message);
+    })
+    .finally(() => {
+      setIsModalOpen(false);
+      setImageBase64("");
+      setFileList([]);
+      setPreviewImage("");
+      setConfirmLoading(false);
+      form.resetFields();
+      setLoading(false);
+    });
+    // axios
+    //   .delete("https://cococatbackend.vercel.app/v1/delete_room", {
+    //     data: { room_id: roomId },
+    //   })
+    //   .then((response) => {
+    //     message.success("Room deleted successfully");
+    //     setData((prevData) => prevData.filter((room) => room._id !== roomId));
+    //   })
+    //   .catch((error) => {
+    //     message.error(
+    //       "Failed to delete room: " +
+    //       (error.response?.data?.message || error.message)
+    //     );
+    //   });
   };
 
   const handleEditRoom = (room) => {
-    form.setFieldsValue(room); // ตั้งค่าข้อมูลห้องในฟอร์ม
-    setImageBase64(room.image[0]); // Load existing image
-    setEditingRoom(room); // Set editing state
-    setIsModalOpen(true); // เปิด modal
+    form.setFieldsValue(room);
+    setImageBase64(room.image[0]);
+    setFileList([
+      { 
+        uid: "-1",
+        name: "image.png",
+        status: "done",
+        url: room.image[0],
+      },
+    ]);
+    setEditingRoom(room);
+    setIsModalOpen(true);
   };
 
   const uploadButton = (
     <div>
       <PlusOutlined />
-      <div style={{ marginTop: 8 }}>อัพโหลดรูปภาพ</div>
+      <div style={{ marginTop: 8 }}>
+        อัพโหลดรูปภาพ
+        </div>
     </div>
   );
 
@@ -277,11 +324,10 @@ export default function Ad_Room() {
           </div>
         ))}
 
-        {/* Add Room button */}
         <div
           className="flex justify-center items-center border bottom-0 rounded-lg shadow-md p-4 bg-gray-100 cursor-pointer"
           data-aos="fade-up"
-          onClick={handleAddRoom} // Open modal when clicked
+          onClick={handleAddRoom}
         >
           <div className="text-center">
             <div className="text-gray-400 text-6xl">+</div>
@@ -294,11 +340,10 @@ export default function Ad_Room() {
         title={editingRoom ? "แก้ไขห้อง" : "เพิ่มห้องใหม่"}
         visible={isModalOpen}
         onCancel={handleCancel}
-        confirmLoading={confirmLoading} // Show loading in modal
+        confirmLoading={confirmLoading}
         footer={null}
       >
         <Form form={form} layout="vertical" onFinish={onFinish}>
-          {/* Image Preview */}
           {previewImage && (
             <Image
               wrapperStyle={{

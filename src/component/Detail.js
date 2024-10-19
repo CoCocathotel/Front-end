@@ -20,7 +20,7 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import moment from "moment-timezone";
 
 import { Button, Modal } from "antd";
- 
+
 dayjs.extend(customParseFormat);
 
 const dateFormat = "YYYY-MM-DD";
@@ -32,7 +32,7 @@ export default function Detail() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(true);
-  const { Type } = useParams();
+  const { type } = useParams();
   const { id } = useParams();
   const [total, setTotal] = useState(0);
   const [upload, setUpload] = useState(false);
@@ -45,6 +45,26 @@ export default function Detail() {
   const [special_request, setSpecialRequest] = useState(
     "ขอกระบะทราย มีน่ำ มีข้าวพร้อม"
   );
+  const [startDate, setStartDate] = useState(
+    localStorage.getItem("startDate") || moment.tz(timezone).format()
+  );
+  const [endDate, setEndDate] = useState(
+    localStorage.getItem("endDate") ||
+    moment.tz(timezone).add(1, "day").format()
+  );
+  const [nunmcat, setNumcat] = useState(
+    parseInt(JSON.parse(localStorage.getItem("number_of_cats")) || 1)
+  );
+
+  const [numcamera, setNumcamera] = useState(
+    parseInt(JSON.parse(localStorage.getItem("number_of_cameras")) || 0)
+  );
+
+  const [totalday, setTotalday] = useState(
+    Math.abs(new Date(endDate) - new Date(startDate)) / 86400000
+  );
+
+  const [modal, contextHolder] = Modal.useModal();
 
   const [username2, setUsername2] = useState(null);
   const [phone2, setPhone2] = useState(null);
@@ -63,38 +83,6 @@ export default function Detail() {
   const handleSelectPayment = (method) => {
     setSelectedPayment(method);
   };
-
-  function production_check() {
-    const isDevelopment =
-      window.location.origin.includes("localhost") ||
-      window.location.origin.includes("127.0.0.1");
-
-    return isDevelopment
-      ? "http://localhost:8700"
-      : "https://cococatbackend.vercel.app";
-  }
-
-  const [startDate, setStartDate] = useState(
-    localStorage.getItem("startDate") || moment.tz(timezone).format()
-  );
-  const [endDate, setEndDate] = useState(
-    localStorage.getItem("endDate") ||
-      moment.tz(timezone).add(1, "day").format()
-  );
-  const [nunmcat, setNumcat] = useState(
-    parseInt(JSON.parse(localStorage.getItem("number_of_cats")) || 1)
-  );
-
-  const [numcamera, setNumcamera] = useState(
-    parseInt(JSON.parse(localStorage.getItem("number_of_cameras")) || 0)
-  );
-
-  const [totalday, setTotalday] = useState(
-    Math.abs(new Date(endDate) - new Date(startDate)) / 86400000
-  );
-
-  const [modal, contextHolder] = Modal.useModal();
-
   const countDown = () => {
     let secondsToGo = 5;
 
@@ -103,7 +91,8 @@ export default function Detail() {
       content: `ระบบจะกลับไปยังหน้าแรกในอีก ${secondsToGo} วินาที`,
       onOk: () => {
         clearInterval(timer);
-      navigate('/')
+        navigate('/');
+        window.location.reload();
       },
     });
 
@@ -118,66 +107,13 @@ export default function Detail() {
       clearInterval(timer);
       instance.destroy();
       navigate('/')
+      window.location.reload();
     }, secondsToGo * 1000);
-  };
-
-  let handleEdit = async () => {
-    try {
-      if (upload_slip instanceof Blob) {
-        const reader = new FileReader();
-        reader.readAsDataURL(upload_slip);
-        reader.onloadend = function () {
-          const img = reader.result;
-          proceedWithEdit(img);
-        };
-        reader.onerror = function (err) {
-          console.error("Error reading image file:", err);
-          proceedWithEdit("");
-        };
-      } else {
-        proceedWithEdit("");
-      }
-    } catch (err) {
-      console.log("An error occurred. Please try again.");
-    }
-  };
-
-  let proceedWithEdit = async (img) => {
-    try {
-      let item = {
-        _id: id,
-        user_name_2: username2,
-        phone_2: phone2,
-        special_request: special_request,
-        pay_way: selectedPayment,
-        image: selectedPayment === "credit" ? img : "",
-      };
-
-      const response = await fetch(production_check() + `/v1/edit_book_room`, {
-        noCors: true,
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          // 'Access-Control-Allow-Origin': '*',
-        },
-        body: JSON.stringify(item),
-      });
-
-      const result = await response.json();
-
- 
-      if (response.status === 200) {
-         navigate("/");
-      }
-    } catch (err) {
-      console.log("An error occurred. Please try again.");
-    }
   };
 
   useEffect(() => {
     if (id) {
-      fecth_detail();
-      // console.log(totalDays)
+       fecth_detail();
     } else {
       let start = localStorage.getItem("startDate");
       let end = localStorage.getItem("endDate");
@@ -192,178 +128,220 @@ export default function Detail() {
       if (get_user === null || get_user === "") {
         navigate("/login");
       } else {
-        // console.log('Type', Type)
-        api.getOneRoom(Type)
-        .then((response) => {
-          console.log(response.data.body);
-          setTotal(Math.ceil(numcat / response.data.body.number_of_cats));
-          setData(response.data.body);
-        })
-        .catch((err) => {
-          console.log("An error occurred. Please try again.", err);
-        })
-        .finally(() => {
-          setLoading(false);
- 
-        
-        setUsername(get_user.first_name + " " + get_user.last_name);
-        setEmail(get_user.email);
-        setPhone(get_user.phone);
-        if (start && end && numcat) {
-          // setData(getdata);
-          setStartDate(start);
-          setEndDate(end);
-          setNumcat(numcat);
-          setTotalday(totalday);
-          setNumcamera(numcamera);
-          // setTotal(num);
-        }
-      });
+        api.getOneRoom(type)
+          .then((response) => {
+            setTotal(Math.ceil(numcat / response.data.body.number_of_cats));
+            setData(response.data.body);
+          })
+          .catch((err) => {
+            console.log("An error occurred. Please try again.", err);
+          })
+          .finally(() => {
+            setLoading(false);
+            setUsername(get_user.first_name + " " + get_user.last_name);
+            setEmail(get_user.email);
+            setPhone(get_user.phone);
+            if (start && end && numcat) {
+              setStartDate(start);
+              setEndDate(end);
+              setNumcat(numcat);
+              setTotalday(totalday);
+              setNumcamera(numcamera);
+            }
+          });
       }
     }
+    // if (id) {
+    //   fecth_detail();
+    // } else {
+    // let start = localStorage.getItem("startDate");
+    // let end = localStorage.getItem("endDate");
+    // let numcat = parseInt(JSON.parse(localStorage.getItem("number_of_cats")));
+    // let totalday = Math.abs(new Date(end) - new Date(start)) / 86400000;
+    // let numcamera = parseInt(
+    //   JSON.parse(localStorage.getItem("number_of_cameras"))
+    // );
+
+    // let get_user = JSON.parse(localStorage.getItem("user-provider"));
+
+    // if (get_user === null || get_user === "") {
+    //   navigate("/login");
+    // } else {
+    //   api.getOneRoom(Type)
+    //   .then((response) => {
+    //     console.log(response.data.body);
+    //     setTotal(Math.ceil(numcat / response.data.body.number_of_cats));
+    //     setData(response.data.body);
+    //   })
+    //   .catch((err) => {
+    //     console.log("An error occurred. Please try again.", err);
+    //   })
+    //   .finally(() => {
+    //     setLoading(false);
+
+
+    //   setUsername(get_user.first_name + " " + get_user.last_name);
+    //   setEmail(get_user.email);
+    //   setPhone(get_user.phone);
+    //   if (start && end && numcat) {
+    //     setStartDate(start);
+    //     setEndDate(end);
+    //     setNumcat(numcat);
+    //     setTotalday(totalday);
+    //     setNumcamera(numcamera);
+    //   }
+    // });
+    // }
+    // }
   }, []);
 
+
   let fecth_detail = async () => {
-    const response = await fetch(production_check() + `/booking/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    api.getOneBookingById(id)
+      .then((res) => {
+        setData(res.data.body);
+        const checkInDate = new Date(res.data.body.check_in_date);
+        const checkOutDate = new Date(res.data.body.check_out_date);
+        const totalDays = Math.abs(checkOutDate - checkInDate) / (1000 * 60 * 60 * 24);
+        setTotalday(totalDays);
+        setSelectedPayment(res.data.body.pay_way);
+        let admin = JSON.parse(localStorage.getItem("user-provider")).pos;
+        setPosition(admin);
+        console.log('that is admin');
 
-    let passedValue = await new Response(response.body).text();
-    let valueToJson = JSON.parse(passedValue).body;
-
-    if (response.status == 201) {
-      setData(valueToJson);
-      console.log(valueToJson);
-      const checkInDate = new Date(valueToJson[0].check_in_date);
-      const checkOutDate = new Date(valueToJson[0].check_out_date);
-
-      const totalDays =
-        Math.abs(checkOutDate - checkInDate) / (1000 * 60 * 60 * 24);
-
-      setTotalday(totalDays);
-      setSelectedPayment(valueToJson[0].pay_way);
-
-      let admin = JSON.parse(localStorage.getItem("user-provider")).pos;
-      setPosition(admin);
-
-      if (admin === "admin") {
-        setPhone2(valueToJson[0].phone_2);
-        setUsername2(valueToJson[0].user_name_2);
-        setSpecialRequest(valueToJson[0].special_request);
-        setUpload_slip(valueToJson[0].image);
-
-        if (valueToJson[0].image) {
+        if (admin === "admin") {
+          setPhone2(res.data.body.phone_2);
+          setUsername2(res.data.body.user_name_2);
+          setSpecialRequest(res.data.body.special_request);
+          setUpload_slip(res.data.body.image);
+          // if (res.data.body.image) {
+          // }
         }
-      }
-
-      setLoading(false);
-    }
-  };
-
- 
-
-  useEffect(() => {
-    // console.log("base64: ", base64img);
-  }, [upload_slip, base64img]);
-
-  let convertToBase64 = () => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(upload_slip);
-
-      reader.onload = () => {
-        setBase64IMG(reader.result);
-        resolve(reader.result);
-      };
-
-      reader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
-
-  const handleBuy = async () => {
-    try {
-      if (upload_slip instanceof Blob) {
-        const reader = new FileReader();
-        reader.readAsDataURL(upload_slip);
-        reader.onloadend = function () {
-          const img = reader.result;
-          proceedWithPurchase(img);
-        };
-        reader.onerror = function (err) {
-          console.error("Error reading image file:", err);
-          proceedWithPurchase("");
-        };
-      } else {
-        proceedWithPurchase("");
-      }
-    } catch (err) {
-      console.log("An error occurred. Please try again.");
-    }
-  };
-
-  let proceedWithPurchase = async (img) => {
-   
-      let item = {
-        room_name: data.room_name,
-        type: data.type,
-        user_name: username,
-        user_name_2: username2,
-        phone_2: phone2,
-        email: email,
-        phone: phone,
-        special_request: special_request,
-        check_in_date: new Date(startDate).toISOString(),
-        check_out_date: new Date(endDate).toISOString(),
-        total_price: data.price * totalday,
-        total_cats: nunmcat,
-        total_rooms: total,
-        pay_way: selectedPayment,
-        status: "pending",
-        total_cameras: numcamera,
-        image: selectedPayment === "credit" ? img : "",
-      };
-
-      console.log(item);
-
-      api.createBooking(item)
-      .then((response) => {
-        console.log(response.data);
       })
       .catch((err) => {
         console.log("An error occurred. Please try again.", err);
-      }).finally(() => {
+      })
+      .finally(() => {
         setLoading(false);
-        countDown();
       });
-
-      // const response = await fetch(production_check() + `/v1/book_room`, {
-      //   method: "POST",
-      //   headers: {
-      //     "Content-Type": "application/json",
-          
-      //   },
-      //   body: JSON.stringify(item),
-      // });
-
- 
-      // // setLoading(true);
-      // const result = await response.json();
-
-      // console.log(result, "result");
-
-      // if (response.status == 201) {
-      //   countDown();
-      //   // setTimeout(() => {
-      //   //   setLoading(false);
-      //   // }, 5*1000);
-  
+    // const response = await fetch(production_check() + `/booking/${id}`, {
+    //   method: "GET",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
+    // let passedValue = await new Response(response.body).text();
+    // let valueToJson = JSON.parse(passedValue).body;
+    // if (response.status == 201) {
+    //   setData(valueToJson);
+    //   console.log(valueToJson);
+    //   const checkInDate = new Date(valueToJson[0].check_in_date);
+    //   const checkOutDate = new Date(valueToJson[0].check_out_date);
+    //   const totalDays =
+    //     Math.abs(checkOutDate - checkInDate) / (1000 * 60 * 60 * 24);
+    //   setTotalday(totalDays);
+    //   setSelectedPayment(valueToJson[0].pay_way);
+    //   let admin = JSON.parse(localStorage.getItem("user-provider")).pos;
+    //   setPosition(admin);
+    //   if (admin === "admin") {
+    //     setPhone2(valueToJson[0].phone_2);
+    //     setUsername2(valueToJson[0].user_name_2);
+    //     setSpecialRequest(valueToJson[0].special_request);
+    //     setUpload_slip(valueToJson[0].image);
+    //     if (valueToJson[0].image) {
+    //     }
+    //   }
+    //   setLoading(false);
+    // }
   };
 
+  let handleOk = async (edit) => {
+    try {
+      // console.log('click', edit);
+      if (upload_slip instanceof Blob) {
+        const reader = new FileReader();
+        reader.readAsDataURL(upload_slip);
+        
+        reader.onloadend = async function () {
+          const img = reader.result;
+          if (!edit) {
+            await proceedWithPurchase(img);
+          } else {
+            await proceedWithEdit(img);
+          }
+        };
+        
+        reader.onerror = async function (err) {
+          console.log("File reading failed:", err);
+          if (!edit) {
+            await proceedWithPurchase(null);
+          } else {
+            await proceedWithEdit(null);
+          }
+        };
+      } else {
+        if (!edit) {
+          await proceedWithPurchase(null);
+        } else {
+          await proceedWithEdit(null);
+        }
+      }
+    } catch (err) {
+      console.log("An error occurred. Please try again.", err);
+    }
+  };
+  
+  let proceedWithEdit = async (img) => {
+    let item = {
+      user_name_2: username2,
+      phone_2: phone2,
+      special_request: special_request,
+      pay_way: selectedPayment,
+      image: selectedPayment === "credit" ? img : "",
+    };
+    try {
+      const res = await api.updateBooking(id, item);
+      console.log("Success", res);
+    } catch (err) {
+      console.log("An error occurred. Please try again.", err);
+    } finally {
+      setLoading(false);
+      countDown();
+    }
+  };
+  
+  let proceedWithPurchase = async (img) => {
+    let item = {
+      room_name: data.room_name,
+      type: data.type,
+      user_name: username,
+      user_name_2: username2,
+      phone_2: phone2,
+      email: email,
+      phone: phone,
+      special_request: special_request,
+      check_in_date: new Date(startDate).toISOString(),
+      check_out_date: new Date(endDate).toISOString(),
+      total_price: data.price * totalday,
+      total_cats: nunmcat,
+      total_rooms: total,
+      pay_way: selectedPayment,
+      status: "pending",
+      total_cameras: numcamera,
+      image: selectedPayment === "credit" ? img : "",
+    };
+    
+    try {
+      const response = await api.createBooking(item);
+      console.log(response.data);
+    } catch (err) {
+      console.log("An error occurred. Please try again.", err);
+    } finally {
+      setLoading(false);
+      countDown();
+    }
+  };
+  
   return (
     <>
       {loading ? (
@@ -387,34 +365,25 @@ export default function Detail() {
                     เริ่มเช็คอิน : จาก: 08:00 ถึง เวลาเช็คเอาท์ : 17:00
                   </p>
                   <p className="text-xs text-gray-600">
-                    {" "}
                     โดย {data.description ?? data.description}
                   </p>
                 </div>
-                {data.image && data.image.length > 0 ? (
+                {data.image ? (
                   <>
-                    {data.image.map((img, index) => (
-                      <img
-                        key={index}
-                        src={img}
+                    <img
+                        key={0}
+                        src={data.image}
                         className="rounded-xl shadow-lg"
                         alt={data.type}
                         width={150}
                         height={150}
                       />
-                    ))}
                   </>
                 ) : (
                   <>
-                    {id ? (
+                    {id && data.image ? (
                       <>
-                        <img
-                          key={0}
-                          src={data.image}
-                          className="rounded-xl shadow-lg"
-                          alt={data[0].type}
-                          width={150}
-                          height={150}
+                        <img key={0} src={data.image} className="rounded-xl shadow-lg" alt={data.type} width={150} height={150}
                         />
                       </>
                     ) : (
@@ -430,7 +399,7 @@ export default function Detail() {
                   <p>เช็คอิน</p>
                   <p className="font-semibold">
                     {id ? (
-                      <>{dayjs(data[0].check_in_date).format("DD/MM/YYYY")}</>
+                      <>{dayjs(data.check_in_date).format("DD/MM/YYYY")}</>
                     ) : (
                       <>{dayjs(startDate).format("DD/MM/YYYY")}</>
                     )}
@@ -447,7 +416,7 @@ export default function Detail() {
                   <p className="font-semibold">
                     {" "}
                     {id ? (
-                      <>{dayjs(data[0].check_out_date).format("DD/MM/YYYY")}</>
+                      <>{dayjs(data.check_out_date).format("DD/MM/YYYY")}</>
                     ) : (
                       <> {dayjs(endDate).format("DD/MM/YYYY")}</>
                     )}
@@ -456,8 +425,8 @@ export default function Detail() {
                 </div>
                 <div>
                   <p className="font-semibold">
-                    แมว {id ? data[0].total_cats : nunmcat}
-                    {" - "}กล้อง {id ? data[0].total_cameras : numcamera}
+                    แมว {id ? data.total_cats : nunmcat}
+                    {" - "}กล้อง {id ? data.total_cameras : numcamera}
                   </p>
                 </div>
               </div>
@@ -467,20 +436,15 @@ export default function Detail() {
                   <input
                     type="text"
                     placeholder="ชื่อ"
-                    value={id ? data[0].user_name : username}
+                    value={id ? data.user_name : username}
                     readOnly
                     onChange={(e) => setUsername(e.target.value)}
                     className="border border-gray-300 rounded p-2"
                   />
-                  {/* <input
-                    type="text"
-                    placeholder="นามสกุล"
-                    className="border border-gray-300 rounded p-2"
-                  /> */}
                   <input
                     type="email"
                     placeholder="อีเมล"
-                    value={id ? data[0].email : email}
+                    value={id ? data.email : email}
                     readOnly
                     onChange={(e) => setEmail(e.target.value)}
                     className="border border-gray-300 rounded p-2"
@@ -488,7 +452,7 @@ export default function Detail() {
                   <input
                     type="text"
                     placeholder="เบอร์โทรศัพท์"
-                    value={id ? data[0].phone : phone}
+                    value={id ? data.phone : phone}
                     onChange={(e) => setPhone(e.target.value)}
                     className="border border-gray-300 rounded p-2"
                   />
@@ -502,28 +466,17 @@ export default function Detail() {
                       id
                         ? pos === "admin"
                           ? username2
-                          : data[0].user_name_2
+                          : data.user_name_2
                         : username2
                     }
                     onChange={(e) => setUsername2(e.target.value)}
                     className="border border-gray-300 rounded p-2"
                   />
-                  {/* <input
-                    type="text"
-                    placeholder="นามสกุล"
-                    className="border border-gray-300 rounded p-2"
-                  /> */}
-                  {/* <input
-                    type="email"
-                    placeholder="อีเมล"
-                    
-                    className="border border-gray-300 rounded p-2"
-                  /> */}
                   <input
                     type="text"
                     placeholder="เบอร์โทรศัพท์"
                     value={
-                      id ? (pos === "admin" ? phone2 : data[0].phone_2) : phone2
+                      id ? (pos === "admin" ? phone2 : data.phone_2) : phone2
                     }
                     onChange={(e) => setPhone2(e.target.value)}
                     className="border border-gray-300 rounded p-2"
@@ -540,7 +493,7 @@ export default function Detail() {
                       id
                         ? pos === "admin"
                           ? special_request
-                          : data[0].special_request
+                          : data.special_request
                         : special_request
                     }
                     onChange={(e) => setSpecialRequest(e.target.value)}
@@ -550,7 +503,7 @@ export default function Detail() {
               </div>
               {!id ? (
                 <button
-                  onClick={handleBuy}
+                  onClick={() => handleOk(false)}
                   className="px-4 py-2 text-white rounded-sm mt-4 bg-[#55605B] hover:bg-[#A2A7A7]"
                 >
                   ยืนยันการจอง
@@ -559,7 +512,7 @@ export default function Detail() {
                 <>
                   {pos === "admin" ? (
                     <button
-                      onClick={handleEdit}
+                      onClick={() => handleOk(true)}
                       className="px-4 py-2 text-white rounded-sm mt-4 bg-[#55605B] hover:bg-[#A2A7A7]"
                     >
                       ยืนยันการแก้ไข
@@ -581,7 +534,7 @@ export default function Detail() {
                     {id ? totalday : totalday - 1} คืน
                   </p>
                   <p class="text-gray-500 text-sm">
-                    {id ? data[0].total_price : data.price * totalday} บาท
+                    {id ? data.total_price : data.price * totalday} บาท
                   </p>
                 </div>
                 <div className="flex justify-between space-x-24">
@@ -599,46 +552,17 @@ export default function Detail() {
                 <div className="flex justify-between space-x-24">
                   <p class="text-black text-lg font-semibold">ราคาทั้งหมด</p>
                   <p class="text-black text-lg font-semibold">
-                    {data && id ? data[0].total_price : data.price * totalday}{" "}
+                    {data && id ? data.total_price : data.price * totalday}{" "}
                     บาท
                   </p>
                 </div>
-                {/*  */}
-                {/* <div className="space-y-2 bg-white p-6 rounded-lg shadow-md max-w-md mx-auto mt-3">
-                  <div className="flex justify-between space-x-24">
-                    <p class="text-black text-lg font-semibold">
-                      Cancelation Charges
-                    </p>
-                  </div>
-
-                  <div className="flex justify-between space-x-24">
-                    <p class="text-black text-sm font-semibold">
-                      Non Refundable
-                    </p>
-                  </div>
-
-                  <div className="flex justify-between space-x-24">
-                    <p class="text-gray-500 text-xs">
-                      Penalty may be charged by the airline & by MMT based on
-                      how close to departure date you cancel. View fare rules to
-                      know more.
-                    </p>
-                  </div>
-
-                  <div className="flex justify-between space-x-24">
-                    <p class="text-gray-500 text-lg font-semibold">
-                      View Policy
-                    </p>
-                  </div>
-                </div> */}
 
                 <div className="space-y-4 p-6 mt-3">
                   <h4 className="text-lg font-medium mb-2">ชำระเงิน</h4>
                   <button
                     onClick={() => handleSelectPayment("walk-in")}
-                    className={`${
-                      selectedPayment === "walk-in" ? "border-blue-500" : ""
-                    } bg-white hover:border-blue-500  w-96 h-16 items-center justify-between px-4  flex border  rounded-lg`}
+                    className={`${selectedPayment === "walk-in" ? "border-blue-500" : ""
+                      } bg-white hover:border-blue-500  w-96 h-16 items-center justify-between px-4  flex border  rounded-lg`}
                   >
                     <div className="w-12">
                       <PaymentsIcon />
@@ -649,9 +573,8 @@ export default function Detail() {
 
                   <button
                     onClick={() => handleSelectPayment("credit")}
-                    className={`${
-                      selectedPayment === "credit" ? "border-blue-500" : ""
-                    } bg-white hover:border-blue-500  w-96 h-16 items-center justify-between px-4  flex border  rounded-lg`}
+                    className={`${selectedPayment === "credit" ? "border-blue-500" : ""
+                      } bg-white hover:border-blue-500  w-96 h-16 items-center justify-between px-4  flex border  rounded-lg`}
                   >
                     <img src={PromtPay} alt="1" className="h-12 w-12" />
                     <p>พร้อมเพย์</p>
@@ -659,6 +582,7 @@ export default function Detail() {
                   </button>
                 </div>
               </div>
+
               {selectedPayment === "credit" && (
                 <div className="w-full h-64 items-center justify-center text-center">
                   {id ? (
@@ -711,12 +635,6 @@ export default function Detail() {
                                     </DialogContentText>
 
                                     <div className=" w-full text-center space-y-2 mb-2">
-                                      {/* <div className="flex justify-center space-x-2">
-                                        <p className="font-semibold">
-                                          ชื่อบัญชี
-                                        </p>{" "}
-                                        <p>สุประวีร์ ลู่วิ่งเส้นชัย</p>
-                                      </div> */}
                                       <div className="flex justify-center space-x-2">
                                         {" "}
                                         <p className="font-semibold">
@@ -856,7 +774,7 @@ export default function Detail() {
                       ) : (
                         <div className="justify-center items-center text-center flex h-72">
                           <img
-                            src={data[0].image}
+                            src={data.image}
                             alt="Uploaded"
                             width={160}
                             height={160}
@@ -912,10 +830,6 @@ export default function Detail() {
                                 </DialogContentText>
 
                                 <div className=" w-full text-center space-y-2 mb-2">
-                                  {/* <div className="flex justify-center space-x-2">
-                                    <p className="font-semibold">ชื่อบัญชี</p>{" "}
-                                    <p>สุประวีร์ ลู่วิ่งเส้นชัย</p>
-                                  </div> */}
                                   <div className="flex justify-center space-x-2">
                                     {" "}
                                     <p className="font-semibold">
@@ -999,10 +913,6 @@ export default function Detail() {
                                 </DialogContentText>
 
                                 <div className=" w-full text-center space-y-2 mb-2">
-                                  {/* <div className="flex justify-center space-x-2">
-                                    <p className="font-semibold">ชื่อบัญชี</p>{" "}
-                                    <p>สุประวีร์ ลู่วิ่งเส้นชัย</p>
-                                  </div> */}
                                   <div className="flex justify-center space-x-2">
                                     {" "}
                                     <p className="font-semibold">

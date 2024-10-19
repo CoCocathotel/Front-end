@@ -8,7 +8,7 @@ import Detail from "../component/Detail";
 import Ad_Analytic from "../pages/admin/Ad_Analytic";
 import Ad_Schedule from "../pages/admin/Ad_Schedule";
 import Ad_Custom from "../pages/admin/Ad_Custome";
-
+import Ad_Footer from "../pages/admin/Ad_Footer";
 
 export default function Teacher() {
 
@@ -72,7 +72,7 @@ export default function Teacher() {
             element: (
                 <>
                     <Appbar_master />
-                    <SidebarAdmin page={<Ad_Custom />} />
+                    <SidebarAdmin page={<Ad_Footer />} />
                 </>
             ),
         },
