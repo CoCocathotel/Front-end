@@ -90,13 +90,12 @@ export default function Appbar_master() {
     <>
       {/* AppBar Section */}
       <div
-        className={`transition-opacity ease-linear duration-700 flex items-center justify-between border-b w-full h-24 top-0 bg-white z-50 sticky ${
-          visible ? "opacity-80" : "opacity-0 invisible"
-        }`}
+        className={`transition-opacity ease-linear duration-700 flex items-center justify-between border-b w-full h-24 top-0 bg-white z-50 sticky ${visible ? "opacity-80" : "opacity-0 invisible"
+          }`}
       >
         {/* Logo */}
         <img
-          className="ml-6 sm:ml-10 object-contain cursor-pointer"
+          className="hidden md:flex ml-6 sm:ml-10 object-contain cursor-pointer"
           src={Logo}
           alt="logo"
           width={80}
@@ -127,7 +126,7 @@ export default function Appbar_master() {
         </div>
 
         {/* Mobile Menu Icon */}
-        <div className="md:hidden mr-4">
+        <div className="md:hidden mr-4 ml-4">
           <IconButton onClick={toggleMobileMenu} aria-label="menu">
             <MenuIcon />
           </IconButton>
@@ -135,6 +134,7 @@ export default function Appbar_master() {
 
         {/* Mobile Menu Drawer */}
         <Drawer
+          className="relative"
           anchor="left"
           open={mobileOpen}
           onClose={toggleMobileMenu}
@@ -146,12 +146,20 @@ export default function Appbar_master() {
           }}
         >
           <div className="w-full p-4">
-            <div className="flex justify-between items-center">
-              <h2 className="text-lg font-bold">เมนู</h2>
+            <div className="text-right">
               <IconButton onClick={toggleMobileMenu}>
                 <CloseIcon />
               </IconButton>
             </div>
+
+            <img
+              className="md:hidden w-full object-contain cursor-pointer items-center justify-center text-center"
+              src={Logo}
+              alt="logo"
+              width={50}
+              height={50}
+              onClick={() => navigate("/")}
+            />
 
             {/* Login and Register / User Account in Mobile Menu */}
             {!localStorage.getItem("token") ? (
@@ -176,36 +184,104 @@ export default function Appbar_master() {
                 </button>
               </div>
             ) : (
-              <div className="flex flex-col space-y-4 mt-4">
-                <button
+              <>
+                <React.Fragment>
+                  <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
+                    <Tooltip title="บัญชีผู้ใช้งาน">
+                      <div
+                        className="flex items-center space-x-2 cursor-pointer"
+                      // onClick={handleClick}
+                      >
+                        <Avatar sx={{ width: 32, height: 32 }}>
+                          {JSON.parse(localStorage.getItem("user-provider")).email[0].toUpperCase()}
+                        </Avatar>
+                        <p className="text-gray-600">
+                          {JSON.parse(localStorage.getItem("user-provider")).first_name}{" "}
+                          {JSON.parse(localStorage.getItem("user-provider")).last_name}
+                        </p>
+                      </div>
+                    </Tooltip>
+                  </Box>
+                  {/* <Menu
+                anchorEl={anchorEl}
+                id="account-menu"
+                open={open}
+                onClose={handleClose}
+                onClick={handleClose}
+                PaperProps={{
+                  elevation: 0,
+                  sx: {
+                    overflow: "visible",
+                    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+                    mt: 1.5,
+                    "&::before": {
+                      content: '""',
+                      display: "block",
+                      position: "absolute",
+                      top: 0,
+                      right: 14,
+                      width: 10,
+                      height: 10,
+                      bgcolor: "background.paper",
+                      transform: "translateY(-50%) rotate(45deg)",
+                      zIndex: 0,
+                    },
+                  },
+                }}
+                transformOrigin={{ horizontal: "right", vertical: "top" }}
+                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+              >
+                <MenuItem
                   onClick={() => {
+                    handleClose();
                     navigate("/account");
-                    toggleMobileMenu();
                   }}
-                  className="w-full text-gray-600 hover:text-blue-500"
                 >
                   บัญชีของฉัน
-                </button>
-                <button
+                </MenuItem>
+                <MenuItem
                   onClick={() => {
+                    handleClose();
                     navigate("/history");
-                    toggleMobileMenu();
                   }}
-                  className="w-full text-gray-600 hover:text-blue-500"
                 >
                   ประวัติการจอง
-                </button>
-                <button
-                  onClick={handleCloseLogout}
-                  className="w-full text-red-500 hover:text-blue-500"
-                >
-                  ออกจากระบบ
-                </button>
-              </div>
+                </MenuItem>
+                <MenuItem onClick={handleCloseLogout}>ออกจากระบบ</MenuItem>
+              </Menu> */}
+                </React.Fragment>
+                <div className="flex-col flex text-left items-start space-y-4 mt-4">
+                  <button
+                    onClick={() => {
+                      navigate("/account");
+                      toggleMobileMenu();
+                    }}
+                    className=" text-gray-600 hover:text-blue-500"
+                  >
+                    บัญชีของฉัน
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigate("/history");
+                      toggleMobileMenu();
+                    }}
+                    className=" text-gray-600 hover:text-blue-500"
+                  >
+                    ประวัติการจอง
+                  </button>
+                  {/* <button
+                    onClick={handleCloseLogout}
+                    className=" text-red-500 hover:text-blue-500"
+                  >
+                    ออกจากระบบ
+                  </button> */}
+                </div>
+              </>
             )}
 
+            <h2 className="mt-4 text-lg font-bold">เมนู</h2>
             {/* Navigation Links */}
-            <ul className="mt-8 space-y-4">
+            <ul className="mt-4 space-y-4">
               <li>
                 <button
                   onClick={() => {
@@ -241,10 +317,21 @@ export default function Appbar_master() {
               </li>
             </ul>
           </div>
+
+          {localStorage.getItem("token") && (
+            <div className="flex-col flex text-center p-4 absolute bottom-0 w-full bg-red-500 text-white">
+              <button
+                onClick={handleCloseLogout}
+                className=""
+              >
+                ออกจากระบบ
+              </button>
+            </div>
+          )}
         </Drawer>
 
         {/* User Account Section for Desktop */}
-        <div className="flex items-center mr-6">
+        <div className="hidden md:flex items-center mr-6">
           {localStorage.getItem("token") ? (
             <React.Fragment>
               <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>

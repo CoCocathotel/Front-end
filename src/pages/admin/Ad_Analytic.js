@@ -29,19 +29,9 @@ export default function Ad_Analytic() {
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
 
   useEffect(() => {
-    AOS.init({ duration: 1000 }); // Initialize AOS for animations
+    AOS.init({ duration: 1000 });
     fetchData();
   }, [selectedYear]);
-
-  function productionCheck() {
-    const isDevelopment =
-      window.location.origin.includes("localhost") ||
-      window.location.origin.includes("127.0.0.1");
-
-    return isDevelopment
-      ? "http://localhost:8700"
-      : "https://cococatbackend.vercel.app";
-  }
 
   const fetchData = async () => {
     api.getAllEvent({ role: 'admin' })
@@ -64,7 +54,6 @@ export default function Ad_Analytic() {
     (entry) => new Date(entry.check_in_date).getFullYear() === selectedYear
   );
 
-  // Check if filteredData is empty
   if (filteredData.length === 0) {
     return (
       <div className="container mx-auto p-6 text-center">
@@ -299,7 +288,7 @@ export default function Ad_Analytic() {
         </div>
 
         <div className="text-2xl">
-          ประเภทห้องที่ได้รับการจองสูงสุดคือ {mostBookedRoom.roomType}{" "}
+          ประเภทห้องที่ได้รับการจองสูงสุดคือ {mostBookedRoom.roomType}
           และประเภทห้องที่ได้รับการจองต่ำสุดคือ {leastBookedRoom.roomType}
         </div>
       </div>

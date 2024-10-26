@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, act } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -31,6 +31,8 @@ export default function Home() {
   const [slideIndex, setSlideIndex] = useState(0);
   const [currentPage, setCurrentPage] = useState(0);
   const [data, setData] = useState([]);
+  const [allReviews, setAllReviews] = useState([]);
+  const [indexReview, setIndextReview] = useState(0);
 
   const itemsPerPage = 9;
   const totalPages = Math.ceil(reviews.flat().length / itemsPerPage);
@@ -39,15 +41,30 @@ export default function Home() {
     .flat()
     .slice(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage);
 
-  const handleNext = () => {
-    if (currentPage < totalPages - 1) {
-      setCurrentPage(currentPage + 1);
+  let tempReview = 0;
+  const handleNext = (mode) => {
+    if (!mode) {
+      if (currentPage < totalPages - 1) {
+        setCurrentPage(currentPage + 1);
+      }
+    } else {
+      if (indexReview < allReviews.length - 1) {
+        setIndextReview(indexReview + 1);
+      }
+      console.log(indexReview)
     }
   };
 
-  const handlePrev = () => {
-    if (currentPage > 0) {
-      setCurrentPage(currentPage - 1);
+  const handlePrev = (mode) => {
+    console.log('21312312')
+    if (!mode) {
+      if (currentPage > 0) {
+        setCurrentPage(currentPage - 1);
+      }
+    } else {
+      if (indexReview > 0) {
+        setIndextReview(indexReview - 1);
+      }
     }
   };
 
@@ -72,13 +89,14 @@ export default function Home() {
         }
         return temp;
       }));
+      setAllReviews(data.reviewImage);
 
     }).catch((err) => {
       setError(err.message);
     })
-    .finally(() => {
-      setLoading(false);
-    });
+      .finally(() => {
+        setLoading(false);
+      });
   }, []);
 
   const handleCarouselChange = (current) => {
@@ -93,11 +111,40 @@ export default function Home() {
     }
   };
 
+  function swap(x, y) {
+    const temp = x;
+    x = y;
+    y = temp;
+    return [x, y];
+  }
+
+  const handleActiveIndex = (next) => {
+    if (next >= 0 && next < room.length) {
+      const updatedRoom = [...room];
+      setEffectImg(true);
+
+      const [swappedElement1, swappedElement2] = swap(
+        updatedRoom[1],
+        updatedRoom[next]
+      );
+      updatedRoom[1] = swappedElement1;
+      updatedRoom[next] = swappedElement2;
+
+      setTimeout(() => {
+        setEffectImg(false);
+        setRoom(updatedRoom);
+      }, 500);
+    } else {
+      console.error("Invalid index provided.");
+    }
+  };
+
+
   if (loading && reviews) return <LoadingSpinner />;
   if (error) return <p className="text-red-500">Error: {error}</p>;
 
   return (
-      <>
+    <>
       <div
         className="min-h-screen flex flex-col items-center justify-center bg-[#F0F8FF] relative"
         style={{
@@ -129,7 +176,26 @@ export default function Home() {
           </div>
 
           {/* Horizontal Scroll for Mobile */}
-          <div className="block md:hidden w-full overflow-x-scroll flex space-x-4 py-4">
+          <div className="md:hidden">
+            <Carousel
+              autoplay
+              ref={carouselRef}
+              arrows
+              infinite={false}
+              beforeChange={(from, to) => handleCarouselChange(to)}
+            >
+              {ImgArray.map((image, index) => (
+                <div key={index} className="relative w-full h-auto flex justify-center">
+                  <img
+                    src={`${image}`}
+                    alt={`image-${index}`}
+                    className="w-full h-auto object-contain object-center rounded-lg shadow-lg"
+                  />
+                </div>
+              ))}
+            </Carousel>
+          </div>
+          {/* <div className="md:hidden w-full overflow-x-scroll flex space-x-4 py-4">
             {ImgArray.map((image, index) => (
               <div key={index} className="flex-shrink-0 w-80 h-40 rounded-lg shadow-lg">
                 <img
@@ -139,11 +205,11 @@ export default function Home() {
                 />
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
 
         {/* Indicator */}
-        <div className="flex p-4 space-x-2" data-aos="fade-up">
+        <div className="hidden md:flex p-4 space-x-2" data-aos="fade-up">
           {ImgArray.map((_, index) => (
             <div key={index}>
               <div
@@ -172,124 +238,186 @@ export default function Home() {
           </p>
         </div>
 
-{/* Room Label */}
-<Label label="ห้องพักน้องแมว" className="mt-8" data-aos="fade-up" />
+        {/* Room Label */}
+        <Label label="ห้องพักน้องแมว" className="mt-8" data-aos="fade-up" />
 
-{/* Room Details */}
-<div className="relative w-full flex items-center justify-center mt-8">
-  {/* Mobile Version - Horizontal Scroll */}
-  <div className="block md:hidden w-full flex justify-center">
-    <div className="relative w-full flex items-center justify-center mx-auto px-4"> {/* Added padding for consistent spacing */}
-      {/* Wrapper for the entire card and navigation arrows */}
-      <div className="relative flex items-center justify-center w-[90vw] max-w-sm mx-auto">
-        <button
-          onClick={() => handleRoomCarouselChange('prev')}
-          disabled={activeIndex === 0}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 p-1 bg-white rounded-full shadow-md z-10 opacity-80 hover:opacity-100 transition"
-        >
-          <ArrowBackIosIcon fontSize="small" />
-        </button>
-
-        <div className="w-full flex justify-center items-center">
+        {/* Room Details */}
+        <div className="hidden md:flex relative w-full  items-center justify-center">
           <div
-            className={`relative w-full transition duration-300 ease-in-out overflow-hidden rounded-lg shadow-lg ${effectimg
-              ? "blur-sm transition duration-300 ease-in-out scale-75"
-              : ""
-            } mx-auto`}
+            className="absolute flex items-end justify-center"
+            data-aos="fade-up"
           >
-            <img
-              src={room[activeIndex]?.image[0]}
-              alt={room[activeIndex]?.room_name}
-              className="w-full h-[500px] object-cover rounded-lg transition duration-300 ease-in-out mx-auto"
-              style={{ objectFit: 'cover', aspectRatio: '3 / 4' }}
-            />
-
-            <div className="absolute bottom-0 w-full bg-[rgba(22, 48, 131, 0.8)] backdrop-blur-sm p-2 sm:p-4 flex items-center justify-between">
-              <div className="w-40 sm:w-48">
-                <h1 className="text-white font-semibold text-sm sm:text-base">{room[activeIndex]?.room_name}</h1>
-                <p className="text-white text-xs sm:text-sm">
-                  รองรับน้องแมวได้ {room[activeIndex]?.number_of_cats} ตัว
-                </p>
-              </div>
+            {room.map((item, index) => (
               <button
-                onClick={() => {
-                  navigate("/booking");
-                }}
-                className="bg-[#224683] hover:bg-[#202d42] text-white w-24 sm:w-28 h-8 sm:h-10 rounded-full px-2 py-1 flex items-center"
+                key={item._id}
+                onClick={() => handleActiveIndex(index)}
+                className={`relative w-80  transition duration-300 ease-in-out overflow-hidden rounded-lg shadow-lg hover:blur-0 ${effectimg === true
+                  ? "blur-sm transition duration-300 ease-in-out scale-75"
+                  : ""
+                  } ${index === 1 ? "scale-100 " : "scale-75 blur-sm "}`}
               >
-                <h1 className="mr-1 text-xs sm:text-sm">ดูเพิ่มเติม</h1>
-                <img src={FeetBlue} alt="rom2" className="w-5 sm:w-6 h-5 sm:h-6" />
+                <img
+                  src={item.image[0]}
+                  alt={item.room_name}
+                  className="w-full h-full aspect-[3/6]	 object-cover rounded-lg transition duration-300 ease-in-out"
+                  height={500}
+                />
+
+
+                {index === 1 && (
+                  <div className="absolute bottom-0 w-full bg-[rgba(22, 48, 131, 0.8)] backdrop-blur-sm p-4 flex items-center justify-between">
+                    <div className="w-52">
+                      <h1 className="text-white font-bold">{item.room_name}</h1>
+                      <p className="text-white text-sm">
+                        รองรับน้องแมวได้ {item.number_of_cats} ตัว
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => {
+                        navigate("/booking");
+                      }}
+                      className="bg-[#224683] hover:bg-[#202d42] text-white w-44 h-20 rounded-full px-4 py-2 flex items-center"
+                    >
+                      <h1 className="mr-2">ดูเพิ่มเติม</h1>
+                      <img src={FeetBlue} alt="rom2" width={25} height={25} />
+                    </button>
+                  </div>
+                )}
               </button>
-            </div>
+            ))}
           </div>
+          <BG1 />
         </div>
 
-        <button
-          onClick={() => handleRoomCarouselChange('next')}
-          disabled={activeIndex === room.length - 1}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 p-1 bg-white rounded-full shadow-md z-10 opacity-80 hover:opacity-100 transition"
-        >
-          <ArrowForwardIosIcon fontSize="small" />
-        </button>
-      </div>
-    </div>
-  </div>
+        {/* Room Details */}
+        <div className="relative flex md:hidden w-full items-center justify-center">
+          {/* Mobile Version - Horizontal Scroll */}
+          <div className=" md:hidden w-full flex justify-center">
+            <div className="relative w-full flex items-center justify-center mx-auto px-4"> {/* Added padding for consistent spacing */}
+              {/* Wrapper for the entire card and navigation arrows */}
+              <div className="relative flex items-center justify-center w-96 max-w-sm mx-auto">
+                {/* <button
+                  onClick={() => handleRoomCarouselChange('prev')}
+                  disabled={activeIndex === 0}
+                  className="absolute left-0 top-1/2 transform -translate-y-1/2 p-1 bg-white rounded-full shadow-md z-10 opacity-80 hover:opacity-100 transition"
+                >
+                        <ArrowBackIosIcon />
+                </button> */}
 
-  {/* Desktop Version - Original */}
-  <div className="hidden md:block absolute w-full flex items-center justify-center mx-auto px-4" data-aos="fade-up"> {/* Added padding for consistent spacing */}
-    {/* Wrapper for centering cards */}
-    <div className="flex items-end justify-center flex-wrap gap-4 w-full mx-auto">
-      {room.map((item, index) => (
-        <button
-          key={item._id}
-          onClick={() => handleRoomCarouselChange('next')}
-          className={`relative w-72 transition duration-300 ease-in-out overflow-hidden rounded-lg shadow-lg hover:blur-0 ${effectimg
-            ? "blur-sm transition duration-300 ease-in-out scale-75"
-            : ""
-          } ${index === 1 ? "scale-100" : "scale-75 blur-sm"} mx-auto`}
-        >
-          <img
-            src={item.image[0]}
-            alt={item.room_name}
-            className="w-full h-[500px] object-cover rounded-lg transition duration-300 ease-in-out mx-auto"
-            style={{ objectFit: 'cover', aspectRatio: '3 / 4' }}
-          />
+                <button
+                  onClick={() => {handleRoomCarouselChange('prev')}}
+                  disabled={activeIndex === 0}
+                  className={`absolute top-1/2 left-0 p-4 ml-1 rounded-full z-30 opacity-80 shadow-md hover:bg-[#16305C] ${currentPage === 0 ? "bg-gray-300" : "bg-gray-300"
+                    } text-white`}
+                >
+                  <ArrowBackIosIcon />
+                </button>
 
-          {index === 1 && (
-            <div className="absolute bottom-0 w-full bg-[rgba(22, 48, 131, 0.8)] backdrop-blur-sm p-4 flex items-center justify-between">
-              <div className="w-48">
-                <h1 className="text-white font-bold">{item.room_name}</h1>
-                <p className="text-white text-sm">
-                  รองรับน้องแมวได้ {item.number_of_cats} ตัว
-                </p>
+                <div className="w-full flex justify-center items-center">
+                  <div
+                    className={`relative w-full transition duration-300 ease-in-out overflow-hidden rounded-lg shadow-lg ${effectimg
+                      ? "blur-sm transition duration-300 ease-in-out scale-75"
+                      : ""
+                      } mx-auto`}
+                  >
+                    <img
+                      src={room[activeIndex]?.image[0]}
+                      alt={room[activeIndex]?.room_name}
+                      className="w-full object-cover aspect-[3/6]	 rounded-lg transition duration-300 ease-in-out mx-auto"
+                    />
+
+                    <div className="absolute bottom-0 w-full bg-[rgba(22, 48, 131, 0.8)] backdrop-blur-sm p-2 sm:p-4 flex items-center justify-between">
+                      <div className="w-40 sm:w-48">
+                        <h1 className="text-white font-semibold text-sm sm:text-base">{room[activeIndex]?.room_name}</h1>
+                        <p className="text-white text-xs sm:text-sm">
+                          รองรับน้องแมวได้ {room[activeIndex]?.number_of_cats} ตัว
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => {
+                          navigate("/booking");
+                        }}
+                        className="bg-[#224683] hover:bg-[#202d42] text-white w-24 sm:w-28 h-8 sm:h-10 rounded-full px-2 py-1 flex items-center"
+                      >
+                        <h1 className="mr-1 text-xs sm:text-sm">ดูเพิ่มเติม</h1>
+                        <img src={FeetBlue} alt="rom2" className="w-5 sm:w-6 h-5 sm:h-6" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* <button
+                  onClick={() => handleRoomCarouselChange('next')}
+                  disabled={activeIndex === room.length - 1}
+                  className="absolute right-0 top-1/2 transform -translate-y-1/2 p-1 bg-white rounded-full shadow-md z-10 opacity-80 hover:opacity-100 transition"
+                >
+                  <ArrowForwardIosIcon />
+                </button> */}
+                <button
+                  onClick={() => { handleRoomCarouselChange('next')}}
+                  disabled={activeIndex === room.length - 1}
+                  className={`absolute top-1/2 right-0 p-4 mr-1 rounded-full z-30 opacity-80 shadow-md hover:bg-[#16305C] ${currentPage === totalPages - 1 ? "bg-gray-300" : "bg-gray-300"
+                    } text-white`}
+                >
+                  <ArrowForwardIosIcon />
+                </button>
               </div>
-              <button
-                onClick={() => {
-                  navigate("/booking");
-                }}
-                className="bg-[#224683] hover:bg-[#202d42] text-white w-28 md:w-32 h-10 rounded-full px-2 py-1 flex items-center"
-              >
-                <h1 className="mr-2">ดูเพิ่มเติม</h1>
-                <img src={FeetBlue} alt="rom2" className="w-6 h-6" />
-              </button>
             </div>
-          )}
-        </button>
-      ))}
-    </div>
-  </div>
-  <BG1 />
-</div>
+          </div>
+
+          {/* Desktop Version - Original */}
+          <div className="hidden md:flex absolute w-full  items-center justify-center mx-auto px-4" data-aos="fade-up"> {/* Added padding for consistent spacing */}
+            {/* Wrapper for centering cards */}
+            <div className="flex items-end justify-center flex-wrap gap-4 w-full mx-auto">
+              {room.map((item, index) => (
+                <button
+                  key={item._id}
+                  onClick={() => handleRoomCarouselChange('next')}
+                  className={`relative w-72 transition duration-300 ease-in-out overflow-hidden rounded-lg shadow-lg hover:blur-0 ${effectimg
+                    ? "blur-sm transition duration-300 ease-in-out scale-75"
+                    : ""
+                    } ${index === 1 ? "scale-100" : "scale-75 blur-sm"} mx-auto`}
+                >
+                  <img
+                    src={item.image[0]}
+                    alt={item.room_name}
+                    className="w-full h-[500px] object-cover rounded-lg transition duration-300 ease-in-out mx-auto"
+                    style={{ objectFit: 'cover', aspectRatio: '3 / 4' }}
+                  />
+
+                  {index === 1 && (
+                    <div className="absolute bottom-0 w-full bg-[rgba(22, 48, 131, 0.8)] backdrop-blur-sm p-4 flex items-center justify-between">
+                      <div className="w-48">
+                        <h1 className="text-white font-bold">{item.room_name}</h1>
+                        <p className="text-white text-sm">
+                          รองรับน้องแมวได้ {item.number_of_cats} ตัว
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => {
+                          navigate("/booking");
+                        }}
+                        className="bg-[#224683] hover:bg-[#202d42] text-white w-28 md:w-32 h-10 rounded-full px-2 py-1 flex items-center"
+                      >
+                        <h1 className="mr-2">ดูเพิ่มเติม</h1>
+                        <img src={FeetBlue} alt="rom2" className="w-6 h-6" />
+                      </button>
+                    </div>
+                  )}
+                </button>
+              ))}
+            </div>
+          </div>
+          <BG1 />
+        </div>
 
         {/* Review Label */}
         <Label label="รีวิวจากลูกค้า" className="mt-8" data-aos="fade-up" />
-
-        {/* Reviews Section */}
-        <div className="relative mt-8" data-aos="fade-up">
+        {/* Reviews Section Desktop*/}
+        <div className="relative hidden md:flex" data-aos="fade-up">
           <Star />
-
           <button
-            onClick={handlePrev}
+            onClick={() => { handlePrev(false) }}
             disabled={currentPage === 0}
             className={`absolute top-1/3 left-4 p-4 m-5 rounded-full z-30 opacity-80 shadow-md hover:bg-[#16305C] ${currentPage === 0 ? "bg-gray-300" : "bg-gray-300"
               } text-white`}
@@ -300,7 +428,7 @@ export default function Home() {
           <BG2 />
 
           <button
-            onClick={handleNext}
+            onClick={() => { handleNext(false) }}
             disabled={currentPage === totalPages - 1}
             className={`absolute top-1/3 right-4 p-4 m-5 rounded-full z-30 opacity-80 shadow-md hover:bg-[#16305C] ${currentPage === totalPages - 1 ? "bg-gray-300" : "bg-gray-300"
               } text-white`}
@@ -309,13 +437,13 @@ export default function Home() {
           </button>
 
           <DogIcon />
-          <div className="relative grid grid-cols-2 md:grid-cols-3 gap-4 bg-[#8FA7BD] p-4 m-10 rounded-lg">
+          <div className="relative grid grid-cols-2 gap-4 bg-[#8FA7BD] p-4 m-20 space-x-4 rounded-lg h-full">
             <div className="h-36 z-10">
-              <img src={reviews[activeIndex][slideIndex]} alt="Main Review" className="w-full h-full object-cover rounded-lg" />
+              <img src={reviews[activeIndex][slideIndex]} alt="Main Review" />
             </div>
 
             {/* Grid Display */}
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-2 grid-rows-3 h-96 z-20">
+            <div className="grid grid-cols-3 gap-1 grid-rows-3 h-96 z-20">
               {currentReviews.map((review, index) => (
                 <button
                   onClick={() => {
@@ -331,7 +459,7 @@ export default function Home() {
                   className="relative group"
                 >
                   <img
-                    className="w-full h-28 md:h-32 object-cover rounded-lg group-hover:opacity-75 transition duration-300"
+                    className="w-full h-32 object-cover rounded-lg group-hover:opacity-75 transition duration-300"
                     src={review}
                     alt={`Review ${index}`}
                   />
@@ -345,9 +473,9 @@ export default function Home() {
             </div>
 
             {/* Pagination */}
-            <div className="flex items-center justify-center w-full p-4 space-x-2">
+            <div className="flex items-center justify-center w-full p-4 space-x-4">
               {reviews
-                .filter((_, index) => index % 9 === 0)
+                .filter((_, index) => (index + 1) % 3 === 0)
                 .map((_, index) => (
                   <div
                     key={index}
@@ -356,39 +484,120 @@ export default function Home() {
                     }}
                     className={
                       index === currentPage
-                        ? "max-w-md w-6 h-4 bg-[#B6D4F0] rounded-full shadow-lg cursor-pointer"
+                        ? "max-w-md w-10 h-4 bg-[#B6D4F0] rounded-full shadow-lg cursor-pointer"
                         : "max-w-md w-4 h-4 bg-[#d7d7d7] rounded-full shadow-lg cursor-pointer"
                     }
                   >
                   </div>
                 ))}
             </div>
+
+          </div>
+        </div>
+
+
+        {/* Reviews Section Mobbile*/}
+
+        <div className="relative md:hidden p-3" data-aos="fade-up">
+          <button
+            onClick={() => { handlePrev(true) }}
+            // disabled={currentPage === 0}
+            className={`absolute top-1/3 left-0 p-4 m-5 rounded-full z-30 opacity-80 shadow-md hover:bg-[#16305C] ${currentPage === 0 ? "bg-gray-300" : "bg-gray-300"
+              } text-white`}
+          >
+            <ArrowBackIosIcon />
+          </button>
+          <BG2 />
+          <button
+            onClick={() => { handleNext(true) }}
+            // disabled={currentPage === totalPages - 1}
+            className={`absolute top-1/3 right-0 p-4 m-5 rounded-full z-30 opacity-80 shadow-md hover:bg-[#16305C] ${currentPage === totalPages - 1 ? "bg-gray-300" : "bg-gray-300"
+              } text-white`}
+          >
+            <ArrowForwardIosIcon />
+          </button>
+
+          <div className="relative bg-[#8FA7BD] p-4  space-x-4 rounded-lg h-full">
+            <div className="h-1/2 z-10">
+              <img src={allReviews[indexReview]} alt="Main Review" />
+            </div>
+
+            {/* Grid Display */}
+            {/* <div className="grid grid-cols-3 gap-1 grid-rows-3 h-96 z-20">
+              {currentReviews.map((review, index) => (
+                <button
+                  onClick={() => {
+                    const rowIndex = Math.floor(
+                      (currentPage * itemsPerPage + index) / reviews[0].length
+                    );
+                    const reviewIndex =
+                      (currentPage * itemsPerPage + index) % reviews[0].length;
+                    setActiveIndex(rowIndex);
+                    setSlideIndex(reviewIndex);
+                  }}
+                  key={index}
+                  className="relative group"
+                >
+                  <img
+                    className="w-full h-32 object-cover rounded-lg group-hover:opacity-75 transition duration-300"
+                    src={review}
+                    alt={`Review ${index}`}
+                  />
+                  <img
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-300 z-10"
+                    src={FeetK}
+                    alt="FeetK Icon"
+                  />
+                </button>
+              ))}
+            </div> */}
+
+            {/* Pagination */}
+            {/* <div className="flex items-center justify-center w-full p-4 space-x-4">
+              {reviews
+                .filter((_, index) => (index) % 9 === 0)
+                .map((_, index) => (
+                  <div
+                    key={index}
+                    onClick={() => {
+                      setCurrentPage(index);
+                    }}
+                    className={
+                      index === currentPage
+                        ? "max-w-md w-10 h-4 bg-[#B6D4F0] rounded-full shadow-lg cursor-pointer"
+                        : "max-w-md w-4 h-4 bg-[#d7d7d7] rounded-full shadow-lg cursor-pointer"
+                    }
+                  >
+                  </div>
+                ))}
+            </div> */}
+
           </div>
         </div>
 
         {/* Map Section */}
-<div className="w-full flex flex-col items-center mt-12 md:mt-20 mb-8 md:mb-10 space-y-6" data-aos="fade-up">
-  {/* Title and Icon */}
-  <div className="flex items-center justify-center bg-[#3B82F6] text-white text-center rounded-full shadow-lg p-3 md:p-6">
-    <p className="text-lg md:text-2xl font-bold">แผนที่</p>
-    <img src={FeetBig} alt="Map Icon" className="ml-2 md:ml-4 w-10 md:w-16 h-auto" />
-  </div>
+        <div className="w-full flex flex-col items-center mt-12 md:mt-20 mb-8 md:mb-10 space-y-6" data-aos="fade-up">
+          {/* Title and Icon */}
+          <div className="flex items-center justify-center bg-[#3B82F6] text-white text-center rounded-full shadow-lg p-3 md:p-6">
+            <p className="text-lg md:text-2xl font-bold">แผนที่</p>
+            <img src={FeetBig} alt="Map Icon" className="ml-2 md:ml-4 w-10 md:w-16 h-auto" />
+          </div>
 
-  {/* Map Image */}
-  <div className="w-10/12 sm:w-9/12 md:w-3/4 lg:w-1/2 my-2">
-    <img src={data.mapImage} alt="Map" className="w-full h-auto rounded-lg shadow-md" />
-  </div>
+          {/* Map Image */}
+          <div className="w-10/12 sm:w-9/12 md:w-3/4 lg:w-1/2 my-2">
+            <img src={data.mapImage} alt="Map" className="w-full h-auto rounded-lg shadow-md" />
+          </div>
 
-  {/* Map Detail Text Box */}
-  <div className="bg-[#B6D4F0] text-center rounded-lg shadow-lg p-3 sm:p-5 md:p-10 w-10/12 sm:w-9/12 md:w-3/4 lg:w-1/2 my-3">
-    <h1 className="text-[#16305C] text-sm sm:text-lg md:text-2xl font-bold leading-snug">
-      Co-Co Cat Hotel โรงแรมแมว โค-โค่ แค็ท
-    </h1>
-    <p className="text-[#0A1629] text-xs sm:text-sm md:text-lg leading-relaxed mt-1">
-      {data.mapDetail}
-    </p>
-  </div>
-</div>
+          {/* Map Detail Text Box */}
+          <div className="bg-[#B6D4F0] text-center rounded-lg shadow-lg p-3 sm:p-5 md:p-10 w-10/12 sm:w-9/12 md:w-3/4 lg:w-1/2 my-3">
+            <h1 className="text-[#16305C] text-sm sm:text-lg md:text-2xl font-bold leading-snug">
+              Co-Co Cat Hotel โรงแรมแมว โค-โค่ แค็ท
+            </h1>
+            <p className="text-[#0A1629] text-xs sm:text-sm md:text-lg leading-relaxed mt-1">
+              {data.mapDetail}
+            </p>
+          </div>
+        </div>
 
         <span className="mb-40"></span>
       </div>

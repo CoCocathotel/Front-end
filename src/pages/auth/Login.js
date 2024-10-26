@@ -8,7 +8,6 @@ import api from "../../utils/api";
 
 
 export default function Login({ handleAppbar }) {
-  // http://localhost:8700/v1/login
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);

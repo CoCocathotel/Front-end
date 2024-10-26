@@ -4,6 +4,16 @@ import LoadingSpinner from "../../component/Loading";
 import * as React from "react";
 import Tooltip from "@mui/material/Tooltip";
 import dayjs from "dayjs";
+import {
+  CheckCircleOutlined,
+  ClockCircleOutlined,
+  CloseCircleOutlined,
+  ExclamationCircleOutlined,
+  MinusCircleOutlined,
+  SyncOutlined,
+} from '@ant-design/icons';
+import { Divider, Flex, Tag } from 'antd';
+
 import api from "../../utils/api";
 
 export default function Cart() {
@@ -61,7 +71,7 @@ export default function Cart() {
                   setBoxID(1);
                   setStatus("pending");
                 }}
-                className={`h-full w-full ${boxid === 1 ? "text-blue-500 border-b-2 border-blue-400" : ""}`}
+                className={`h-full w-full truncate ${boxid === 1 ? "text-blue-500 border-b-2 border-blue-400" : ""}`}
               >
                 กำลังตรวจสอบ
               </button>
@@ -111,25 +121,34 @@ export default function Cart() {
                       <Tooltip title={`รูปแบบการชำระ: ${item.pay_way}`} arrow>
                         <h1>รูปแบบการชำระ: {item.pay_way}</h1>
                       </Tooltip>
-                      <div className="flex space-x-1 text-center items-center">
+                      <div className="flex space-x-1 ">
                         <h1>สถานะการชำเงิน: </h1>
                         {(item.status === "pending" ? (
                           <Tooltip title={item.status} arrow>
-                            <h1 className="text-sm bg-yellow-300 p-1 rounded-lg shadow-lg">
+                            {/* <h1 className="text-sm bg-yellow-300 p-1 rounded-lg shadow-lg">
                               {item.status}
-                            </h1>
+                            </h1> */}
+                            <Tag icon={<ClockCircleOutlined />} color="warning">
+                              Waiting
+                            </Tag>
                           </Tooltip>
                         ) : item.status === "pass" ? (
                           <Tooltip title={item.status} arrow>
-                            <h1 className="text-sm bg-green-300 p-1 rounded-lg shadow-lg">
+                            {/* <h1 className="text-sm bg-green-300 p-1 rounded-lg shadow-lg">
                               {item.status}
-                            </h1>
+                            </h1> */}
+                            <Tag icon={<CheckCircleOutlined />} color="success">
+                              Success
+                            </Tag>
                           </Tooltip>
                         ) : (
                           <Tooltip title={item.status} arrow>
-                            <h1 className="text-sm bg-red-300 p-1 rounded-lg shadow-lg">
+                            {/* <h1 className="text-sm bg-red-300 p-1 rounded-lg shadow-lg">
                               {item.status}
-                            </h1>
+                            </h1> */}
+                            <Tag icon={<CloseCircleOutlined />} color="error">
+                              Cancelled
+                            </Tag>
                           </Tooltip>
                         ))}
                       </div>
