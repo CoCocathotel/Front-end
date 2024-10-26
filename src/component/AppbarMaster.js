@@ -8,6 +8,9 @@ import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
+import MenuIcon from "@mui/icons-material/Menu";
+import { Drawer } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
 import { Modal } from "antd";
@@ -20,6 +23,7 @@ export default function Appbar_master() {
   const [modal1Open, setModal1Open] = useState(false);
   const [modal2Open, setModal2Open] = useState(false);
   const [load2, SetLoad2] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false); // For mobile menu
 
   const handleCloseLogout = () => {
     localStorage.removeItem("token");
@@ -37,14 +41,14 @@ export default function Appbar_master() {
   };
 
   const [prevScrollPosition, setPrevScrollPosition] = useState(0);
-  const [visible, setVisable] = useState(true);
+  const [visible, setVisible] = useState(true);
   const handleScroll = () => {
     const currentScrollPosition = window.scrollY;
 
     if (currentScrollPosition > prevScrollPosition) {
-      setVisable(false);
+      setVisible(false);
     } else {
-      setVisable(true);
+      setVisible(true);
     }
     setPrevScrollPosition(currentScrollPosition);
   };
@@ -52,10 +56,9 @@ export default function Appbar_master() {
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
-  });
+  }, [prevScrollPosition]);
 
   let handle_login = (e) => {
-    console.log(e);
     setModal1Open(e);
     if (e) {
       SetLoad2(e);
@@ -68,7 +71,6 @@ export default function Appbar_master() {
   };
 
   let handle_register = (e) => {
-    console.log(e);
     setModal2Open(e);
     if (e) {
       SetLoad2(e);
@@ -80,144 +82,183 @@ export default function Appbar_master() {
     }
   };
 
+  const toggleMobileMenu = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
   return (
     <>
+      {/* AppBar Section */}
       <div
-        className={`transition ease-linear duration-700 flex border-b w-full h-24 top-0 bg-white z-50 sticky  ${
+        className={`transition-opacity ease-linear duration-700 flex items-center justify-between border-b w-full h-24 top-0 bg-white z-50 sticky ${
           visible ? "opacity-80" : "opacity-0 invisible"
         }`}
       >
-        {localStorage.getItem("token") &&
-        JSON.parse(localStorage.getItem("user-provider")).pos === "admin" ? (
-          <>
-            <div className="grid grid-cols-6 w-full gap-1 p-2">
-              <img
-                className="ml-24"
-                src={Logo}
-                alt="logo"
-                width={80}
-                height={80}
-              />
-              {/* 
-              <div
-                className="text-gray-600 hover:text-blue-500"
-              >
-                การจองทั้งหมด
-              </div> */}
+        {/* Logo */}
+        <img
+          className="ml-6 sm:ml-10 object-contain cursor-pointer"
+          src={Logo}
+          alt="logo"
+          width={80}
+          height={80}
+          onClick={() => navigate("/")}
+        />
 
-              {/* <button
-                onClick={() => {
-                  navigate("/admin_home");
-                }}
-                className="text-gray-600 hover:text-blue-500"
-              >
-                การจองทั้งหมด
-              </button>
-              <button
-                onClick={() => {
-                  navigate("/ad_analytic");
-                }}
-                className="text-gray-600 hover:text-blue-500"
-              >
-                ข้อมูลเชิงวิเคราะห์
-              </button>
-              <button
-                onClick={() => {
-                  navigate("#");
-                }}
-                className="text-gray-600 hover:text-blue-500"
-              >
-                จัดการหน้า
-              </button>
-              <button
-                onClick={() => {
-                  navigate("#");
-                }}
-                className="text-gray-600 hover:text-blue-500"
-              >
-                จัดการผู้ใช้งาน
-              </button> */}
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex space-x-8 mx-auto">
+          <button
+            onClick={() => navigate("/")}
+            className="text-gray-600 hover:text-blue-500"
+          >
+            หน้าแรก
+          </button>
+          <button
+            onClick={() => navigate("/booking")}
+            className="text-gray-600 hover:text-blue-500"
+          >
+            จองห้องพัก
+          </button>
+          <button
+            onClick={() => navigate("/rule")}
+            className="text-gray-600 hover:text-blue-500"
+          >
+            ข้อตกลงการเข้าใช้งาน
+          </button>
+        </div>
+
+        {/* Mobile Menu Icon */}
+        <div className="md:hidden mr-4">
+          <IconButton onClick={toggleMobileMenu} aria-label="menu">
+            <MenuIcon />
+          </IconButton>
+        </div>
+
+        {/* Mobile Menu Drawer */}
+        <Drawer
+          anchor="left"
+          open={mobileOpen}
+          onClose={toggleMobileMenu}
+          sx={{
+            "& .MuiDrawer-paper": {
+              width: "75%",
+              backgroundColor: "#f9fafb",
+            },
+          }}
+        >
+          <div className="w-full p-4">
+            <div className="flex justify-between items-center">
+              <h2 className="text-lg font-bold">เมนู</h2>
+              <IconButton onClick={toggleMobileMenu}>
+                <CloseIcon />
+              </IconButton>
             </div>
-          </>
-        ) : (
-          <>
-            <div className="flex w-full">
-              <img
-                className="ml-24 object-contain"
-                src={Logo}
-                alt="logo"
-                width={80}
-                height={80}
-              />
-             <div className="flex justify-between w-96">
-              <span></span>
-             <button
-                onClick={() => {
-                  navigate('/')
-                }}
-                className="text-gray-600 hover:text-blue-500"
-              >
-                หน้าแรก
-              </button>
-              <button
-                onClick={() => {
-                  navigate("/booking");
-                }}
-                className="text-gray-600 hover:text-blue-500"
-              >
-                จองห้องพัก
-              </button>
-              <button
-                onClick={() => {
-                  navigate("/rule");
-                }}
-                className="text-gray-600 hover:text-blue-500"
-              >
-                ข้อตกลงการเข้าใช้งาน
-              </button>
-             </div>
-            </div>
-          </>
-        )}
-        
-        {localStorage.getItem("token") ? (
-          <>
+
+            {/* Login and Register / User Account in Mobile Menu */}
+            {!localStorage.getItem("token") ? (
+              <div className="flex flex-col space-y-4 mt-4">
+                <button
+                  onClick={() => {
+                    setModal2Open(true);
+                    toggleMobileMenu();
+                  }}
+                  className="w-full text-blue-500 border border-blue-500 rounded-md px-4 py-2 hover:bg-blue-500 hover:text-white transition"
+                >
+                  สร้างบัญชีผู้ใช้งาน
+                </button>
+                <button
+                  onClick={() => {
+                    setModal1Open(true);
+                    toggleMobileMenu();
+                  }}
+                  className="w-full text-blue-500 border border-blue-500 rounded-md px-4 py-2 hover:bg-blue-500 hover:text-white transition"
+                >
+                  เข้าสู่ระบบ
+                </button>
+              </div>
+            ) : (
+              <div className="flex flex-col space-y-4 mt-4">
+                <button
+                  onClick={() => {
+                    navigate("/account");
+                    toggleMobileMenu();
+                  }}
+                  className="w-full text-gray-600 hover:text-blue-500"
+                >
+                  บัญชีของฉัน
+                </button>
+                <button
+                  onClick={() => {
+                    navigate("/history");
+                    toggleMobileMenu();
+                  }}
+                  className="w-full text-gray-600 hover:text-blue-500"
+                >
+                  ประวัติการจอง
+                </button>
+                <button
+                  onClick={handleCloseLogout}
+                  className="w-full text-red-500 hover:text-blue-500"
+                >
+                  ออกจากระบบ
+                </button>
+              </div>
+            )}
+
+            {/* Navigation Links */}
+            <ul className="mt-8 space-y-4">
+              <li>
+                <button
+                  onClick={() => {
+                    navigate("/");
+                    toggleMobileMenu();
+                  }}
+                  className="w-full text-left text-gray-600 hover:text-blue-500"
+                >
+                  หน้าแรก
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    navigate("/booking");
+                    toggleMobileMenu();
+                  }}
+                  className="w-full text-left text-gray-600 hover:text-blue-500"
+                >
+                  จองห้องพัก
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    navigate("/rule");
+                    toggleMobileMenu();
+                  }}
+                  className="w-full text-left text-gray-600 hover:text-blue-500"
+                >
+                  ข้อตกลงการเข้าใช้งาน
+                </button>
+              </li>
+            </ul>
+          </div>
+        </Drawer>
+
+        {/* User Account Section for Desktop */}
+        <div className="flex items-center mr-6">
+          {localStorage.getItem("token") ? (
             <React.Fragment>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  textAlign: "center",
-                }}
-              >
+              <Box sx={{ display: "flex", alignItems: "center", textAlign: "center" }}>
                 <Tooltip title="บัญชีผู้ใช้งาน">
                   <div
-                    className="flex w-44 space-x-2 mr-24 items-center justify-start text-start"
+                    className="flex items-center space-x-2 cursor-pointer"
                     onClick={handleClick}
                   >
-                    <IconButton
-                      size="small"
-                      sx={{ ml: 2 }}
-                      aria-controls={open ? "account-menu" : undefined}
-                      aria-haspopup="true"
-                      aria-expanded={open ? "true" : undefined}
-                    >
-                      <Avatar sx={{ width: 32, height: 32 }}>
-                        {JSON.parse(
-                          localStorage.getItem("user-provider")
-                        ).email[0].toUpperCase()}
-                      </Avatar>
-                    </IconButton>
-                    <p>
-                      {" "}
-                      {
-                        JSON.parse(localStorage.getItem("user-provider"))
-                          .first_name
-                      }{" "}
-                      {
-                        JSON.parse(localStorage.getItem("user-provider"))
-                          .last_name
-                      }
+                    <Avatar sx={{ width: 32, height: 32 }}>
+                      {JSON.parse(localStorage.getItem("user-provider")).email[0].toUpperCase()}
+                    </Avatar>
+                    <p className="text-gray-600">
+                      {JSON.parse(localStorage.getItem("user-provider")).first_name}{" "}
+                      {JSON.parse(localStorage.getItem("user-provider")).last_name}
                     </p>
                   </div>
                 </Tooltip>
@@ -234,12 +275,6 @@ export default function Appbar_master() {
                     overflow: "visible",
                     filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
                     mt: 1.5,
-                    "& .MuiAvatar-root": {
-                      width: 32,
-                      height: 32,
-                      ml: -0.5,
-                      mr: 1,
-                    },
                     "&::before": {
                       content: '""',
                       display: "block",
@@ -257,41 +292,47 @@ export default function Appbar_master() {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
-                <MenuItem onClick={(_)=>{handleClose(); navigate("/account")}}>บัญชีของฉัน</MenuItem>
-
-                <MenuItem onClick={(_)=>{handleClose(); navigate("/history")}}>ประวัติการจอง</MenuItem>
-
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    navigate("/account");
+                  }}
+                >
+                  บัญชีของฉัน
+                </MenuItem>
+                <MenuItem
+                  onClick={() => {
+                    handleClose();
+                    navigate("/history");
+                  }}
+                >
+                  ประวัติการจอง
+                </MenuItem>
                 <MenuItem onClick={handleCloseLogout}>ออกจากระบบ</MenuItem>
               </Menu>
             </React.Fragment>
-          </>
-        ) : (
-          <>
-            <div className="flex space-x-5 w-96 mr-24  items-center justify-center text-start">
+          ) : (
+            <div className="hidden md:flex space-x-5">
               <button
-                onClick={(_) => {
-                  setModal2Open(true);
-                }}
-                className=" hover:bg-gray-300 transition ease-linear   rounded-md px-4 py-3"
+                onClick={() => setModal2Open(true)}
+                className="hover:bg-gray-300 transition ease-linear rounded-md px-4 py-3"
               >
                 สร้างบัญชีผู้ใช้งาน
               </button>
-
               <button
-                onClick={(_) => {
-                  setModal1Open(true);
-                }}
-                className="px-4 py-3 border rounded-md bg-whie text-blue-500 border-blue-500 hover:text-white hover:bg-blue-500 transition ease-linear "
+                onClick={() => setModal1Open(true)}
+                className="px-4 py-3 border rounded-md bg-white text-blue-500 border-blue-500 hover:text-white hover:bg-blue-500 transition ease-linear"
               >
                 เข้าสู่ระบบ
               </button>
             </div>
-          </>
-        )}
+          )}
+        </div>
       </div>
 
+      {/* Login Modal */}
       <Modal
-        style={{ top: 20 }}
+        className="mt-4"
         open={modal1Open}
         onCancel={() => setModal1Open(false)}
         footer={null}
@@ -300,16 +341,17 @@ export default function Appbar_master() {
         <div className="space-y-4">
           <h1 className="text-3xl">เข้าสู่ระบบ</h1>
           <div className="flex space-x-4">
-            <img src={Feet} className="w-5  h-5" alt="feet" />
-            <p className="text-xm ">ยินดีต้อนรับเข้าสู่โรงแรมโคโค่แคท</p>
+            <img src={Feet} className="w-5 h-5" alt="feet" />
+            <p className="text-sm">ยินดีต้อนรับเข้าสู่โรงแรมโคโค่แคท</p>
           </div>
           <hr />
-
           <Login handleAppbar={(e) => handle_login(e)} />
         </div>
       </Modal>
+
+      {/* Register Modal */}
       <Modal
-        style={{ top: 20 }}
+        className="mt-4"
         open={modal2Open}
         onCancel={() => setModal2Open(false)}
         footer={null}
@@ -318,8 +360,8 @@ export default function Appbar_master() {
         <div className="space-y-4">
           <h1 className="text-3xl">ลงทะเบียน</h1>
           <div className="flex space-x-4">
-            <img src={Feet} className="w-5  h-5" alt="feet" />
-            <p className="text-xm ">ยินดีต้อนรับเข้าสู่โรงแรมโคโค่แคท</p>
+            <img src={Feet} className="w-5 h-5" alt="feet" />
+            <p className="text-sm">ยินดีต้อนรับเข้าสู่โรงแรมโคโค่แคท</p>
           </div>
           <hr />
           <Register handleAppbar={(e) => handle_register(e)} />

@@ -151,50 +151,7 @@ export default function Detail() {
           });
       }
     }
-    // if (id) {
-    //   fecth_detail();
-    // } else {
-    // let start = localStorage.getItem("startDate");
-    // let end = localStorage.getItem("endDate");
-    // let numcat = parseInt(JSON.parse(localStorage.getItem("number_of_cats")));
-    // let totalday = Math.abs(new Date(end) - new Date(start)) / 86400000;
-    // let numcamera = parseInt(
-    //   JSON.parse(localStorage.getItem("number_of_cameras"))
-    // );
-
-    // let get_user = JSON.parse(localStorage.getItem("user-provider"));
-
-    // if (get_user === null || get_user === "") {
-    //   navigate("/login");
-    // } else {
-    //   api.getOneRoom(Type)
-    //   .then((response) => {
-    //     console.log(response.data.body);
-    //     setTotal(Math.ceil(numcat / response.data.body.number_of_cats));
-    //     setData(response.data.body);
-    //   })
-    //   .catch((err) => {
-    //     console.log("An error occurred. Please try again.", err);
-    //   })
-    //   .finally(() => {
-    //     setLoading(false);
-
-
-    //   setUsername(get_user.first_name + " " + get_user.last_name);
-    //   setEmail(get_user.email);
-    //   setPhone(get_user.phone);
-    //   if (start && end && numcat) {
-    //     setStartDate(start);
-    //     setEndDate(end);
-    //     setNumcat(numcat);
-    //     setTotalday(totalday);
-    //     setNumcamera(numcamera);
-    //   }
-    // });
-    // }
-    // }
   }, []);
-
 
   let fecth_detail = async () => {
     api.getOneBookingById(id)
@@ -207,15 +164,11 @@ export default function Detail() {
         setSelectedPayment(res.data.body.pay_way);
         let admin = JSON.parse(localStorage.getItem("user-provider")).pos;
         setPosition(admin);
-        console.log('that is admin');
-
         if (admin === "admin") {
           setPhone2(res.data.body.phone_2);
           setUsername2(res.data.body.user_name_2);
           setSpecialRequest(res.data.body.special_request);
           setUpload_slip(res.data.body.image);
-          // if (res.data.body.image) {
-          // }
         }
       })
       .catch((err) => {
@@ -224,40 +177,10 @@ export default function Detail() {
       .finally(() => {
         setLoading(false);
       });
-    // const response = await fetch(production_check() + `/booking/${id}`, {
-    //   method: "GET",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-    // let passedValue = await new Response(response.body).text();
-    // let valueToJson = JSON.parse(passedValue).body;
-    // if (response.status == 201) {
-    //   setData(valueToJson);
-    //   console.log(valueToJson);
-    //   const checkInDate = new Date(valueToJson[0].check_in_date);
-    //   const checkOutDate = new Date(valueToJson[0].check_out_date);
-    //   const totalDays =
-    //     Math.abs(checkOutDate - checkInDate) / (1000 * 60 * 60 * 24);
-    //   setTotalday(totalDays);
-    //   setSelectedPayment(valueToJson[0].pay_way);
-    //   let admin = JSON.parse(localStorage.getItem("user-provider")).pos;
-    //   setPosition(admin);
-    //   if (admin === "admin") {
-    //     setPhone2(valueToJson[0].phone_2);
-    //     setUsername2(valueToJson[0].user_name_2);
-    //     setSpecialRequest(valueToJson[0].special_request);
-    //     setUpload_slip(valueToJson[0].image);
-    //     if (valueToJson[0].image) {
-    //     }
-    //   }
-    //   setLoading(false);
-    // }
   };
 
   let handleOk = async (edit) => {
     try {
-      // console.log('click', edit);
       if (upload_slip instanceof Blob) {
         const reader = new FileReader();
         reader.readAsDataURL(upload_slip);
@@ -341,7 +264,7 @@ export default function Detail() {
       countDown();
     }
   };
-  
+
   return (
     <>
       {loading ? (
@@ -351,11 +274,11 @@ export default function Detail() {
       ) : (
         <>
           {contextHolder}
-          <div className="p-20 bg-[#EAEDF1] flex justify-center items-start">
-            <div className=" w-1/2 ">
-              <div className="flex items-center justify-between text-center">
-                <div className="items-start text-left mr-20">
-                  <h1 className="text-3xl">
+          <div className="p-4 md:p-20 bg-[#EAEDF1] flex flex-col md:flex-row justify-center items-start">
+            <div className="w-full md:w-1/2">
+              <div className="flex flex-col md:flex-row items-start md:items-center justify-between text-left md:text-center">
+                <div className="text-left mb-4 md:mb-0">
+                  <h1 className="text-2xl md:text-3xl">
                     {data.room_name ?? data.room_name}
                   </h1>
                   <p className="text-xs text-gray-600">
@@ -369,32 +292,19 @@ export default function Detail() {
                   </p>
                 </div>
                 {data.image ? (
-                  <>
-                    <img
-                        key={0}
-                        src={data.image}
-                        className="rounded-xl shadow-lg"
-                        alt={data.type}
-                        width={150}
-                        height={150}
-                      />
-                  </>
+                  <img
+                    key={0}
+                    src={data.image}
+                    className="rounded-xl shadow-lg mb-4 md:mb-0"
+                    alt={data.type}
+                    width={150}
+                    height={150}
+                  />
                 ) : (
-                  <>
-                    {id && data.image ? (
-                      <>
-                        <img key={0} src={data.image} className="rounded-xl shadow-lg" alt={data.type} width={150} height={150}
-                        />
-                      </>
-                    ) : (
-                      <>
-                        <div className="placeholder">No Images</div>
-                      </>
-                    )}
-                  </>
+                  <div className="placeholder">No Images</div>
                 )}
               </div>
-              <div className="bg-gray-200 p-4 rounded-md mt-4 flex  items-center justify-around text-left">
+              <div className="bg-gray-200 p-4 rounded-md mt-4 flex flex-col md:flex-row items-center justify-around text-left">
                 <div>
                   <p>เช็คอิน</p>
                   <p className="font-semibold">
@@ -406,7 +316,7 @@ export default function Detail() {
                   </p>
                   <p>8.00</p>
                 </div>
-                <div className="px-4 py-2 bg-[#A2A7A7] items-center text-white text-center justify-center flex rounded-lg ">
+                <div className="px-4 py-2 mt-4 md:mt-0 bg-[#A2A7A7] items-center text-white text-center justify-center flex rounded-lg">
                   <p className="font-semibold">
                     {id ? totalday : totalday} คืน
                   </p>
@@ -414,7 +324,6 @@ export default function Detail() {
                 <div>
                   <p>เช็คเอาท์</p>
                   <p className="font-semibold">
-                    {" "}
                     {id ? (
                       <>{dayjs(data.check_out_date).format("DD/MM/YYYY")}</>
                     ) : (
@@ -432,7 +341,7 @@ export default function Detail() {
               </div>
               <div className="space-y-4 mt-4">
                 <h4 className="text-lg font-medium mb-2">ผู้จอง</h4>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <input
                     type="text"
                     placeholder="ชื่อ"
@@ -458,7 +367,7 @@ export default function Detail() {
                   />
                 </div>
                 <h4 className="text-lg font-medium mb-2">ผู้รับ-ฝาก</h4>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <input
                     type="text"
                     placeholder="ชื่อ"
@@ -524,45 +433,41 @@ export default function Detail() {
               )}
             </div>
 
-            {/* ชวา */}
-
-            <div className="mx-auto">
-              <div class=" items-center space-y-2 mb-4">
-                <div className="flex justify-between space-x-24">
-                  <p class="text-gray-500 text-sm">
+            <div className="w-full md:w-auto mx-auto mt-4 md:mt-0">
+              <div className="items-center space-y-2 mb-4">
+                <div className="flex justify-between space-x-4 md:space-x-24">
+                  <p className="text-gray-500 text-sm">
                     {total} ห้อง {" - "}
                     {id ? totalday : totalday - 1} คืน
                   </p>
-                  <p class="text-gray-500 text-sm">
+                  <p className="text-gray-500 text-sm">
                     {id ? data.total_price : data.price * totalday} บาท
                   </p>
                 </div>
-                <div className="flex justify-between space-x-24">
-                  <p class="text-gray-500 text-sm">ราคาส่วนลด</p>
-                  <p class="text-gray-500 text-sm">0.00 บาท</p>
+                <div className="flex justify-between space-x-4 md:space-x-24">
+                  <p className="text-gray-500 text-sm">ราคาส่วนลด</p>
+                  <p className="text-gray-500 text-sm">0.00 บาท</p>
                 </div>
-                <div className="flex justify-between space-x-24">
-                  <p class="text-gray-500 text-sm">ราคาหลังจากได้รับส่วนลด</p>
-                  <p class="text-gray-500 text-sm">0.00 บาท</p>
+                <div className="flex justify-between space-x-4 md:space-x-24">
+                  <p className="text-gray-500 text-sm">ราคาหลังจากได้รับส่วนลด</p>
+                  <p className="text-gray-500 text-sm">0.00 บาท</p>
                 </div>
-                <div className="flex justify-between space-x-24">
-                  <p class="text-gray-500 text-sm">ภาษี & ค่าบริการ</p>
-                  <p class="text-gray-500 text-sm">0.00 บาท</p>
+                <div className="flex justify-between space-x-4 md:space-x-24">
+                  <p className="text-gray-500 text-sm">ภาษี & ค่าบริการ</p>
+                  <p className="text-gray-500 text-sm">0.00 บาท</p>
                 </div>
-                <div className="flex justify-between space-x-24">
-                  <p class="text-black text-lg font-semibold">ราคาทั้งหมด</p>
-                  <p class="text-black text-lg font-semibold">
-                    {data && id ? data.total_price : data.price * totalday}{" "}
-                    บาท
+                <div className="flex justify-between space-x-4 md:space-x-24">
+                  <p className="text-black text-lg font-semibold">ราคาทั้งหมด</p>
+                  <p className="text-black text-lg font-semibold">
+                    {data && id ? data.total_price : data.price * totalday} บาท
                   </p>
                 </div>
-
-                <div className="space-y-4 p-6 mt-3">
+                <div className="space-y-4 p-4 md:p-6 mt-3">
                   <h4 className="text-lg font-medium mb-2">ชำระเงิน</h4>
                   <button
                     onClick={() => handleSelectPayment("walk-in")}
                     className={`${selectedPayment === "walk-in" ? "border-blue-500" : ""
-                      } bg-white hover:border-blue-500  w-96 h-16 items-center justify-between px-4  flex border  rounded-lg`}
+                      } bg-white hover:border-blue-500 w-full md:w-96 h-16 items-center justify-between px-4 flex border rounded-lg`}
                   >
                     <div className="w-12">
                       <PaymentsIcon />
@@ -570,11 +475,10 @@ export default function Detail() {
                     <p>ชำระเงินสด</p>
                     <ArrowForwardIosIcon />
                   </button>
-
                   <button
                     onClick={() => handleSelectPayment("credit")}
                     className={`${selectedPayment === "credit" ? "border-blue-500" : ""
-                      } bg-white hover:border-blue-500  w-96 h-16 items-center justify-between px-4  flex border  rounded-lg`}
+                      } bg-white hover:border-blue-500 w-full md:w-96 h-16 items-center justify-between px-4 flex border rounded-lg`}
                   >
                     <img src={PromtPay} alt="1" className="h-12 w-12" />
                     <p>พร้อมเพย์</p>
@@ -582,9 +486,8 @@ export default function Detail() {
                   </button>
                 </div>
               </div>
-
               {selectedPayment === "credit" && (
-                <div className="w-full h-64 items-center justify-center text-center">
+                <div className="w-full h-64 items-center justify-center text-center flex">
                   {id ? (
                     <>
                       {pos === "admin" ? (
@@ -633,17 +536,14 @@ export default function Detail() {
                                         height={250}
                                       />
                                     </DialogContentText>
-
-                                    <div className=" w-full text-center space-y-2 mb-2">
+                                    <div className="w-full text-center space-y-2 mb-2">
                                       <div className="flex justify-center space-x-2">
-                                        {" "}
                                         <p className="font-semibold">
                                           จำนวนเงิน
-                                        </p>{" "}
+                                        </p>
                                         <p>{data.price * totalday} บาท</p>
                                       </div>
                                     </div>
-
                                     <input
                                       autoFocus
                                       required
@@ -652,10 +552,9 @@ export default function Detail() {
                                       name="paymentSlip"
                                       type="file"
                                       accept="image/*"
-                                      className=" w-60 px-4 py-1"
+                                      className="w-60 px-4 py-1"
                                     />
                                   </DialogContent>
-
                                   <DialogActions>
                                     <div className="space-x-4">
                                       <button
@@ -676,7 +575,6 @@ export default function Detail() {
                               </div>
                             </React.Fragment>
                           )}
-
                           {upload && (
                             <React.Fragment>
                               <div>
@@ -721,23 +619,14 @@ export default function Detail() {
                                         height={250}
                                       />
                                     </DialogContentText>
-
-                                    <div className=" w-full text-center space-y-2 mb-2">
-                                      {/* <div className="flex justify-center space-x-2">
-                                        <p className="font-semibold">
-                                          ชื่อบัญชี
-                                        </p>{" "}
-                                        <p>สุประวีร์ ลู่วิ่งเส้นชัย</p>
-                                      </div> */}
+                                    <div className="w-full text-center space-y-2 mb-2">
                                       <div className="flex justify-center space-x-2">
-                                        {" "}
                                         <p className="font-semibold">
                                           จำนวนเงิน
-                                        </p>{" "}
+                                        </p>
                                         <p>{data.price * totalday} บาท</p>
                                       </div>
                                     </div>
-
                                     <input
                                       autoFocus
                                       required
@@ -746,10 +635,9 @@ export default function Detail() {
                                       name="paymentSlip"
                                       type="file"
                                       accept="image/*"
-                                      className=" w-60 px-4 py-1"
+                                      className="w-60 px-4 py-1"
                                     />
                                   </DialogContent>
-
                                   <DialogActions>
                                     <div className="space-x-4">
                                       <button
@@ -828,17 +716,14 @@ export default function Detail() {
                                     height={250}
                                   />
                                 </DialogContentText>
-
-                                <div className=" w-full text-center space-y-2 mb-2">
+                                <div className="w-full text-center space-y-2 mb-2">
                                   <div className="flex justify-center space-x-2">
-                                    {" "}
                                     <p className="font-semibold">
                                       จำนวนเงิน
-                                    </p>{" "}
+                                    </p>
                                     <p>{data.price * totalday} บาท</p>
                                   </div>
                                 </div>
-
                                 <input
                                   autoFocus
                                   required
@@ -847,10 +732,9 @@ export default function Detail() {
                                   name="paymentSlip"
                                   type="file"
                                   accept="image/*"
-                                  className=" w-60 px-4 py-1"
+                                  className="w-60 px-4 py-1"
                                 />
                               </DialogContent>
-
                               <DialogActions>
                                 <div className="space-x-4">
                                   <button
@@ -871,7 +755,6 @@ export default function Detail() {
                           </div>
                         </React.Fragment>
                       )}
-
                       {!upload && (
                         <div className="justify-center items-center text-center flex h-72">
                           <React.Fragment>
@@ -911,17 +794,14 @@ export default function Detail() {
                                     height={250}
                                   />
                                 </DialogContentText>
-
-                                <div className=" w-full text-center space-y-2 mb-2">
+                                <div className="w-full text-center space-y-2 mb-2">
                                   <div className="flex justify-center space-x-2">
-                                    {" "}
                                     <p className="font-semibold">
                                       จำนวนเงิน
-                                    </p>{" "}
+                                    </p>
                                     <p>{data.price * totalday} บาท</p>
                                   </div>
                                 </div>
-
                                 <input
                                   autoFocus
                                   required
@@ -930,10 +810,9 @@ export default function Detail() {
                                   name="paymentSlip"
                                   type="file"
                                   accept="image/*"
-                                  className=" w-60 px-4 py-1"
+                                  className="w-60 px-4 py-1"
                                 />
                               </DialogContent>
-
                               <DialogActions>
                                 <div className="space-x-4">
                                   <button

@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import { Route, Routes, Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Feet from "../../assets/image/feet.png";
@@ -29,7 +29,6 @@ export default function Dashboard() {
     AOS.init({ duration: 1000 });
     api.getBooking().then((res) => {
       setBooking(res.data.body);
-      console.log(res.data.body);
     }).catch((err) => {
       setError(err.message);
     }).finally(() => {
@@ -37,7 +36,6 @@ export default function Dashboard() {
     });
     api.getRoom().then((res) => {
       setData(res.data.body);
-      console.log(res.data.body);
     }).catch((err) => {
       setError(err.message);
     }).finally(() => {
@@ -129,8 +127,8 @@ export default function Dashboard() {
   }
 
   return (
-    <div>
-      <div data-aos="fade-up">
+    <div className="w-full">
+      <div className="w-full flex justify-center" data-aos="fade-up">
         <Appbar handleAppbar={(e) => handleTimeChange(e)} />
       </div>
       <Modal
@@ -144,7 +142,7 @@ export default function Dashboard() {
           <h1 className="text-3xl">เข้าสู่ระบบ</h1>
           <div className="flex space-x-4">
             <img src={Feet} className="w-5 h-5" alt="feet" />
-            <p className="text-xm ">ยินดีต้อนรับเข้าสู่โรงแรมโคโค่แคท</p>
+            <p className="text-sm">ยินดีต้อนรับเข้าสู่โรงแรมโคโค่แคท</p>
           </div>
           <hr />
           <Login handleAppbar={(e) => handle_login(e)} />
@@ -152,142 +150,77 @@ export default function Dashboard() {
       </Modal>
 
       {data.map((item, index) => (
-        <div key={index} className="mx-auto">
+        <div key={index} className="w-full">
           <div
-            className={`${index % 2 === 0 ? "bg-[#B6D4F0]" : "bg-[#f2f4f6]"
-              } flex p-7 justify-center items-center align-middle w-screen h-full`}
+            className={`${index % 2 === 0 ? "bg-[#B6D4F0]" : "bg-[#f2f4f6]"} 
+                        flex flex-col lg:flex-row p-7 items-center justify-center lg:align-middle w-full`}
           >
             <div
-              className="rounded-lg px-4 py-5 w-full h-auto ml-72 mr-72"
+              className="rounded-lg px-4 py-5 w-full lg:w-10/12"
               data-aos="fade-up"
             >
-              <div className="flex">
-                <div className="col-span-2 flex space-x-5 overflow-hidden">
-                  <div className="w-96">
+              <div className="flex flex-col lg:flex-row">
+                <div className="col-span-2 flex flex-col lg:flex-row space-y-5 lg:space-y-0 lg:space-x-5 overflow-hidden w-full">
+                  <div className="w-full lg:w-96">
                     <img
-                      className="rounded-lg scale-95 object-cover border-gray-400 border-4"
-                      key={index}
+                      className="rounded-lg scale-95 object-cover border-gray-400 border-4 w-full"
                       src={`${item.image[0]}`}
                       alt={item.room_name}
                     />
                   </div>
 
                   <div className="w-full">
-                    <p className="opacity-45 font-extralight">CoCoCat Hotel</p>
-                    <h2 className="text-3xl font-bold">{item.room_name}</h2>
-                    <div className="mt-5 space-y-5">
+                    <p className="opacity-45 font-extralight text-sm lg:text-base">CoCoCat Hotel</p>
+                    <h2 className="text-2xl lg:text-3xl font-bold">{item.room_name}</h2>
+                    <div className="mt-5 space-y-3 lg:space-y-5">
                       <div className="flex space-x-4">
-                        <img src={Feet} className="w-5 h-5" alt="feet" />
-                        <p className="text-xm ">
-                          สามารถใช้กล้องได้ทั้งหมด {item.cameras} ตัว
-                        </p>
+                        <img src={Feet} className="w-4 lg:w-5 h-4 lg:h-5" alt="feet" />
+                        <p className="text-sm lg:text-base">สามารถใช้กล้องได้ทั้งหมด {item.cameras} ตัว</p>
                       </div>
                       <div className="flex space-x-4">
-                        <img src={Feet} className="w-5 h-5" alt="feet" />
-                        <p className="text-xm ">
-                          <p>จำนวนน้องแมว {item.number_of_cats} ตัว </p>
-                        </p>
+                        <img src={Feet} className="w-4 lg:w-5 h-4 lg:h-5" alt="feet" />
+                        <p className="text-sm lg:text-base">จำนวนน้องแมว {item.number_of_cats} ตัว</p>
                       </div>
-
                       <div className="flex space-x-4">
-                        <img src={Feet} className="w-5 h-5" alt="feet" />
-                        <p className="text-xm ">
+                        <img src={Feet} className="w-4 lg:w-5 h-4 lg:h-5" alt="feet" />
+                        <p className="text-sm lg:text-base">
                           มีห้องว่างทั้งหมด{" "}
                           {checkroom(item.room_name) >= 0
-                            ? `${item.number_of_rooms -
-                              checkroom(item.room_name) >=
-                              0
-                              ? item.number_of_rooms -
-                              checkroom(item.room_name)
-                              : 0
-                            }`
+                            ? `${Math.max(item.number_of_rooms - checkroom(item.room_name), 0)}`
                             : `${item.number_of_rooms}`}{" "}
                           ห้อง
                         </p>
                       </div>
-
                       <div className="flex space-x-4">
-                        <img src={Feet} className="w-5 h-5" alt="feet" />
-                        <p className="text-xm break-words">
-                          {item.description}</p>
+                        <img src={Feet} className="w-4 lg:w-5 h-4 lg:h-5" alt="feet" />
+                        <p className="text-sm lg:text-base break-words">{item.description}</p>
                       </div>
-
-                      <div className="w-52 h-14 text-xl text-black bg-[#e8f773] hover:bg-[#f4f0af] flex rounded-full items-center text-center justify-center">
+                      <div className="w-full lg:w-52 h-12 lg:h-14 text-lg lg:text-xl text-black bg-[#e8f773] hover:bg-[#f4f0af] flex rounded-full items-center text-center justify-center">
                         <p className="font-semibold">{item.price} บาท /คืน</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="bottom-0 justify-end items-end flex h-96">
+                <div className="bottom-0 justify-end items-end flex h-full lg:h-96 mt-4 lg:mt-0">
                   <span></span>
-                  <div>
-                    {numcamera >
-                      item.cameras * Math.ceil(numcat / item.number_of_cats) &&
-                      (numcat >
-                        item.number_of_cats *
-                        (item.number_of_rooms - checkroom(item.room_name)) ||
-                        numcat > item.number_of_cats * item.number_of_rooms) ? (
-                      <button className="btn-primary3">
-                        {"จำนวนกล้องไม่เพียงพอและ " +
-                          `ต้องการ ${Math.ceil(
-                            numcat / item.number_of_cats
-                          )} ห้อง เหลือเพียง ${item.number_of_rooms - checkroom(item.room_name)
-                            ? item.number_of_rooms -
-                              checkroom(item.room_name) >=
-                              0
-                              ? item.number_of_rooms -
-                              checkroom(item.room_name)
-                              : 0
-                            : item.number_of_rooms
-                          } ห้องว่าง `}
-                      </button>
-                    ) : numcat >
-                      item.number_of_cats *
-                      (item.number_of_rooms - checkroom(item.room_name)) ||
-                      numcat > item.number_of_cats * item.number_of_rooms ? (
-                      <button className="btn-primary3">{` ต้องการ ${Math.ceil(
-                        numcat / item.number_of_cats
-                      )} ห้อง แต่เหลือเพียง ${item.number_of_rooms - checkroom(item.room_name)
-                        ? item.number_of_rooms - checkroom(item.room_name) >=
-                          0
-                          ? item.number_of_rooms - checkroom(item.room_name)
-                          : 0
-                        : item.number_of_rooms
-                        } ห้องว่าง `}</button>
-                    ) : numcamera >
-                      item.cameras * Math.ceil(numcat / item.number_of_cats) ? (
-                      <button className="btn-primary3">
-                        จำนวนกล้องไม่เพียงพอ
-                      </button>
+                  <div className="w-full lg:w-52 h-12 lg:h-14 text-lg lg:text-xl text-white bg-[#16305C] hover:bg-[#224683] flex rounded-full items-center text-center justify-center mt-4">
+                    {localStorage.getItem("token") ? (
+                      <Link to={`/detail/${item.type}`}>
+                        <button
+                          className="w-full h-full font-semibold"
+                          onClick={() => saveToLocalStorage(index)}
+                        >
+                          จองที่พัก
+                        </button>
+                      </Link>
                     ) : (
-                      <>
-                        {localStorage.getItem("token") ? (
-                          <>
-                            <Link to={`/detail/${item.type}`}>
-                              <button
-                                className="bg-[#16305C] hover:bg-[#224683] text-white w-40 mt-4 py-2 px-4 rounded-lg"
-                                onClick={() => {
-                                  saveToLocalStorage(index);
-                                }}
-                              >
-                                จองที่พัก
-                              </button>
-                            </Link>
-                          </>
-                        ) : (
-                          <>
-                            <button
-                              className="bg-[#16305C] hover:bg-[#224683] text-white w-40 mt-4 py-2 px-4 rounded-lg"
-                              onClick={() => {
-                                setModal1Open(true);
-                              }}
-                            >
-                              จองที่พัก
-                            </button>
-                          </>
-                        )}
-                      </>
+                      <button
+                        className="w-full h-full font-semibold"
+                        onClick={() => setModal1Open(true)}
+                      >
+                        จองที่พัก
+                      </button>
                     )}
                   </div>
                 </div>

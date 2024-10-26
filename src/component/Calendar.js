@@ -166,55 +166,59 @@ export default function Appbar({ handleAppbar }) {
   );
 
   return (
-    // <div className="items-center justify-center  h-auto bg-white-50 text-center px-4 py-5"> bg-[#EAEDF1]
-    <div className=" items-center w-full bg-[#EAEDF1] flex justify-center h-96  ">
-        <img src={Cat01} alt="23" className="absolute object-cover z-0 w-screen h-60 filter blur-3xl from-teal-400 to-blue-500 hover:from-purple-500 hover:to-blue-500" />
-      <div className=" items-center justify-center h-56 rounded-2xl bg-[#fff8f8] space-x-4 shadow-lg z-10 w-1/2 border-2 px-4 py-2">
-      <h1 className="text-4xl text-[#2757A6] font-semibold px-4 py-5">จองห้องพัก</h1>
-        <div className="flex  space-x-4">
-        <div className="border h-10 items-center flex px-4 py-2 w-80 bg-white rounded-md border-[#A2A7A7] shadow-md hover:text-[#A2A7A7]">
-          <InsertInvitationOutlinedIcon />
-          <RangePicker
-            suffixIcon={null}
-            className=""
-            picker="date"
-            defaultValue={[
-              dayjs(startDate, dateFormat),
-              dayjs(endDate, dateFormat),
-            ]}
-            onChange={(date, dateString) => {
-              setStartDate(dateString[0]);
-              setEndDate(dateString[1]);
-            }}
-            renderExtraFooter={() => null}
-            bordered={false}
-            placeholder={["เช็คอิน", "เช็คเอาท์"]}
-          />
-        </div>
-        <Popover
-          content={content}
-          title="รายละเอียดการจอง"
-          trigger="click"
-          visible={visible}
-          onVisibleChange={handleVisibleChange}
-        >
-          <div className="border h-10 items-center flex px-4 py-2 w-80 bg-white rounded-md border-[#A2A7A7] shadow-md hover:text-[#A2A7A7] cursor-pointer">
-            <GroupOutlinedIcon />
-            <span className="ml-2">
-              {numcat} {"แมว"} {" - "} {numcamera} {"กล้อง"}
-            </span>
+    <div className="items-center w-full bg-[#EAEDF1] flex flex-col md:flex-row justify-center h-auto md:h-96 p-4">
+      <img
+        src={Cat01}
+        alt="23"
+        className="absolute object-cover z-0 w-full h-40 md:h-60 filter blur-3xl from-teal-400 to-blue-500 hover:from-purple-500 hover:to-blue-500"
+      />
+      <div className="items-center justify-center h-auto md:h-56 rounded-2xl bg-[#fff8f8] space-x-4 shadow-lg z-10 w-full md:w-1/2 border-2 px-4 py-4">
+        <h1 className="text-2xl md:text-4xl text-[#2757A6] font-semibold mb-4 md:mb-8">
+          จองห้องพัก
+        </h1>
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
+          <div className="border h-10 items-center flex px-4 py-2 w-full md:w-80 bg-white rounded-md border-[#A2A7A7] shadow-md hover:text-[#A2A7A7]">
+            <InsertInvitationOutlinedIcon />
+            <RangePicker
+              suffixIcon={null}
+              className=""
+              picker="date"
+              defaultValue={[
+                dayjs(startDate, dateFormat),
+                dayjs(endDate, dateFormat),
+              ]}
+              onChange={(date, dateString) => {
+                setStartDate(dateString[0]);
+                setEndDate(dateString[1]);
+              }}
+              renderExtraFooter={() => null}
+              bordered={false}
+              placeholder={["เช็คอิน", "เช็คเอาท์"]}
+            />
           </div>
-        </Popover>
+          <Popover
+            content={content}
+            title="รายละเอียดการจอง"
+            trigger="click"
+            visible={visible}
+            onVisibleChange={handleVisibleChange}
+          >
+            <div className="border h-10 items-center flex px-4 py-2 w-full md:w-80 bg-white rounded-md border-[#A2A7A7] shadow-md hover:text-[#A2A7A7] cursor-pointer">
+              <GroupOutlinedIcon />
+              <span className="ml-2">
+                {numcat} {"แมว"} {" - "} {numcamera} {"กล้อง"}
+              </span>
+            </div>
+          </Popover>
 
-        <button
-          className=" h-10 flex items-center px-4 py-2  w-32 text-center justify-center rounded-lg shadow-md hover:bg-[#dddfe3] bg-[#16305C] text-white"
-          onClick={handlePageChange}
-        >
-          ค้นหา
-        </button>
-      </div>
+          <button
+            className="h-10 flex items-center px-4 py-2 w-full md:w-32 text-center justify-center rounded-lg shadow-md hover:bg-[#dddfe3] bg-[#16305C] text-white"
+            onClick={handlePageChange}
+          >
+            ค้นหา
+          </button>
         </div>
+      </div>
     </div>
-    // </div>
   );
 }
