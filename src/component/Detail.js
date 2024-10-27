@@ -113,7 +113,7 @@ export default function Detail() {
 
   useEffect(() => {
     if (id) {
-       fecth_detail();
+      fecth_detail();
     } else {
       let start = localStorage.getItem("startDate");
       let end = localStorage.getItem("endDate");
@@ -184,7 +184,7 @@ export default function Detail() {
       if (upload_slip instanceof Blob) {
         const reader = new FileReader();
         reader.readAsDataURL(upload_slip);
-        
+
         reader.onloadend = async function () {
           const img = reader.result;
           if (!edit) {
@@ -193,7 +193,7 @@ export default function Detail() {
             await proceedWithEdit(img);
           }
         };
-        
+
         reader.onerror = async function (err) {
           console.log("File reading failed:", err);
           if (!edit) {
@@ -213,7 +213,7 @@ export default function Detail() {
       console.log("An error occurred. Please try again.", err);
     }
   };
-  
+
   let proceedWithEdit = async (img) => {
     let item = {
       user_name_2: username2,
@@ -232,7 +232,7 @@ export default function Detail() {
       countDown();
     }
   };
-  
+
   let proceedWithPurchase = async (img) => {
     let item = {
       room_name: data.room_name,
@@ -253,7 +253,7 @@ export default function Detail() {
       total_cameras: numcamera,
       image: selectedPayment === "credit" ? img : "",
     };
-    
+
     try {
       const response = await api.createBooking(item);
       console.log(response.data);
@@ -291,54 +291,111 @@ export default function Detail() {
                     โดย {data.description ?? data.description}
                   </p>
                 </div>
+
                 {data.image ? (
-                  <img
-                    key={0}
-                    src={data.image}
-                    className="rounded-xl shadow-lg mb-4 md:mb-0"
-                    alt={data.type}
-                    width={150}
-                    height={150}
-                  />
+                  <>
+                    {/* Mobile Version */}
+                    <img
+                      key="mobile"
+                      src={data.image}
+                      className="rounded-lg shadow-lg mb-4 w-full md:hidden" // Visible on mobile only
+                      alt={data.type}
+                    />
+
+                    {/* Desktop Version */}
+                    <img
+                      key="desktop"
+                      src={data.image}
+                      className="rounded-xl shadow-lg mb-4 md:mb-0 hidden md:block" // Visible on desktop only
+                      alt={data.type}
+                      width={150}
+                      height={150}
+                    />
+                  </>
                 ) : (
-                  <div className="placeholder">No Images</div>
+                  <div className="placeholder sm:text-center sm:py-4 md:py-0">No Images</div>
                 )}
+
+
               </div>
               <div className="bg-gray-200 p-4 rounded-md mt-4 flex flex-col md:flex-row items-center justify-around text-left">
-                <div>
-                  <p>เช็คอิน</p>
-                  <p className="font-semibold">
-                    {id ? (
-                      <>{dayjs(data.check_in_date).format("DD/MM/YYYY")}</>
-                    ) : (
-                      <>{dayjs(startDate).format("DD/MM/YYYY")}</>
-                    )}
-                  </p>
-                  <p>8.00</p>
+                {/* Mobile Version */}
+                <div className="md:hidden">
+                  <div className="grid grid-cols-2 gap-20 mb-4">
+                    <div className="flex flex-col items-start">
+                      <p>เช็คอิน</p>
+                      <p className="font-semibold">
+                        {id ? (
+                          <>{dayjs(data.check_in_date).format("DD/MM/YYYY")}</>
+                        ) : (
+                          <>{dayjs(startDate).format("DD/MM/YYYY")}</>
+                        )}
+                      </p>
+                      <p>8.00</p>
+                    </div>
+                    <div className="flex flex-col items-start">
+                      <p>เช็คเอาท์</p>
+                      <p className="font-semibold">
+                        {id ? (
+                          <>{dayjs(data.check_out_date).format("DD/MM/YYYY")}</>
+                        ) : (
+                          <> {dayjs(endDate).format("DD/MM/YYYY")}</>
+                        )}
+                      </p>
+                      <p>17.00</p>
+                    </div>
+                  </div>
+                  <div className="px-4 py-2 mb-4 bg-[#A2A7A7] items-center text-white text-center justify-center flex rounded-lg">
+                    <p className="font-semibold">
+                      {id ? totalday : totalday} คืน
+                    </p>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <p className="font-semibold">
+                      แมว {id ? data.total_cats : nunmcat}
+                      {" - "}กล้อง {id ? data.total_cameras : numcamera}
+                    </p>
+                  </div>
                 </div>
-                <div className="px-4 py-2 mt-4 md:mt-0 bg-[#A2A7A7] items-center text-white text-center justify-center flex rounded-lg">
-                  <p className="font-semibold">
-                    {id ? totalday : totalday} คืน
-                  </p>
-                </div>
-                <div>
-                  <p>เช็คเอาท์</p>
-                  <p className="font-semibold">
-                    {id ? (
-                      <>{dayjs(data.check_out_date).format("DD/MM/YYYY")}</>
-                    ) : (
-                      <> {dayjs(endDate).format("DD/MM/YYYY")}</>
-                    )}
-                  </p>
-                  <p> 17.00 </p>
-                </div>
-                <div>
-                  <p className="font-semibold">
-                    แมว {id ? data.total_cats : nunmcat}
-                    {" - "}กล้อง {id ? data.total_cameras : numcamera}
-                  </p>
+
+                {/* Desktop Version */}
+                <div className="hidden md:flex flex-col md:flex-row items-center justify-around w-full text-left">
+                  <div>
+                    <p>เช็คอิน</p>
+                    <p className="font-semibold">
+                      {id ? (
+                        <>{dayjs(data.check_in_date).format("DD/MM/YYYY")}</>
+                      ) : (
+                        <>{dayjs(startDate).format("DD/MM/YYYY")}</>
+                      )}
+                    </p>
+                    <p>8.00</p>
+                  </div>
+                  <div className="px-4 py-2 mt-4 md:mt-0 bg-[#A2A7A7] items-center text-white text-center justify-center flex rounded-lg">
+                    <p className="font-semibold">
+                      {id ? totalday : totalday} คืน
+                    </p>
+                  </div>
+                  <div>
+                    <p>เช็คเอาท์</p>
+                    <p className="font-semibold">
+                      {id ? (
+                        <>{dayjs(data.check_out_date).format("DD/MM/YYYY")}</>
+                      ) : (
+                        <> {dayjs(endDate).format("DD/MM/YYYY")}</>
+                      )}
+                    </p>
+                    <p>17.00</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold">
+                      แมว {id ? data.total_cats : nunmcat}
+                      {" - "}กล้อง {id ? data.total_cameras : numcamera}
+                    </p>
+                  </div>
                 </div>
               </div>
+
               <div className="space-y-4 mt-4">
                 <h4 className="text-lg font-medium mb-2">ผู้จอง</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -413,7 +470,7 @@ export default function Detail() {
               {!id ? (
                 <button
                   onClick={() => handleOk(false)}
-                  className="px-4 py-2 text-white rounded-sm mt-4 bg-[#55605B] hover:bg-[#A2A7A7]"
+                  className="hidden md:block px-4 py-2 text-white rounded-sm mt-4 bg-[#55605B] hover:bg-[#A2A7A7]"
                 >
                   ยืนยันการจอง
                 </button>
@@ -484,6 +541,7 @@ export default function Detail() {
                     <p>พร้อมเพย์</p>
                     <ArrowForwardIosIcon />
                   </button>
+
                 </div>
               </div>
               {selectedPayment === "credit" && (
@@ -837,11 +895,20 @@ export default function Detail() {
                   )}
                 </div>
               )}
+
               {selectedPayment === "walk-in" && (
                 <div className="w-full h-64 items-center justify-center text-center flex">
                   <h1>เมื่อเดินทางมาถึงที่พัก กรุณาชำระเงินที่หน้าเคาเตอร์</h1>
                 </div>
               )}
+              <div className="flex justify-center">
+                <button
+                  onClick={() => handleOk(false)}
+                  className="px-4 py-2 text-base font-semibold text-white rounded-md mt-4 bg-[#55605B] hover:bg-[#A2A7A7] mx-auto block md:hidden" // Visible on mobile only
+                >
+                  ยืนยันการจอง
+                </button>
+              </div>
             </div>
           </div>
         </>
