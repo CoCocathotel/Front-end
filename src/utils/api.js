@@ -24,8 +24,17 @@ const BASE = BASE_URL();
 const FRONTEND = FRONTEND_URL();
 
 
+let token = localStorage.getItem('token')
 
-const service = axios.create({ baseURL: BASE });
+const service = axios.create({ 
+  baseURL: BASE,
+  headers: {
+    post: {
+      'Content-Type': 'application/json',
+      'x-access-token': token
+    }
+  }
+});
 
 export default{
   service,
