@@ -108,44 +108,6 @@ export default function Ad_Home() {
             </>
           ) : (
             <>
-              <div className="flex justify-between mb-8">
-                <Card
-                  title="จำนวนการจอง"
-                  data={data
-                    .filter(
-                      (value) =>
-                        value.status !== "failed" &&
-                        formatDate(today) === formatDate(dayjs(value.check_in_date))
-                    ).length
-                  }
-                  change={data
-                    .filter(
-                      (value) =>
-                        value.status !== "failed" &&
-                        formatDate(today.subtract(1, "day")) === formatDate(dayjs(value.check_in_date))
-                    ).length}
-                  color="bg-blue-50"
-                />
-                <Card
-                  title="รอการอนุมัติ"
-                  data={pendingStats.currentCount}
-                  change={pendingStats.change}
-                  color="bg-yellow-50"
-                />
-                <Card
-                  title="จำนวนอนุมัติ"
-                  data={passStats.currentCount}
-                  change={passStats.change}
-                  color="bg-green-50"
-                />
-                <Card
-                  title="จำนวนยกเลิก"
-                  data={failedStats.currentCount}
-                  change={failedStats.change}
-                  color="bg-red-50"
-                />
-              </div>
-
               <div className="grid grid-cols-12 gap-1 text-center mb-4">
                 {[
                   "ลำดับ",

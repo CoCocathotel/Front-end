@@ -142,11 +142,58 @@ export default function Ad_Schedule() {
                   />
                 </div>
               </div>
+
+              {/* <div className="flex justify-between mb-8">
+                <Card
+                  title="จำนวนการจอง"
+                  data={data
+                    .filter(
+                      (value) =>
+                        value.status !== "failed" &&
+                        formatDate(today) === formatDate(dayjs(value.check_in_date))
+                    ).length
+                  }
+                  change={data
+                    .filter(
+                      (value) =>
+                        value.status !== "failed" &&
+                        formatDate(today.subtract(1, "day")) === formatDate(dayjs(value.check_in_date))
+                    ).length}
+                  color="bg-blue-50"
+                />
+                <Card
+                  title="รอการอนุมัติ"
+                  data={pendingStats.currentCount}
+                  change={pendingStats.change}
+                  color="bg-yellow-50"
+                />
+                <Card
+                  title="จำนวนอนุมัติ"
+                  data={passStats.currentCount}
+                  change={passStats.change}
+                  color="bg-green-50"
+                />
+                <Card
+                  title="จำนวนยกเลิก"
+                  data={failedStats.currentCount}
+                  change={failedStats.change}
+                  color="bg-red-50"
+                />
+              </div> */}
+
               <div className="grid grid-cols-12 gap-1 text-center ">
                 {[
-                  "ลำดับ","ห้อง","สถานะ","วิธีการชำระเงิน",
-                  "เช็คอิน","เช็คเอาท์","ราคา","ชื่อผู้จอง",
-                  "เบอร์โทร","ชื่อผู้รับ/ฝาก","เบอร์โทรผู้รับ/ฝาก",
+                  "ลำดับ",
+                  "ห้อง",
+                  "สถานะ",
+                  "วิธีการชำระเงิน",
+                  "เช็คอิน",
+                  "เช็คเอาท์",
+                  "ราคา",
+                  "ชื่อผู้จอง",
+                  "เบอร์โทร",
+                  "ชื่อผู้รับ/ฝาก",
+                  "เบอร์โทรผู้รับ/ฝาก",
                   // "ดูรายละเอียด",
                 ].map((header) => (
                   <h1 key={header} className="font-bold text-sm">
@@ -203,22 +250,28 @@ export default function Ad_Schedule() {
                           ))}
                         </select>
                       </div>
+
                       <Tooltip title={item.pay_way} arrow>
                         <span>{item.pay_way}</span>
                       </Tooltip>
+
                       <Tooltip
                         title={formatDate(dayjs(item.check_in_date))}
-                        arrow>
+                        arrow
+                      >
                         <span>{formatDate(dayjs(item.check_in_date))}</span>
                       </Tooltip>
                       <Tooltip
                         title={formatDate(dayjs(item.check_out_date))}
-                        arrow>
+                        arrow
+                      >
                         <span>{formatDate(dayjs(item.check_out_date))}</span>
                       </Tooltip>
+
                       <Tooltip title={item.total_price} arrow>
                         <span className="truncate ...">{item.total_price}</span>
                       </Tooltip>
+
                       <Tooltip title={item.user_name} arrow>
                         <span className="truncate ...">{item.user_name}</span>
                       </Tooltip>
@@ -237,6 +290,7 @@ export default function Ad_Schedule() {
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                             onClick={() => { 
                               navigate("/admin_edit/" + item._id) 
+
                               window.location.reload();                  
                               }} >
                             ดูรายละเอียด

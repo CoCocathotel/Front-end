@@ -28,32 +28,6 @@ export default function Register({ handleAppbar }) {
       .finally(() => {
         handle_value();
       });
-
-    // try {
-    //   const response = await fetch(production_check()+"/v1/register", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //       // 'Access-Control-Allow-Origin': '*',
-
-    //     },
-    //     body: JSON.stringify({ email, password, first_name, last_name }),
-    //   });
-    //   const result = await response.json();
-
-
-    //   if (result.err != "") {
-    //     handle_value();
-    //     localStorage.setItem("user-provider", JSON.stringify(result));
-    //     localStorage.setItem("token", result.token);
-    //     window.onload.herf('/')
-    //     console.log("Register and Login successful");
-    //   } else {
-    //     console.log("Register failed");
-    //   }
-    // } catch (err) {
-    //   console.log("An error occurred. Please try again.");
-    // }
   };
 
   const handle_value = () => {

@@ -11,6 +11,7 @@ import Rule from "../pages/user/Rule";
 import Footer from "../component/Footer";
 import Account from "../pages/user/Account";
 import Detail from "../component/Detail";
+import ResetPass from "../pages/user/ResetPass.";
 
 
 export default function Teacher() {
@@ -84,6 +85,17 @@ export default function Teacher() {
                 <>
                     <Appbar_master />
                     <Rule />
+                    <Footer />
+                </>
+            ),
+        },
+        {
+            path: "/Changepassword",
+            element: (
+                <>
+                    <Appbar_master />
+                    <Sidebar value={1} />
+                    <ResetPass />
                     <Footer />
                 </>
             ),

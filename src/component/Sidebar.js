@@ -51,12 +51,12 @@ export default function Sidebar({ value }) {
                         </button>
                     </li>
                     <li>
-                        <button
-                            onClick={() => setActiveIndex(2)}
-                            className={`flex space-x-4 items-center ${activeIndex === 2 ? "text-cyan-400" : ""}`}
+                    <button
+                          onClick={() => {setActiveIndex(2); navigate("/Changepassword");}}
+                          className={`flex space-x-4 items-center ${activeIndex === 2 ? "text-cyan-400" : ""}`}
                         >
-                            <VpnKeyIcon /> <p>เปลี่ยนรหัสผ่าน</p>
-                        </button>
+                          <VpnKeyIcon /> <p>เปลี่ยนรหัสผ่าน</p>
+                    </button>
                     </li>
                 </ul>
             </div>

@@ -17,65 +17,55 @@ function BASE_URL() {
 
   return isDevelopment
     ? "http://localhost:8700"
-    : "https://cococatbackend.vercel.app";
+    : "https://cococatfrontend.vercel.app";
 }
 
 const BASE = BASE_URL();
 const FRONTEND = FRONTEND_URL();
 
+const service = axios.create({ baseURL: BASE });
 
-let token = localStorage.getItem('token')
-
-const service = axios.create({ 
-  baseURL: BASE,
-  headers: {
-    post: {
-      'Content-Type': 'application/json',
-      'x-access-token': token
-    }
-  }
-});
-
-export default{
+export default {
   service,
   apiUrl: BASE,
   frontendUrl: FRONTEND,
 
-//   Home
+  // Home
   getHome: (data) => service.get('/home', data),
   createHome: (data) => service.post('/home/createHome', data),
-  updateHome: (id,data) => service.patch(`/home/updateHome/${id}`, data),
+  updateHome: (id, data) => service.patch(`/home/updateHome/${id}`, data),
 
-// Booking
+  // Booking
   getBooking: (data) => service.get('/booking', data),
   createBooking: (data) => service.post('/booking/createBooking', data),
 
-// // Detail 
+  // // Detail 
   getOneBookingByType: (type) => service.get(`/booking/type/${type}`),
   getOneBookingById: (id) => service.post(`/booking/id/${id}`),
   updateBooking: (id,data) => service.patch(`/booking/updateBooking/${id}`, data),
 
-//   Room
+  // Room
   getRoom: (data) => service.get('/room', data),
   createRoom: (data) => service.post('/room/createRoom', data),
   getOneRoom: (type) => service.get(`/room/${type}`),
-  updateRoom: (id,data) => service.patch(`/room/updateRoom/${id}`, data),
+  updateRoom: (id, data) => service.patch(`/room/updateRoom/${id}`, data),
   deleteRoom: (id) => service.delete(`/room/deleteRoom/${id}`),
-  
-//User
+
+  // User
   userLogin: (data) => service.post('/user/login', data),
   userRegister: (data) => service.post('/user/register', data),
+  getUser: (id) => service.get(`/user/getUser/${id}`), // New function to get user details
+  updateUser: (id, data) => service.patch(`/user/updateUser/${id}`, data), // Update user details
+  // Password update API
+  updatePassword: (data) => service.patch(`/user/changePassword/${data.userId}`, data),
 
-//  AdminHome
+  // AdminHome
   getAllEvent: (data) => service.post('/booking/getAllEvent', data),
   changeStatus: (data) => service.patch(`/booking/changeStatus`, data),
 
-
-// Footer
+  // Footer
   getFooter: () => service.get('/footer'),
   createFooter: (data) => service.post('/footer/createFooter', data),
-  updateFooter: (id,data) => service.patch(`/footer/updateFooter/${id}`, data),
-}
-
-
+  updateFooter: (id, data) => service.patch(`/footer/updateFooter/${id}`, data),
+};
 

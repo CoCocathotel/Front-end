@@ -112,45 +112,6 @@ export default function Ad_Room() {
         form.resetFields();
         setLoading(false);
       });
-
-    // axios
-    //   .post(
-    //     productionCheck() + "/v1/create_room",
-    //     payload,
-    //     {
-    //       headers: {
-    //         "Content-Type": "application/json",
-
-    //       },
-    //     }
-    //   )
-    //   .then((response) => {
-    //     message.success("Room added successfully"); // Display success message
-    //     // setData([...data, response.data.room]); // Add the new room to the list
-    //   })
-    //   .catch((error) => {
-    //     if (
-    //       error.response &&
-    //       error.response.data &&
-    //       error.response.data.message
-    //     ) {
-    //       // If API sends an error message
-    //       message.error(`Error: ${error.response.data.message}`);
-    //     } else if (error.message) {
-    //       // If Axios fails
-    //       message.error(`Error: ${error.message}`);
-    //     } else {
-    //       message.error("An unknown error occurred");
-    //     }
-    //   })
-    //   .finally(() => {
-    //     setIsModalOpen(false); // Close modal
-    //     setImageBase64(""); // Reset image
-    //     setFileList([]); // Clear file list
-    //     setPreviewImage(""); // Clear preview image
-    //     setConfirmLoading(false);
-    //     form.resetFields(); // Reset form fields
-    //   });
   };
 
   const handleFormSubmitEdit = (values) => {
@@ -172,50 +133,6 @@ export default function Ad_Room() {
         form.resetFields();
         setLoading(false);
       });
-
-
-    // const payload = {
-    //   ...values,
-    //   room_id: editingRoom._id,
-    //   image: [imageBase64],
-    // };
-
-    // function productionCheck() {
-    //   const isDevelopment =
-    //     window.location.origin.includes("localhost") ||
-    //     window.location.origin.includes("127.0.0.1");
-
-    //   return isDevelopment
-    //     ? "http://localhost:8700"
-    //     : "https://cococatbackend.vercel.app";
-    // }
-
-
-    // axios
-    //   .post(productionCheck() + "/v1/edit_room", payload, {
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //      },
-    //   })
-    //   .then((response) => {
-    //     message.success("Room updated successfully");
-    //     setData((prevData) =>
-    //       prevData.map((room) =>
-    //         room._id === response.data._id ? response.data : room
-    //       )
-    //     );
-    //     setIsModalOpen(false);
-    //   })
-    //   .catch((error) => {
-    //     message.error(
-    //       "Failed to update room: " +
-    //       (error.response?.data?.message || error.message)
-    //     );
-    //   })
-    //   .finally(() => {
-    //     setConfirmLoading(false);
-    //     form.resetFields();
-    //   });
   };
 
   const handleRoomNameChange = (e) => {
@@ -242,20 +159,6 @@ export default function Ad_Room() {
       form.resetFields();
       setLoading(false);
     });
-    // axios
-    //   .delete("https://cococatbackend.vercel.app/v1/delete_room", {
-    //     data: { room_id: roomId },
-    //   })
-    //   .then((response) => {
-    //     message.success("Room deleted successfully");
-    //     setData((prevData) => prevData.filter((room) => room._id !== roomId));
-    //   })
-    //   .catch((error) => {
-    //     message.error(
-    //       "Failed to delete room: " +
-    //       (error.response?.data?.message || error.message)
-    //     );
-    //   });
   };
 
   const handleEditRoom = (room) => {

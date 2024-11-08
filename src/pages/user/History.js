@@ -46,7 +46,7 @@ export default function Cart() {
 
   let data_information =
     status !== "" ? data.filter((data) => data.status === status) : data;
-
+//UI part
   return (
     <>
       {loading ? (
@@ -125,27 +125,19 @@ export default function Cart() {
                         <h1>สถานะการชำเงิน: </h1>
                         {(item.status === "pending" ? (
                           <Tooltip title={item.status} arrow>
-                            {/* <h1 className="text-sm bg-yellow-300 p-1 rounded-lg shadow-lg">
-                              {item.status}
-                            </h1> */}
+
                             <Tag icon={<ClockCircleOutlined />} color="warning">
                               Waiting
                             </Tag>
                           </Tooltip>
                         ) : item.status === "pass" ? (
                           <Tooltip title={item.status} arrow>
-                            {/* <h1 className="text-sm bg-green-300 p-1 rounded-lg shadow-lg">
-                              {item.status}
-                            </h1> */}
                             <Tag icon={<CheckCircleOutlined />} color="success">
                               Success
                             </Tag>
                           </Tooltip>
                         ) : (
                           <Tooltip title={item.status} arrow>
-                            {/* <h1 className="text-sm bg-red-300 p-1 rounded-lg shadow-lg">
-                              {item.status}
-                            </h1> */}
                             <Tag icon={<CloseCircleOutlined />} color="error">
                               Cancelled
                             </Tag>

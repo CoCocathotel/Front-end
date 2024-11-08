@@ -292,30 +292,30 @@ export default function Detail() {
                   </p>
                 </div>
 
-  {data.image ? (
-    <>
-      {/* Mobile Version */}
-      <img
-        key="mobile"
-        src={data.image}
-        className="rounded-lg shadow-lg mb-4 w-full md:hidden" // Visible on mobile only
-        alt={data.type}
-      />
-      
-      {/* Desktop Version */}
-      <img
-        key="desktop"
-        src={data.image}
-        className="rounded-xl shadow-lg mb-4 md:mb-0 hidden md:block" // Visible on desktop only
-        alt={data.type}
-        width={150}
-        height={150}
-      />
-    </>
-  ) : (
-    <div className="placeholder sm:text-center sm:py-4 md:py-0">No Images</div>
-  )}
-  
+                {data.image ? (
+                  <>
+                    {/* Mobile Version */}
+                    <img
+                      key="mobile"
+                      src={data.image}
+                      className="rounded-lg shadow-lg mb-4 w-full md:hidden" // Visible on mobile only
+                      alt={data.type}
+                    />
+
+                    {/* Desktop Version */}
+                    <img
+                      key="desktop"
+                      src={data.image}
+                      className="rounded-xl shadow-lg mb-4 md:mb-0 hidden md:block" // Visible on desktop only
+                      alt={data.type}
+                      width={150}
+                      height={150}
+                    />
+                  </>
+                ) : (
+                  <div className="placeholder sm:text-center sm:py-4 md:py-0">No Images</div>
+                )}
+
 
               </div>
               <div className="bg-gray-200 p-4 rounded-md mt-4 flex flex-col md:flex-row items-center justify-around text-left">
@@ -902,12 +902,12 @@ export default function Detail() {
                 </div>
               )}
               <div className="flex justify-center">
-              <button
-    onClick={() => handleOk(false)}
-    className="px-4 py-2 text-base font-semibold text-white rounded-md mt-4 bg-[#55605B] hover:bg-[#A2A7A7] mx-auto block md:hidden" // Visible on mobile only
-  >
-    ยืนยันการจอง
-  </button>
+                <button
+                  onClick={() => handleOk(false)}
+                  className="px-4 py-2 text-base font-semibold text-white rounded-md mt-4 bg-[#55605B] hover:bg-[#A2A7A7] mx-auto block md:hidden" // Visible on mobile only
+                >
+                  ยืนยันการจอง
+                </button>
               </div>
             </div>
           </div>

@@ -202,53 +202,6 @@ export default function Appbar_master() {
                       </div>
                     </Tooltip>
                   </Box>
-                  {/* <Menu
-                anchorEl={anchorEl}
-                id="account-menu"
-                open={open}
-                onClose={handleClose}
-                onClick={handleClose}
-                PaperProps={{
-                  elevation: 0,
-                  sx: {
-                    overflow: "visible",
-                    filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                    mt: 1.5,
-                    "&::before": {
-                      content: '""',
-                      display: "block",
-                      position: "absolute",
-                      top: 0,
-                      right: 14,
-                      width: 10,
-                      height: 10,
-                      bgcolor: "background.paper",
-                      transform: "translateY(-50%) rotate(45deg)",
-                      zIndex: 0,
-                    },
-                  },
-                }}
-                transformOrigin={{ horizontal: "right", vertical: "top" }}
-                anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-              >
-                <MenuItem
-                  onClick={() => {
-                    handleClose();
-                    navigate("/account");
-                  }}
-                >
-                  บัญชีของฉัน
-                </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    handleClose();
-                    navigate("/history");
-                  }}
-                >
-                  ประวัติการจอง
-                </MenuItem>
-                <MenuItem onClick={handleCloseLogout}>ออกจากระบบ</MenuItem>
-              </Menu> */}
                 </React.Fragment>
                 <div className="flex-col flex text-left items-start space-y-4 mt-4">
                   <button
@@ -269,12 +222,6 @@ export default function Appbar_master() {
                   >
                     ประวัติการจอง
                   </button>
-                  {/* <button
-                    onClick={handleCloseLogout}
-                    className=" text-red-500 hover:text-blue-500"
-                  >
-                    ออกจากระบบ
-                  </button> */}
                 </div>
               </>
             )}

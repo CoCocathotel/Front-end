@@ -79,67 +79,67 @@ export default function Rule() {
         <Label label={"เงื่อนไขและข้อตกลงการเข้าพักน้องแมว"} data-aos="fade-up" />
 
         {/* Rules Details */}
-<div className="relative w-full lg:w-1/2 min-h-screen p-4 lg:p-14">
-  {/* Blue Background Section */}
-  <div
-    className="absolute inset-0 bg-[#8DAFCB] rounded-lg shadow-md z-0"
-    data-aos="fade-up"
-  ></div>
-
-  {/* White Smaller Rectangle (centered and 10% smaller) */}
-  <div
-    className="absolute inset-0 bg-white rounded-lg shadow-md z-10"
-    style={{
-      width: '90%', // 10% smaller
-      height: '90%', // 10% smaller
-      top: '50%',
-      left: '50%',
-      transform: 'translate(-50%, -50%)', // Centering the white rectangle
-    }}
-  ></div>
-
-  {/* Content Section */}
-  <div className="relative z-20 grid grid-cols-1 gap-4 justify-center p-2 lg:p-14 max-w-full mt-4"> {/* Adjusted margin */}
-    {title.map((item, index) => (
-      <div key={index} className="w-full p-2" data-aos="fade-up">
-        <div className="shadow-lg rounded-2xl h-full flex items-center text-lg bg-[#EDF2F9] bg-opacity-90 p-2 lg:p-4 transition-transform transform hover:scale-105">
-          <FeetIcon />
-          <span className="ml-2">{item}</span>
-        </div>
-      </div>
-    ))}
-
-    {/* Check-in Time */}
-    <div className="p-2" data-aos="fade-up">
-      <div className="shadow-lg rounded-2xl h-full text-xl bg-[#EDF2F9] bg-opacity-90 p-2 lg:p-4 transition-transform transform hover:scale-105">
-        {timeCheckin.map((item, index) => (
-          <div key={index} className="w-full space-x-4 p-2 flex items-center">
-            <FeetIcon />
-            <h1>รับเช็คอินในช่วงเวลาบริการ</h1>
-            <span>{item.checkin}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    {/* Check-out Time */}
-    <div className="p-2" data-aos="fade-up">
-      <div className="shadow-lg rounded-2xl h-full text-xl bg-[#EDF2F9] bg-opacity-90 p-2 lg:p-4 transition-transform transform hover:scale-105">
-        <h1>รับน้องกลับ</h1>
-        {timeCheckout.map((item, index) => (
+        <div className="relative w-full lg:w-1/2 min-h-screen p-4 lg:p-14">
+          {/* Blue Background Section */}
           <div
-            key={index}
-            className="space-x-4 w-full items-center p-1 text-center flex"
-          >
-            <FeetIcon />
-            <span>{item.checkcout}</span>
-            <span>{item.result}</span>
+            className="absolute inset-0 bg-[#8DAFCB] rounded-lg shadow-md z-0"
+            data-aos="fade-up"
+          ></div>
+
+          {/* White Smaller Rectangle (centered and 10% smaller) */}
+          <div
+            className="absolute inset-0 bg-white rounded-lg shadow-md z-10"
+            style={{
+              width: '90%', // 10% smaller
+              height: '90%', // 10% smaller
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)', // Centering the white rectangle
+            }}
+          ></div>
+
+          {/* Content Section */}
+          <div className="relative z-20 grid grid-cols-1 gap-4 justify-center p-2 lg:p-14 max-w-full mt-4"> {/* Adjusted margin */}
+            {title.map((item, index) => (
+              <div key={index} className="w-full p-2" data-aos="fade-up">
+                <div className="shadow-lg rounded-2xl h-full flex items-center text-lg bg-[#EDF2F9] bg-opacity-90 p-2 lg:p-4 transition-transform transform hover:scale-105">
+                  <FeetIcon />
+                  <span className="ml-2">{item}</span>
+                </div>
+              </div>
+            ))}
+
+            {/* Check-in Time */}
+            <div className="p-2" data-aos="fade-up">
+              <div className="shadow-lg rounded-2xl h-full text-xl bg-[#EDF2F9] bg-opacity-90 p-2 lg:p-4 transition-transform transform hover:scale-105">
+                {timeCheckin.map((item, index) => (
+                  <div key={index} className="w-full space-x-4 p-2 flex items-center">
+                    <FeetIcon />
+                    <h1>รับเช็คอินในช่วงเวลาบริการ</h1>
+                    <span>{item.checkin}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Check-out Time */}
+            <div className="p-2" data-aos="fade-up">
+              <div className="shadow-lg rounded-2xl h-full text-xl bg-[#EDF2F9] bg-opacity-90 p-2 lg:p-4 transition-transform transform hover:scale-105">
+                <h1>รับน้องกลับ</h1>
+                {timeCheckout.map((item, index) => (
+                  <div
+                    key={index}
+                    className="space-x-4 w-full items-center p-1 text-center flex"
+                  >
+                    <FeetIcon />
+                    <span>{item.checkcout}</span>
+                    <span>{item.result}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
-        ))}
-      </div>
-    </div>
-  </div>
-</div>
+        </div>
         {/* Cat Care Label */}
         <Label label={"สิ่งที่ต้องเตรียมมาเพื่อดูแลน้องแมว"} data-aos="fade-up" />
 

@@ -51,12 +51,10 @@ export default function Home() {
       if (indexReview < allReviews.length - 1) {
         setIndextReview(indexReview + 1);
       }
-      console.log(indexReview)
     }
   };
 
   const handlePrev = (mode) => {
-    console.log('21312312')
     if (!mode) {
       if (currentPage > 0) {
         setCurrentPage(currentPage - 1);
@@ -142,8 +140,8 @@ export default function Home() {
 
   if (loading && reviews) return <LoadingSpinner />;
   if (error) return <p className="text-red-500">Error: {error}</p>;
-
-  return (
+  //UI part
+  return ( 
     <>
       <div
         className="min-h-screen flex flex-col items-center justify-center bg-[#F0F8FF] relative"
@@ -195,17 +193,6 @@ export default function Home() {
               ))}
             </Carousel>
           </div>
-          {/* <div className="md:hidden w-full overflow-x-scroll flex space-x-4 py-4">
-            {ImgArray.map((image, index) => (
-              <div key={index} className="flex-shrink-0 w-80 h-40 rounded-lg shadow-lg">
-                <img
-                  src={`${image}`}
-                  alt={`image-${index}`}
-                  className="w-full h-full object-cover object-center rounded-lg"
-                />
-              </div>
-            ))}
-          </div> */}
         </div>
 
         {/* Indicator */}
@@ -296,13 +283,6 @@ export default function Home() {
             <div className="relative w-full flex items-center justify-center mx-auto px-4"> {/* Added padding for consistent spacing */}
               {/* Wrapper for the entire card and navigation arrows */}
               <div className="relative flex items-center justify-center w-96 max-w-sm mx-auto">
-                {/* <button
-                  onClick={() => handleRoomCarouselChange('prev')}
-                  disabled={activeIndex === 0}
-                  className="absolute left-0 top-1/2 transform -translate-y-1/2 p-1 bg-white rounded-full shadow-md z-10 opacity-80 hover:opacity-100 transition"
-                >
-                        <ArrowBackIosIcon />
-                </button> */}
 
                 <button
                   onClick={() => {handleRoomCarouselChange('prev')}}
@@ -346,13 +326,6 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* <button
-                  onClick={() => handleRoomCarouselChange('next')}
-                  disabled={activeIndex === room.length - 1}
-                  className="absolute right-0 top-1/2 transform -translate-y-1/2 p-1 bg-white rounded-full shadow-md z-10 opacity-80 hover:opacity-100 transition"
-                >
-                  <ArrowForwardIosIcon />
-                </button> */}
                 <button
                   onClick={() => { handleRoomCarouselChange('next')}}
                   disabled={activeIndex === room.length - 1}
@@ -521,57 +494,6 @@ export default function Home() {
             <div className="h-1/2 z-10">
               <img src={allReviews[indexReview]} alt="Main Review" />
             </div>
-
-            {/* Grid Display */}
-            {/* <div className="grid grid-cols-3 gap-1 grid-rows-3 h-96 z-20">
-              {currentReviews.map((review, index) => (
-                <button
-                  onClick={() => {
-                    const rowIndex = Math.floor(
-                      (currentPage * itemsPerPage + index) / reviews[0].length
-                    );
-                    const reviewIndex =
-                      (currentPage * itemsPerPage + index) % reviews[0].length;
-                    setActiveIndex(rowIndex);
-                    setSlideIndex(reviewIndex);
-                  }}
-                  key={index}
-                  className="relative group"
-                >
-                  <img
-                    className="w-full h-32 object-cover rounded-lg group-hover:opacity-75 transition duration-300"
-                    src={review}
-                    alt={`Review ${index}`}
-                  />
-                  <img
-                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition duration-300 z-10"
-                    src={FeetK}
-                    alt="FeetK Icon"
-                  />
-                </button>
-              ))}
-            </div> */}
-
-            {/* Pagination */}
-            {/* <div className="flex items-center justify-center w-full p-4 space-x-4">
-              {reviews
-                .filter((_, index) => (index) % 9 === 0)
-                .map((_, index) => (
-                  <div
-                    key={index}
-                    onClick={() => {
-                      setCurrentPage(index);
-                    }}
-                    className={
-                      index === currentPage
-                        ? "max-w-md w-10 h-4 bg-[#B6D4F0] rounded-full shadow-lg cursor-pointer"
-                        : "max-w-md w-4 h-4 bg-[#d7d7d7] rounded-full shadow-lg cursor-pointer"
-                    }
-                  >
-                  </div>
-                ))}
-            </div> */}
-
           </div>
         </div>
 
