@@ -3,45 +3,59 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState, useContext } from "react";
 import { Form, Input, Button, message } from "antd";
 import api from "../../utils/api";
-import { UserContext } from "../../context/UserContext"; // Adjust the import path
+// import { UserContext } from "../../context/UserContext"; // Adjust the import path
 
 export default function Account() {
   const navigate = useNavigate();
-  const { user } = useContext(UserContext); // Access the user from context
+  // const { user } = useContext(UserContext); // Access the user from context
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
-
-  const currentUserId = user?._id; // Get the user ID from context
+  const [currentUserId, setCurrentUserId] = useState(false);
+   // Get the user ID from context
+  // console.log(22222222222222222222222222,currentUserId) 
 
   // Fetch user details and populate the form
-  useEffect(() => {
-    if (!currentUserId) {
-      message.error("User ID not found. Please log in.");
-      return;
-    }
+  // useEffect(() => {
+  //   if (!currentUserId) {
+  //     message.error("User ID not found. Please log in.");
+  //     return;
+  //   }
+  //   fetchUserDetails();
 
-    const fetchUserDetails = async () => {
-      try {
-        const response = await api.getUser(currentUserId);
-        const user = response.data;
 
-        if (user) {
-          form.setFieldsValue({
-            first_name: user.first_name,
-            last_name: user.last_name,
-          });
-        } else {
-          message.error("User data not found");
+  //   fetchUserDetails();
+  // }, [form, currentUserId]);
+  const fetchUserDetails = async () => {
+    const savedUser = localStorage.getItem("user-provider");
+    const value = savedUser ? JSON.parse(savedUser) : null;
+    setCurrentUserId(value?._id)
+    const userId = value?._id;
+    console.log(currentUserId)
+    if (!userId) {
+          message.error("User ID not found. Please log in.");
+          return;
         }
-      } catch (error) {
-        message.error("Failed to load user details");
+    try {
+      const response = await api.getUser(userId);
+      const user = response.data;
+
+      if (user) {
+        form.setFieldsValue({
+          first_name: user.first_name,
+          last_name: user.last_name,
+        });
+      } else {
+        message.error("User data not found");
       }
-    };
-
+    } catch (error) {
+      message.error("Failed to load user details");
+    }
+  };
+  useEffect(() => {
     fetchUserDetails();
-  }, [form, currentUserId]);
-
+  }, [])
   const handleOk = async () => {
+    console.log("handleOk",currentUserId)
     if (!currentUserId) {
       message.error("Invalid user ID. Cannot update details.");
       return;

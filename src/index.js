@@ -10,9 +10,9 @@ const router = require("./router/router").default;
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <UserProvider> {/* Wrap your app with UserProvider */}
+    {/* <UserProvider> Wrap your app with UserProvider */}
       <RouterProvider router={router} />
-    </UserProvider>
+    {/* </UserProvider>  */}
   </React.StrictMode>
 );
 

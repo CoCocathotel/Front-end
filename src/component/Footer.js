@@ -13,7 +13,7 @@ export default function Footer() {
     api.getFooter()
       .then(res => {
         setData(res?.data?.body[0] || []);
-        console.log(res);
+      //  console.log(res);
       })
       .catch(err => {
         console.log(err);

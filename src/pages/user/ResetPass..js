@@ -1,24 +1,32 @@
 import React, { useState, useContext } from "react";
 import { Form, Input, Button, message } from "antd";
 import api from "../../utils/api";
-import { UserContext } from "../../context/UserContext"; // Import UserContext
+// import { UserContext } from "../../context/UserContext";
 
 export default function ResetPass() {
-  const { user } = useContext(UserContext); // Access the user from context
+  // const { user } = useContext(UserContext);
+  const [currentUserId, setCurrentUserId] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
 
-  const userId = user?._id; // Get the user ID from context
+  // const CurrentUserId = CurrentUserId?._id;
 
   const handlePasswordReset = async () => {
-    if (!userId) {
+    const savedUser = localStorage.getItem("user-provider");
+    const value = savedUser ? JSON.parse(savedUser) : null;
+    setCurrentUserId(value?._id)
+    const CurrentUserId = value?._id;
+    if (!CurrentUserId) {
+      console.log(CurrentUserId)
       message.error("User ID not found. Please log in.");
       return;
     }
 
     try {
       const values = await form.validateFields();
+      console.log(values)
 
+      // Validate if new password and confirm password match
       if (values.new_password !== values.confirm_new_password) {
         message.error("New password and confirm password do not match.");
         return;
@@ -26,18 +34,20 @@ export default function ResetPass() {
 
       setLoading(true);
 
-      // Pass userId and password data to the API
+      // Call the API to update the password
+      console.log(CurrentUserId)
       const response = await api.updatePassword({
-        userId, // Use the user ID from context
-        old_password: values.old_password,
-        new_password: values.new_password,
+        userId:CurrentUserId,
+        old_password: values.old_password, // Old password entered by the user
+        new_password: values.new_password, // New password entered by the user
       });
 
+      // Handle the response from the backend
       if (response.data.success) {
         message.success("Password updated successfully.");
-        form.resetFields();
+        form.resetFields(); // Reset form fields after success
       } else {
-        message.error("Failed to update password. Please try again.");
+        message.error(response.data.message || "Failed to update password. Please try again.");
       }
     } catch (error) {
       console.error("Error updating password:", error);
