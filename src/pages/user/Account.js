@@ -11,26 +11,12 @@ export default function Account() {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const [currentUserId, setCurrentUserId] = useState(false);
-   // Get the user ID from context
-  // console.log(22222222222222222222222222,currentUserId) 
-
-  // Fetch user details and populate the form
-  // useEffect(() => {
-  //   if (!currentUserId) {
-  //     message.error("User ID not found. Please log in.");
-  //     return;
-  //   }
-  //   fetchUserDetails();
-
-
-  //   fetchUserDetails();
-  // }, [form, currentUserId]);
   const fetchUserDetails = async () => {
     const savedUser = localStorage.getItem("user-provider");
     const value = savedUser ? JSON.parse(savedUser) : null;
     setCurrentUserId(value?._id)
     const userId = value?._id;
-    console.log(currentUserId)
+   // console.log(currentUserId)
     if (!userId) {
           message.error("User ID not found. Please log in.");
           return;

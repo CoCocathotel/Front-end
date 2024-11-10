@@ -1,5 +1,5 @@
 
-import Appbar_master from "../component/AppbarMaster";
+import AppbarAdmin from "../component/AppbarAdmin";
 import SidebarAdmin from "../component/SidebarAdmin";
 
 import Ad_Home from "../pages/admin/Ad_Home";
@@ -17,7 +17,7 @@ export default function Teacher() {
             path: "/",
             element: (
                 <>
-                    <Appbar_master />
+                    <AppbarAdmin />
                     <SidebarAdmin value={0} page={<Ad_Home />} />
                 </>
             ),
@@ -26,7 +26,7 @@ export default function Teacher() {
             path: "/room",
             element: (
                 <>
-                    <Appbar_master />
+                    <AppbarAdmin />
                     <SidebarAdmin value={3} page={<Ad_Room />} />
                 </>
             ),
@@ -35,7 +35,7 @@ export default function Teacher() {
             path: "/admin_edit/:id",
             element: (
                 <>
-                    <Appbar_master />
+                    <AppbarAdmin />
                     <SidebarAdmin page={<Detail />} />
                 </>
             ),
@@ -44,7 +44,7 @@ export default function Teacher() {
             path: "/schedule",
             element: (
                 <>
-                    <Appbar_master />
+                    <AppbarAdmin />
                     <SidebarAdmin page={<Ad_Schedule />} />
                 </>
             ),
@@ -53,7 +53,7 @@ export default function Teacher() {
             path: "/ad_analytic",
             element: (
                 <>
-                    <Appbar_master />
+                    <AppbarAdmin />
                     <SidebarAdmin value={2} page={<Ad_Analytic />} />
                 </>
             ),
@@ -62,7 +62,7 @@ export default function Teacher() {
             path: "/ad_custom",
             element: (
                 <>
-                    <Appbar_master />
+                    <AppbarAdmin />
                     <SidebarAdmin value={4} page={<Ad_Custom />} />
                 </>
             ),
@@ -71,7 +71,7 @@ export default function Teacher() {
             path: "/footer",
             element: (
                 <>
-                    <Appbar_master />
+                    <AppbarAdmin />
                     <SidebarAdmin page={<Ad_Footer />} />
                 </>
             ),

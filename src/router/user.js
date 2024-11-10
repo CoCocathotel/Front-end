@@ -5,13 +5,13 @@ import Sidebar from "../component/Sidebar";
 // import Login from "./pages/auth/Login";
 // import Register from "./pages/auth/Register";
 import Home from "../pages/user/Home";
-import Dashboard from "../pages/user/Dashboard";
+import Booking from "../pages/user/Booking";
 import History from "../pages/user/History";
 import Rule from "../pages/user/Rule";
 import Footer from "../component/Footer";
 import Account from "../pages/user/Account";
 import Detail from "../component/Detail";
-import ResetPass from "../pages/user/ResetPass.";
+import ChangePass from "../pages/user/ChangePass.";
 
 
 export default function Teacher() {
@@ -32,7 +32,7 @@ export default function Teacher() {
             element: (
                 <>
                     <Appbar_master />
-                    <Dashboard />
+                    <Booking />
                     <Footer />
                 </>
             ),
@@ -95,7 +95,7 @@ export default function Teacher() {
                 <>
                     <Appbar_master />
                     <Sidebar value={1} />
-                    <ResetPass />
+                    <ChangePass />
                     <Footer />
                 </>
             ),

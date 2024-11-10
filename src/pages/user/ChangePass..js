@@ -1,16 +1,11 @@
 import React, { useState, useContext } from "react";
 import { Form, Input, Button, message } from "antd";
 import api from "../../utils/api";
-// import { UserContext } from "../../context/UserContext";
 
 export default function ResetPass() {
-  // const { user } = useContext(UserContext);
   const [currentUserId, setCurrentUserId] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
-
-  // const CurrentUserId = CurrentUserId?._id;
-
   const handlePasswordReset = async () => {
     const savedUser = localStorage.getItem("user-provider");
     const value = savedUser ? JSON.parse(savedUser) : null;
@@ -21,19 +16,15 @@ export default function ResetPass() {
       message.error("User ID not found. Please log in.");
       return;
     }
-
     try {
       const values = await form.validateFields();
       console.log(values)
-
       // Validate if new password and confirm password match
       if (values.new_password !== values.confirm_new_password) {
         message.error("New password and confirm password do not match.");
         return;
       }
-
       setLoading(true);
-
       // Call the API to update the password
       console.log(CurrentUserId)
       const response = await api.updatePassword({
@@ -41,7 +32,6 @@ export default function ResetPass() {
         old_password: values.old_password, // Old password entered by the user
         new_password: values.new_password, // New password entered by the user
       });
-
       // Handle the response from the backend
       if (response.data.success) {
         message.success("Password updated successfully.");
@@ -56,7 +46,6 @@ export default function ResetPass() {
       setLoading(false);
     }
   };
-
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-gray-200">
       <div className="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
