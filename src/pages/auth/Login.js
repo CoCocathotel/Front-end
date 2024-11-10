@@ -48,43 +48,50 @@ export default function Login({ handleAppbar }) {
         <LoadingSpinner />
       ) : (
         <div className="flex flex-col items-center justify-center">
-          <div className="w-full max-w-md">
-            <div className="space-y-6">
-              <div className="grid grid-cols-1 gap-4">
-                <label className="text-left">อีเมล</label>
-                <input
-                  className="w-full bg-slate-100 rounded-lg p-2 text-black"
-                  type="text"
-                  placeholder="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
+  <div className="w-full max-w-md">
+    <form className="space-y-6" onSubmit={handleLogin}>
+      <div className="grid grid-cols-1 gap-4">
+        <label className="text-left" htmlFor="email">อีเมล</label>
+        <input
+          id="email"
+          name="email"
+          className="w-full bg-slate-100 rounded-lg p-2 text-black"
+          type="text"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </div>
 
-              <div className="grid grid-cols-1 gap-4">
-                <label className="text-left">รหัสผ่าน</label>
-                <input
-                  className="w-full bg-slate-100 rounded-lg p-2 text-black"
-                  type="password"
-                  placeholder="Password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
+      <div className="grid grid-cols-1 gap-4">
+        <label className="text-left" htmlFor="password">รหัสผ่าน</label>
+        <input
+          id="password"
+          name="password"
+          className="w-full bg-slate-100 rounded-lg p-2 text-black"
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+      </div>
 
-              {errorMessage && (
-                <p className="text-red-500 text-center">{errorMessage}</p>
-              )}
+      {errorMessage && (
+        <p className="text-red-500 text-center">{errorMessage}</p>
+      )}
 
-              <button
-                className="w-full py-2 px-4 mt-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
-                onClick={handleLogin}
-              >
-                Login
-              </button>
-            </div>
-          </div>
-        </div>
+      <button
+        type="submit"
+        className="w-full py-2 px-4 mt-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75"
+      >
+        Login
+      </button>
+    </form>
+  </div>
+</div>
+
       )}
     </>
   );
