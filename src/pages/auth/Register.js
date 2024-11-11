@@ -7,19 +7,46 @@ export default function Register({ handleAppbar }) {
   const [first_name, setFirst_name] = useState("");
   const [last_name, setLast_name] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // New state for confirm password
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(""); // State for error message
+  const [error, setError] = useState("");
+
+  // Function to check password strength
+  const isPasswordStrong = (password) => {
+    return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password);
+  };
 
   const handleLogin = async () => {
-    // Check if password and confirmPassword match
+    setError(""); // Clear previous errors
+
+    // Check if passwords match
     if (password !== confirmPassword) {
       setError("Passwords do not match");
       return;
     }
 
-    setLoading(true); // Show loading spinner
-    handle_value2();
+    // Check if password is strong enough
+    if (!isPasswordStrong(password)) {
+      setError("Password must be at least 8 characters long, contain uppercase, lowercase, number, and special character");
+      return;
+    }
+
+    // Check if email already exists
+    try {
+      setLoading(true);
+      const emailCheckResponse = await api.checkEmailExists(email);
+      if (emailCheckResponse.data.exists) {
+        setError("Email is already registered");
+        setLoading(false);
+        return;
+      }
+    } catch (err) {
+      setError("Error checking email availability");
+      setLoading(false);
+      return;
+    }
+
+    // Proceed with registration
     api.userRegister({ email, password, first_name, last_name })
       .then((response) => {
         const result = response.data;
@@ -32,19 +59,9 @@ export default function Register({ handleAppbar }) {
       })
       .catch((err) => {
         console.log("An error occurred. Please try again.", err);
+        setError("Registration failed. Please try again.");
       })
-      .finally(() => {
-        setLoading(false); // Hide loading spinner
-        handle_value();
-      });
-  };
-
-  const handle_value = () => {
-    handleAppbar(false);
-  };
-
-  const handle_value2 = () => {
-    handleAppbar(true);
+      .finally(() => setLoading(false));
   };
 
   return (
@@ -53,10 +70,9 @@ export default function Register({ handleAppbar }) {
         <LoadingSpinner />
       ) : (
         <div className="flex flex-col items-center justify-center">
-          <div className="absolute top-5 right-5 text-3xl"></div>
-
           <div className="p-6 w-full max-w-md">
             <div className="space-y-6">
+              {/* Registration fields */}
               <div className="grid grid-cols-1 gap-4">
                 <label className="text-left">ชื่อ</label>
                 <input
@@ -67,7 +83,6 @@ export default function Register({ handleAppbar }) {
                   onChange={(e) => setFirst_name(e.target.value)}
                 />
               </div>
-
               <div className="grid grid-cols-1 gap-4">
                 <label className="text-left">นามสกุล</label>
                 <input
@@ -78,7 +93,6 @@ export default function Register({ handleAppbar }) {
                   onChange={(e) => setLast_name(e.target.value)}
                 />
               </div>
-
               <div className="grid grid-cols-1 gap-4">
                 <label className="text-left">อีเมล</label>
                 <input
@@ -89,7 +103,6 @@ export default function Register({ handleAppbar }) {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-
               <div className="grid grid-cols-1 gap-4">
                 <label className="text-left">รหัสผ่าน</label>
                 <input
@@ -100,7 +113,6 @@ export default function Register({ handleAppbar }) {
                   onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-
               <div className="grid grid-cols-1 gap-4">
                 <label className="text-left">ยืนยันรหัสผ่าน</label>
                 <input
@@ -112,7 +124,7 @@ export default function Register({ handleAppbar }) {
                 />
               </div>
 
-              {/* Display error if passwords do not match */}
+              {/* Display error messages */}
               {error && <p className="text-red-500 text-sm">{error}</p>}
 
               <button

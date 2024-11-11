@@ -39,10 +39,10 @@ export default {
   getBooking: (data) => service.get('/booking', data),
   createBooking: (data) => service.post('/booking/createBooking', data),
 
-  // // Detail 
+  // Detail
   getOneBookingByType: (type) => service.get(`/booking/type/${type}`),
   getOneBookingById: (id) => service.post(`/booking/id/${id}`),
-  updateBooking: (id,data) => service.patch(`/booking/updateBooking/${id}`, data),
+  updateBooking: (id, data) => service.patch(`/booking/updateBooking/${id}`, data),
 
   // Room
   getRoom: (data) => service.get('/room', data),
@@ -54,11 +54,12 @@ export default {
   // User
   userLogin: (data) => service.post('/user/login', data),
   userRegister: (data) => service.post('/user/register', data),
-  getUser: (id) => service.get(`/user/getUser/${id}`), // New function to get user details
-  updateUser: (id, data) => service.patch(`/user/updateUser/${id}`, data), // Update user details
-  // Password update API
+  getUser: (id) => service.get(`/user/getUser/${id}`),
+  updateUser: (id, data) => service.patch(`/user/updateUser/${id}`, data),
   updatePassword: (data) => service.patch(`/user/changePassword/${data.userId}`, data),
-  getUserBookingEvent: (email) => service.get(`/booking/userBookingEvent/${email}`), // New function for user-specific bookings
+  getUserBookingEvent: (email) => service.get(`/booking/userBookingEvent/${email}`),
+  checkEmailExists: (email) => service.get(`/user/checkEmailExists/${email}`),
+
   // AdminHome
   getAllEvent: (data) => service.post('/booking/getAllEvent', data),
   changeStatus: (data) => service.patch(`/booking/changeStatus`, data),
@@ -68,4 +69,3 @@ export default {
   createFooter: (data) => service.post('/footer/createFooter', data),
   updateFooter: (id, data) => service.patch(`/footer/updateFooter/${id}`, data),
 };
-

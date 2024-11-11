@@ -60,7 +60,7 @@ export default function Account() {
   };
 
   return (
-    <div className="bg-gray-200 flex flex-col items-center h-screen p-6">
+    <div className="bg-gray-200 flex flex-col items-center h-screen p-10">
       <div className="bg-white w-full md:w-1/2 h-auto mt-5 p-6 rounded-lg shadow-lg space-y-4">
         <h1 className="font-semibold text-[#3B82F6] text-2xl">ข้อมูลส่วนตัว</h1>
         <hr />

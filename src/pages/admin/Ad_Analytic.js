@@ -195,7 +195,7 @@ export default function Ad_Analytic() {
       
       <div className="flex items-center" data-aos="fade-up">
         <div className="w-1/2 m-5">
-          <h2 className="text-xl font-bold mb-4 ">กำไร - ขาดทุน (บาท)</h2>
+          <h2 className="text-xl font-bold mb-4 ">รายได้ (บาท)</h2>
           <ResponsiveContainer width="100%" height={400}>
             <LineChart data={groupedProfitData}>
               <CartesianGrid strokeDasharray="3 3" />

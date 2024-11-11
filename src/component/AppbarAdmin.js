@@ -193,15 +193,6 @@ export default function Appbar_master() {
                   >
                     บัญชีของฉัน
                   </button>
-                  <button
-                    onClick={() => {
-                      navigate("/history");
-                      toggleMobileMenu();
-                    }}
-                    className=" text-gray-600 hover:text-blue-500"
-                  >
-                    ประวัติการจอง
-                  </button>
                 </div>
               </>
             )}
@@ -279,14 +270,7 @@ export default function Appbar_master() {
                 >
                   บัญชีของฉัน
                 </MenuItem>
-                <MenuItem
-                  onClick={() => {
-                    handleClose();
-                    navigate("/history");
-                  }}
-                >
-                  ประวัติการจอง
-                </MenuItem>
+              
                 <MenuItem onClick={handleCloseLogout}>ออกจากระบบ</MenuItem>
               </Menu>
             </React.Fragment>
