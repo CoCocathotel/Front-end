@@ -108,6 +108,7 @@ export default function Ad_Home() {
             </>
           ) : (
             <>
+
               <div className="grid grid-cols-12 gap-1 text-center mb-4">
                 {[
                   "ลำดับ",
@@ -164,7 +165,7 @@ export default function Ad_Home() {
                                 ? "ตรวจสอบ"
                                 : status === "pass"
                                   ? "ยืนยัน"
-                                  : "ลบข้อมูล"}
+                                  : "ยกเลิก"}
                             </option>
                           ))}
                         </select>

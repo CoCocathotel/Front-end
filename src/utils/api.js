@@ -58,7 +58,7 @@ export default {
   updateUser: (id, data) => service.patch(`/user/updateUser/${id}`, data), // Update user details
   // Password update API
   updatePassword: (data) => service.patch(`/user/changePassword/${data.userId}`, data),
-
+  getUserBookingEvent: (email) => service.get(`/booking/userBookingEvent/${email}`), // New function for user-specific bookings
   // AdminHome
   getAllEvent: (data) => service.post('/booking/getAllEvent', data),
   changeStatus: (data) => service.patch(`/booking/changeStatus`, data),

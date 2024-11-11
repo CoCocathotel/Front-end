@@ -198,7 +198,7 @@ export default function Ad_Schedule() {
                                 ? "ตรวจสอบ"
                                 : status === "pass"
                                   ? "ยืนยัน"
-                                  : "ลบข้อมูล"}
+                                  : "ยกเลิก"}
                             </option>
                           ))}
                         </select>
