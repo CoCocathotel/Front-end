@@ -20,6 +20,7 @@ exports.convertFilesToBase64 = async (files) => {
 
 
 exports.handleFileChange = async (info, fieldName, form) => {
+    console.log("info",info,"filename",fieldName,"from",form," test function 13213451255221 ");
     const files = info.fileList.map(file => {
         if (file.originFileObj) {
             return file.originFileObj;

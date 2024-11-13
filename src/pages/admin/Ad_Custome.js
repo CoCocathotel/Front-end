@@ -197,6 +197,7 @@ export default function Ad_Custom() {
                             defaultFileList={form.getFieldValue('heroImage')}
                             beforeUpload={() => false}
                             onChange={(info) => handleFileChange(info, 'heroImage', form)}
+                            
                         >
                             <Button icon={<UploadOutlined />}>Upload Hero Image(s)</Button>
                         </Upload>

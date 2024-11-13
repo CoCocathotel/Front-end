@@ -145,11 +145,11 @@ export default function BookingDashboard() {
   }
 
   return (
-    <div className="w-full">
-      <div className="w-full flex justify-center" data-aos="fade-up">
+    <div>
+      {/* Appbar และ Modal */}
+      <div data-aos="fade-up">
         <Appbar handleAppbar={(e) => handleTimeChange(e)} />
       </div>
-
       <Modal
         style={{ top: 20 }}
         open={modal1Open}
@@ -161,114 +161,195 @@ export default function BookingDashboard() {
           <h1 className="text-3xl">เข้าสู่ระบบ</h1>
           <div className="flex space-x-4">
             <img src={Feet} className="w-5 h-5" alt="feet" />
-            <p className="text-sm">ยินดีต้อนรับเข้าสู่โรงแรมโคโค่แคท</p>
+            <p className="text-xm">ยินดีต้อนรับเข้าสู่โรงแรมโคโค่แคท</p>
           </div>
           <hr />
           <Login handleAppbar={(e) => handleLogin(e)} />
         </div>
       </Modal>
-
-      {data.map((item, index) => {
-  const requiredRooms = Math.ceil(numcat / item.number_of_cats);
-  const availableRooms = Math.max(item.number_of_rooms - checkRoomAvailability(item.room_name), 0);
-  const requiredCameras = numcamera;
-  const availableCameras = Math.max(item.cameras - checkCameraAvailability(item.room_name), 0);
   
-  const isRoomAvailable = requiredRooms <= availableRooms;
-  const isCameraAvailable = requiredCameras <= availableCameras;
-
-  return (
-    <div key={index} className="w-full">
-      <div
-        className={`${index % 2 === 0 ? "bg-[#B6D4F0]" : "bg-[#f2f4f6]"} 
-                    flex flex-col lg:flex-row p-7 items-center justify-center lg:align-middle w-full`}
-      >
-        <div
-          className="rounded-lg px-4 py-5 w-full lg:w-10/12"
-          data-aos="fade-up"
-        >
-          <div className="flex flex-col lg:flex-row">
-            <div className="col-span-2 flex flex-col lg:flex-row space-y-5 lg:space-y-0 lg:space-x-5 overflow-hidden w-full">
-              <div className="w-full lg:w-96">
-                <img
-                  className="rounded-lg scale-95 object-cover border-gray-400 border-4 w-full"
-                  src={`${item.image[0]}`}
-                  alt={item.room_name}
-                />
-              </div>
-
-              <div className="w-full">
-                <p className="opacity-45 font-extralight text-sm lg:text-base">CoCoCat Hotel</p>
-                <h2 className="text-2xl lg:text-3xl font-bold">{item.room_name}</h2>
-                <div className="mt-5 space-y-3 lg:space-y-5">
-                  <div className="flex space-x-4">
-                    <img src={Feet} className="w-4 lg:w-5 h-4 lg:h-5" alt="feet" />
-                    <p className="text-sm lg:text-base">สามารถใช้กล้องได้ทั้งหมด {item.cameras} ตัว</p>
-                  </div>
-                  <div className="flex space-x-4">
-                    <img src={Feet} className="w-4 lg:w-5 h-4 lg:h-5" alt="feet" />
-                    <p className="text-sm lg:text-base">จำนวนน้องแมว {item.number_of_cats} ตัว</p>
-                  </div>
-                  <div className="flex space-x-4">
-                    <img src={Feet} className="w-4 lg:w-5 h-4 lg:h-5" alt="feet" />
-                    <p className="text-sm lg:text-base">
-                      มีห้องว่างทั้งหมด {availableRooms} ห้อง และกล้องว่าง {availableCameras} ตัว
-                    </p>
-                  </div>
-                  <div className="flex space-x-4">
-                    <img src={Feet} className="w-4 lg:w-5 h-4 lg:h-5" alt="feet" />
-                    <p className="text-sm lg:text-base break-words">{item.description}</p>
-                  </div>
-                  <div className="w-full lg:w-52 h-12 lg:h-14 text-lg lg:text-xl text-black bg-[#e8f773] hover:bg-[#f4f0af] flex rounded-full items-center text-center justify-center">
-                    <p className="font-semibold">{item.price} บาท /คืน</p>
+      {/* Mapping Data */}
+      {data.map((item, index) => {
+        // คำนวณสถานะห้องและกล้อง
+        const availableRooms =
+          item.number_of_rooms - checkRoomAvailability(item.room_name) >= 0
+            ? item.number_of_rooms - checkRoomAvailability(item.room_name)
+            : 0;
+  
+        const requiredRooms = Math.ceil(numcat / item.number_of_cats);
+        const isRoomSufficient = availableRooms >= requiredRooms;
+        const isCameraSufficient =
+          numcamera <= item.cameras * Math.ceil(numcat / item.number_of_cats);
+  
+        return (
+          <div key={index}>
+            {/* Desktop Version */}
+            <div className="hidden md:block mx-auto">
+              <div
+                className={`${
+                  index % 2 === 0 ? "bg-[#B6D4F0]" : "bg-[#f2f4f6]"
+                } flex p-7 justify-center items-center align-middle w-screen h-full`}
+              >
+                <div
+                  className="rounded-lg px-4 py-5 w-full h-auto ml-72 mr-72"
+                  data-aos="fade-up"
+                >
+                  {/* โครงสร้าง Desktop */}
+                  <div className="flex">
+                    <div className="col-span-2 flex space-x-5 overflow-hidden">
+                      <div className="w-96">
+                        <img
+                          className="rounded-lg scale-95 object-cover border-gray-400 border-4"
+                          src={`${item.image[0]}`}
+                          alt={item.room_name}
+                        />
+                      </div>
+  
+                      <div className="w-full">
+                        <p className="opacity-45 font-extralight">
+                          CoCoCat Hotel
+                        </p>
+                        <h2 className="text-3xl font-bold">{item.room_name}</h2>
+                        <div className="mt-5 space-y-5">
+                          <div className="flex space-x-4">
+                            <img src={Feet} className="w-5 h-5" alt="feet" />
+                            <p className="text-xm">
+                              สามารถใช้กล้องได้ทั้งหมด {item.cameras} ตัว
+                            </p>
+                          </div>
+                          <div className="flex space-x-4">
+                            <img src={Feet} className="w-5 h-5" alt="feet" />
+                            <p className="text-xm">
+                              จำนวนน้องแมว {item.number_of_cats} ตัว
+                            </p>
+                          </div>
+                          <div className="flex space-x-4">
+                            <img src={Feet} className="w-5 h-5" alt="feet" />
+                            <p className="text-xm">
+                              มีห้องว่างทั้งหมด {availableRooms} ห้อง
+                            </p>
+                          </div>
+                          <div className="flex space-x-4">
+                            <img src={Feet} className="w-5 h-5" alt="feet" />
+                            <p className="text-xm break-words">
+                              {item.description}
+                            </p>
+                          </div>
+                          <div className="w-52 h-14 text-xl text-black bg-[#e8f773] hover:bg-[#f4f0af] flex rounded-full items-center justify-center">
+                            <p className="font-semibold">
+                              {item.price} บาท /คืน
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+  
+                    <div className="bottom-0 justify-end items-end flex h-96">
+                      <div>
+                        {!isRoomSufficient && !isCameraSufficient ? (
+                          <button className="btn-primary3">
+                            จำนวนกล้องและห้องไม่เพียงพอ
+                          </button>
+                        ) : !isRoomSufficient ? (
+                          <button className="btn-primary3">
+                            ต้องการ {requiredRooms} ห้อง แต่เหลือเพียง{" "}
+                            {availableRooms} ห้อง
+                          </button>
+                        ) : !isCameraSufficient ? (
+                          <button className="btn-primary3">
+                            จำนวนกล้องไม่เพียงพอ
+                          </button>
+                        ) : (
+                          <button
+                            className="bg-[#16305C] hover:bg-[#224683] text-white w-40 mt-4 py-2 px-4 rounded-lg"
+                            onClick={() => setModal1Open(true)}
+                          >
+                            จองที่พัก
+                          </button>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-
-            <div className="bottom-0 justify-end items-end flex h-full lg:h-96 mt-4 lg:mt-0">
-              <div className="w-full lg:w-52 h-12 lg:h-14 flex items-center text-center rounded-full mt-4">
-                {isRoomAvailable && isCameraAvailable ? (
-                  localStorage.getItem("token") ? (
-                    <Link to={`/detail/${item.type}`} className="w-full h-full">
-                      <button
-                        className="w-full h-full font-semibold text-lg lg:text-xl bg-[#16305C] text-white hover:bg-[#224683] rounded-full flex items-center justify-center"
-                        onClick={() => saveToLocalStorage(index)}
-                      >
-                        จองที่พัก
-                      </button>
-                    </Link>
-                  ) : (
-                    <button
-                      className="w-full h-full font-semibold text-lg lg:text-xl bg-[#16305C] text-white hover:bg-[#224683] rounded-full flex items-center justify-center"
-                      onClick={() => setModal1Open(true)}
-                    >
-                      จองที่พัก
-                    </button>
-                  )
-                ) : !isRoomAvailable ? (
-                  <button
-                    className="w-full h-full font-semibold text-lg lg:text-xl bg-gray-400 text-gray-200 cursor-not-allowed rounded-full flex items-center justify-center"
-                    disabled
-                  >
-                    จำนวนห้องไม่เพียงพอ
-                  </button>
-                ) : !isCameraAvailable ? (
-                  <button
-                    className="w-full h-full font-semibold text-lg lg:text-xl bg-gray-400 text-gray-200 cursor-not-allowed rounded-full flex items-center justify-center"
-                    disabled
-                  >
-                    จำนวนกล้องไม่เพียงพอ
-                  </button>
-                ) : null}
+  
+            {/* Mobile Version */}
+            <div className="block md:hidden p-4">
+              <div
+                className={`${
+                  index % 2 === 0 ? "bg-[#B6D4F0]" : "bg-[#f2f4f6]"
+                } rounded-lg p-4`}
+              >
+                <div className="flex flex-col items-center">
+                  <img
+                    className="rounded-lg object-cover w-full max-h-72 border-gray-400 border-4"
+                    src={`${item.image[0]}`}
+                    alt={item.room_name}
+                  />
+                  <p className="opacity-45 font-extralight text-center mt-2">
+                    CoCoCat Hotel
+                  </p>
+                  <h2 className="text-lg font-bold text-center">
+                    {item.room_name}
+                  </h2>
+                  <div className="mt-4 space-y-4">
+                    <div className="flex items-center space-x-2">
+                      <img src={Feet} className="w-4 h-4" alt="feet" />
+                      <p className="text-sm">
+                        สามารถใช้กล้องได้ทั้งหมด {item.cameras} ตัว
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <img src={Feet} className="w-4 h-4" alt="feet" />
+                      <p className="text-sm">
+                        จำนวนน้องแมว {item.number_of_cats} ตัว
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <img src={Feet} className="w-4 h-4" alt="feet" />
+                      <p className="text-sm">
+                        มีห้องว่างทั้งหมด {availableRooms} ห้อง
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <img src={Feet} className="w-4 h-4" alt="feet" />
+                      <p className="text-sm">{item.description}</p>
+                    </div>
+                    <div className="w-full h-14 text-xl text-black bg-[#e8f773] hover:bg-[#f4f0af] flex rounded-full items-center justify-center">
+                      <p className="font-semibold">{item.price} บาท /คืน</p>
+                    </div>
+                    <div className="mt-4 text-center">
+                      {!isRoomSufficient && !isCameraSufficient ? (
+                        <button className="btn-primary3 w-full">
+                          จำนวนกล้องและห้องไม่เพียงพอ
+                        </button>
+                      ) : !isRoomSufficient ? (
+                        <button className="btn-primary3 w-full">
+                          ต้องการ {requiredRooms} ห้อง แต่เหลือเพียง{" "}
+                          {availableRooms} ห้อง
+                        </button>
+                      ) : !isCameraSufficient ? (
+                        <button className="btn-primary3 w-full">
+                          จำนวนกล้องไม่เพียงพอ
+                        </button>
+                      ) : (
+                        <button
+                          className="bg-[#16305C] hover:bg-[#224683] text-white w-full py-2 rounded-lg"
+                          onClick={() => setModal1Open(true)}
+                        >
+                          จองที่พัก
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </div>
+        );
+      })}
     </div>
   );
-})}
-    </div>
-  );
+  
 }
