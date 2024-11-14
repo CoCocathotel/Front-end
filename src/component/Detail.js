@@ -347,7 +347,8 @@ export default function Detail() {
                   </div>
                   <div className="px-4 py-2 mb-4 bg-[#A2A7A7] items-center text-white text-center justify-center flex rounded-lg">
                     <p className="font-semibold">
-                      {id ? totalday : totalday} คืน
+                      {id ? totalday : totalday +1 } วัน
+                      {id ? totalday : totalday } คืน
                     </p>
                   </div>
                   <div className="flex flex-col items-center">
@@ -373,7 +374,8 @@ export default function Detail() {
                   </div>
                   <div className="px-4 py-2 mt-4 md:mt-0 bg-[#A2A7A7] items-center text-white text-center justify-center flex rounded-lg">
                     <p className="font-semibold">
-                      {id ? totalday : totalday} คืน
+                    {id ? totalday : totalday +1 } วัน
+                    {id ? totalday : totalday } คืน
                     </p>
                   </div>
                   <div>
@@ -495,7 +497,7 @@ export default function Detail() {
                 <div className="flex justify-between space-x-4 md:space-x-24">
                   <p className="text-gray-500 text-sm">
                     {total} ห้อง {" - "}
-                    {id ? totalday : totalday - 1} คืน
+                    {id ? totalday : totalday } คืน
                   </p>
                   <p className="text-gray-500 text-sm">
                     {id ? data.total_price : data.price * totalday} บาท
