@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import LoadingSpinner from "../../component/Loading";
@@ -8,25 +9,33 @@ import { Modal } from "antd";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import api from "../../utils/api";
+
 export default function Ad_Home() {
   const navigate = useNavigate();
+
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [today, setToday] = useState(dayjs());
   const [previousData, setPreviousData] = useState([]);
   const [open, setOpen] = useState(false);
+
   dayjs.extend(customParseFormat);
+
   const handleOk = (e) => {
     console.log(e);
     setOpen(false);
   };
+
   const handleCancel = (e) => {
     console.log(e);
     setOpen(false);
   };
+
   const formatDate = (date) => {
     return date.format("DD MMM-YYYY");
   };
+
+
   const fecthdata = async () => {
     api.getAllEvent({ role: 'admin' })
       .then((res) => {
@@ -39,40 +48,56 @@ export default function Ad_Home() {
         setLoading(false);
       })
   };
-  const changeStatus = async (id, status) => {
-    setLoading(true); // Set loading to true to indicate a pending operation
-    try {
-        await api.changeStatus({ id, status }); // Call the API to change status
 
-        // Re-fetch data to update the UI
-        await fecthdata();
-    } catch (err) {
-        console.error("Error changing status:", err);
-    } finally {
-        setLoading(false); // Set loading back to false
-    }
-};
+  const changeStatus = async (id, status) => {
+    api.changeStatus(
+      {
+        id: id,
+        status: status,
+      },)
+      .then((res) => {
+       
+      })
+      .catch(err => {
+        console.log(err);
+      })
+      .finally(() => {
+        fecthdata();
+      })
+  };
+
+
   const [statusList] = useState(["pending", "pass", "failed"]);
+
+
+
   const calculateChanges = (current, previous, status) => {
     const previousDay = today.subtract(1, "day");
     const currentCount = current.filter(
       (item) => item.status === status && formatDate(today) === formatDate(dayjs(item.check_in_date))
     ).length;
+
     const previousCount = previous.filter(
       (item) => item.status === status && formatDate(previousDay) === formatDate(dayjs(item.check_in_date))
     ).length;
+
     const change = previousCount;
     return { currentCount, change };
   };
+
   const pendingStats = calculateChanges(data, previousData, "pending");
   const passStats = calculateChanges(data, previousData, "pass");
   const failedStats = calculateChanges(data, previousData, "failed");
+
   useEffect(() => {
     fecthdata();
   }, [today]);
+
+
   useEffect(() => {
     fecthdata();
   }, []);
+
   return (
     <>
       <div className="overflow-x-auto">
@@ -83,43 +108,7 @@ export default function Ad_Home() {
             </>
           ) : (
             <>
-              {/* <div className="flex justify-between mb-8">
-                <Card
-                  title="จำนวนการจอง"
-                  data={data
-                    .filter(
-                      (value) =>
-                        value.status !== "failed" &&
-                        formatDate(today) === formatDate(dayjs(value.check_in_date))
-                    ).length
-                  }
-                  change={data
-                    .filter(
-                      (value) =>
-                        value.status !== "failed" &&
-                        formatDate(today.subtract(1, "day")) === formatDate(dayjs(value.check_in_date))
-                    ).length}
-                  color="bg-blue-50"
-                />
-                <Card
-                  title="รอการอนุมัติ"
-                  data={pendingStats.currentCount}
-                  change={pendingStats.change}
-                  color="bg-yellow-50"
-                />
-                <Card
-                  title="จำนวนอนุมัติ"
-                  data={passStats.currentCount}
-                  change={passStats.change}
-                  color="bg-green-50"
-                />
-                <Card
-                  title="จำนวนยกเลิก"
-                  data={failedStats.currentCount}
-                  change={failedStats.change}
-                  color="bg-red-50"
-                />
-              </div> */}
+
               <div className="grid grid-cols-12 gap-1 text-center mb-4">
                 {[
                   "ลำดับ",
@@ -176,14 +165,16 @@ export default function Ad_Home() {
                                 ? "ตรวจสอบ"
                                 : status === "pass"
                                   ? "ยืนยัน"
-                                  : "ลบข้อมูล"}
+                                  : "ยกเลิก"}
                             </option>
                           ))}
                         </select>
                       </div>
+
                       <Tooltip title={item.pay_way} arrow>
                         <span>{item.pay_way}</span>
                       </Tooltip>
+
                       <Tooltip
                         title={formatDate(dayjs(item.check_in_date))}
                         arrow
@@ -196,9 +187,11 @@ export default function Ad_Home() {
                       >
                         <span>{formatDate(dayjs(item.check_out_date))}</span>
                       </Tooltip>
+
                       <Tooltip title={item.total_price} arrow>
                         <span className="truncate ...">{item.total_price}</span>
                       </Tooltip>
+
                       <Tooltip title={item.user_name} arrow>
                         <span className="truncate ...">{item.user_name}</span>
                       </Tooltip>
@@ -217,6 +210,7 @@ export default function Ad_Home() {
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                             onClick={() => {
                               navigate("/admin_edit/" + item._id) 
+
                               window.location.reload();
                               
                             }} >

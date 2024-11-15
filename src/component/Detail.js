@@ -235,47 +235,35 @@ export default function Detail() {
 
   let proceedWithPurchase = async (img) => {
     let item = {
-        room_name: data.room_name,
-        type: data.type,
-        user_name: username,
-        user_name_2: username2,
-        phone_2: phone2,
-        email: email,
-        phone: phone,
-        special_request: special_request,
-        check_in_date: new Date(startDate).toISOString(),
-        check_out_date: new Date(endDate).toISOString(),
-        total_price: data.price * totalday * total,
-        total_cats: nunmcat,
-        total_rooms: total,
-        pay_way: selectedPayment,
-        status: "pending",
-        total_cameras: numcamera,
-        image: selectedPayment === "credit" ? img : "",
+      room_name: data.room_name,
+      type: data.type,
+      user_name: username,
+      user_name_2: username2,
+      phone_2: phone2,
+      email: email,
+      phone: phone,
+      special_request: special_request,
+      check_in_date: new Date(startDate).toISOString(),
+      check_out_date: new Date(endDate).toISOString(),
+      total_price: data.price * totalday,
+      total_cats: nunmcat,
+      total_rooms: total,
+      pay_way: selectedPayment,
+      status: "pending",
+      total_cameras: numcamera,
+      image: selectedPayment === "credit" ? img : "",
     };
 
     try {
-        // ตรวจสอบการอัปโหลดสลิปการชำระเงิน
-        if (selectedPayment === "credit" && !img) {
-            modal.error({
-                title: "ไม่สามารถดำเนินการจองได้",
-                content: "กรุณาอัปโหลดสลิปการโอนเงินก่อนทำการจอง",
-            });
-            return; // หยุดการทำงานที่นี่หากไม่มีการอัปโหลดสลิป
-        }
-        
-        const response = await api.createBooking(item);
-        console.log(response.data);
-
-        // เรียก countDown() เฉพาะเมื่อสร้างการจองสำเร็จ
-        countDown();
+      const response = await api.createBooking(item);
+      console.log(response.data);
     } catch (err) {
-        console.log("An error occurred. Please try again.", err);
+      console.log("An error occurred. Please try again.", err);
     } finally {
-        setLoading(false);
+      setLoading(false);
+      countDown();
     }
-
-};
+  };
 
   return (
     <>
@@ -359,8 +347,7 @@ export default function Detail() {
                   </div>
                   <div className="px-4 py-2 mb-4 bg-[#A2A7A7] items-center text-white text-center justify-center flex rounded-lg">
                     <p className="font-semibold">
-                      {id ? totalday : totalday +1 } วัน
-                      {id ? totalday : totalday } คืน
+                      {id ? totalday : totalday} คืน
                     </p>
                   </div>
                   <div className="flex flex-col items-center">
@@ -386,8 +373,7 @@ export default function Detail() {
                   </div>
                   <div className="px-4 py-2 mt-4 md:mt-0 bg-[#A2A7A7] items-center text-white text-center justify-center flex rounded-lg">
                     <p className="font-semibold">
-                    {id ? totalday : totalday } วัน{" "}
-                    {id ? totalday : totalday } คืน
+                      {id ? totalday : totalday} คืน
                     </p>
                   </div>
                   <div>
@@ -509,10 +495,10 @@ export default function Detail() {
                 <div className="flex justify-between space-x-4 md:space-x-24">
                   <p className="text-gray-500 text-sm">
                     {total} ห้อง {" - "}
-                    {id ? totalday : totalday } คืน
+                    {id ? totalday : totalday - 1} คืน
                   </p>
                   <p className="text-gray-500 text-sm">
-                    {id ? data.total_price : data.price * totalday * total} บาท
+                    {id ? data.total_price : data.price * totalday} บาท
                   </p>
                 </div>
                 <div className="flex justify-between space-x-4 md:space-x-24">
@@ -530,7 +516,7 @@ export default function Detail() {
                 <div className="flex justify-between space-x-4 md:space-x-24">
                   <p className="text-black text-lg font-semibold">ราคาทั้งหมด</p>
                   <p className="text-black text-lg font-semibold">
-                    {data && id ? data.total_price : data.price * totalday * total} บาท
+                    {data && id ? data.total_price : data.price * totalday} บาท
                   </p>
                 </div>
                 <div className="space-y-4 p-4 md:p-6 mt-3">
