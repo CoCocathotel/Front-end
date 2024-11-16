@@ -245,7 +245,7 @@ export default function Detail() {
         special_request: special_request,
         check_in_date: new Date(startDate).toISOString(),
         check_out_date: new Date(endDate).toISOString(),
-        total_price: data.price * totalday * total,
+        total_price: data.price * totalday * total+ numcamera*50*totalday,
         total_cats: nunmcat,
         total_rooms: total,
         pay_way: selectedPayment,
@@ -386,7 +386,9 @@ export default function Detail() {
                   </div>
                   <div className="px-4 py-2 mt-4 md:mt-0 bg-[#A2A7A7] items-center text-white text-center justify-center flex rounded-lg">
                     <p className="font-semibold">
+
                     {id ? totalday : totalday } วัน{" "}
+
                     {id ? totalday : totalday } คืน
                     </p>
                   </div>
@@ -525,12 +527,12 @@ export default function Detail() {
                 </div>
                 <div className="flex justify-between space-x-4 md:space-x-24">
                   <p className="text-gray-500 text-sm">ภาษี & ค่าบริการ</p>
-                  <p className="text-gray-500 text-sm">0.00 บาท</p>
+                  <p className="text-gray-500 text-sm">{numcamera*50*totalday}บาท</p>
                 </div>
                 <div className="flex justify-between space-x-4 md:space-x-24">
                   <p className="text-black text-lg font-semibold">ราคาทั้งหมด</p>
                   <p className="text-black text-lg font-semibold">
-                    {data && id ? data.total_price : data.price * totalday * total} บาท
+                    {data && id ? data.total_price : data.price * totalday * total+ numcamera*50*totalday} บาท
                   </p>
                 </div>
                 <div className="space-y-4 p-4 md:p-6 mt-3">
@@ -613,7 +615,7 @@ export default function Detail() {
                                         <p className="font-semibold">
                                           จำนวนเงิน
                                         </p>
-                                        <p>{data.price * totalday} บาท</p>
+                                        <p>{data && id ? data.total_price : data.price * totalday * total+ numcamera*50*totalday} บาท</p>
                                       </div>
                                     </div>
                                     <input
@@ -696,7 +698,7 @@ export default function Detail() {
                                         <p className="font-semibold">
                                           จำนวนเงิน
                                         </p>
-                                        <p>{data.price * totalday} บาท</p>
+                                        <p>{data && id ? data.total_price : data.price * totalday * total+ numcamera*50*totalday} บาท</p>
                                       </div>
                                     </div>
                                     <input
@@ -793,7 +795,7 @@ export default function Detail() {
                                     <p className="font-semibold">
                                       จำนวนเงิน
                                     </p>
-                                    <p>{data.price * totalday} บาท</p>
+                                    <p>{data && id ? data.total_price : data.price * totalday * total+ numcamera*50*totalday} บาท</p>
                                   </div>
                                 </div>
                                 <input
@@ -871,7 +873,7 @@ export default function Detail() {
                                     <p className="font-semibold">
                                       จำนวนเงิน
                                     </p>
-                                    <p>{data.price * totalday} บาท</p>
+                                    <p>{data && id ? data.total_price : data.price * totalday * total+ numcamera*50*totalday} บาท</p>
                                   </div>
                                 </div>
                                 <input

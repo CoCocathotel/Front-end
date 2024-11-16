@@ -222,6 +222,15 @@ export default function Appbar_master() {
                   >
                     ประวัติการจอง
                   </button>
+                  <button
+                    onClick={() => {
+                      navigate("/Changepassword");
+                      toggleMobileMenu();
+                    }}
+                    className=" text-gray-600 hover:text-blue-500"
+                  >
+                    เปลี่ยนรหัสผ่าน
+                  </button>
                 </div>
               </>
             )}
