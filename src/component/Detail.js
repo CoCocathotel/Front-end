@@ -235,23 +235,23 @@ export default function Detail() {
 
   let proceedWithPurchase = async (img) => {
     let item = {
-      room_name: data.room_name,
-      type: data.type,
-      user_name: username,
-      user_name_2: username2,
-      phone_2: phone2,
-      email: email,
-      phone: phone,
-      special_request: special_request,
-      check_in_date: new Date(startDate).toISOString(),
-      check_out_date: new Date(endDate).toISOString(),
-      total_price: data.price * totalday,
-      total_cats: nunmcat,
-      total_rooms: total,
-      pay_way: selectedPayment,
-      status: "pending",
-      total_cameras: numcamera,
-      image: selectedPayment === "credit" ? img : "",
+        room_name: data.room_name,
+        type: data.type,
+        user_name: username,
+        user_name_2: username2,
+        phone_2: phone2,
+        email: email,
+        phone: phone,
+        special_request: special_request,
+        check_in_date: new Date(startDate).toISOString(),
+        check_out_date: new Date(endDate).toISOString(),
+        total_price: data.price * totalday * total+ numcamera*50*totalday,
+        total_cats: nunmcat,
+        total_rooms: total,
+        pay_way: selectedPayment,
+        status: "pending",
+        total_cameras: numcamera,
+        image: selectedPayment === "credit" ? img : "",
     };
 
     try {
@@ -373,7 +373,12 @@ export default function Detail() {
                   </div>
                   <div className="px-4 py-2 mt-4 md:mt-0 bg-[#A2A7A7] items-center text-white text-center justify-center flex rounded-lg">
                     <p className="font-semibold">
-                      {id ? totalday : totalday} คืน
+
+
+                    {id ? totalday : totalday } วัน{" "}
+
+                    {id ? totalday : totalday } คืน
+
                     </p>
                   </div>
                   <div>
@@ -511,12 +516,12 @@ export default function Detail() {
                 </div>
                 <div className="flex justify-between space-x-4 md:space-x-24">
                   <p className="text-gray-500 text-sm">ภาษี & ค่าบริการ</p>
-                  <p className="text-gray-500 text-sm">0.00 บาท</p>
+                  <p className="text-gray-500 text-sm">{numcamera*50*totalday}บาท</p>
                 </div>
                 <div className="flex justify-between space-x-4 md:space-x-24">
                   <p className="text-black text-lg font-semibold">ราคาทั้งหมด</p>
                   <p className="text-black text-lg font-semibold">
-                    {data && id ? data.total_price : data.price * totalday} บาท
+                    {data && id ? data.total_price : data.price * totalday * total+ numcamera*50*totalday} บาท
                   </p>
                 </div>
                 <div className="space-y-4 p-4 md:p-6 mt-3">
@@ -599,7 +604,7 @@ export default function Detail() {
                                         <p className="font-semibold">
                                           จำนวนเงิน
                                         </p>
-                                        <p>{data.price * totalday} บาท</p>
+                                        <p>{data && id ? data.total_price : data.price * totalday * total+ numcamera*50*totalday} บาท</p>
                                       </div>
                                     </div>
                                     <input
@@ -682,7 +687,7 @@ export default function Detail() {
                                         <p className="font-semibold">
                                           จำนวนเงิน
                                         </p>
-                                        <p>{data.price * totalday} บาท</p>
+                                        <p>{data && id ? data.total_price : data.price * totalday * total+ numcamera*50*totalday} บาท</p>
                                       </div>
                                     </div>
                                     <input
@@ -779,7 +784,7 @@ export default function Detail() {
                                     <p className="font-semibold">
                                       จำนวนเงิน
                                     </p>
-                                    <p>{data.price * totalday} บาท</p>
+                                    <p>{data && id ? data.total_price : data.price * totalday * total+ numcamera*50*totalday} บาท</p>
                                   </div>
                                 </div>
                                 <input
@@ -857,7 +862,7 @@ export default function Detail() {
                                     <p className="font-semibold">
                                       จำนวนเงิน
                                     </p>
-                                    <p>{data.price * totalday} บาท</p>
+                                    <p>{data && id ? data.total_price : data.price * totalday * total+ numcamera*50*totalday} บาท</p>
                                   </div>
                                 </div>
                                 <input

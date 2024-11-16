@@ -262,15 +262,6 @@ export default function Appbar_master() {
                 transformOrigin={{ horizontal: "right", vertical: "top" }}
                 anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
               >
-                <MenuItem
-                  onClick={() => {
-                    handleClose();
-                    navigate("/account");
-                  }}
-                >
-                  บัญชีของฉัน
-                </MenuItem>
-              
                 <MenuItem onClick={handleCloseLogout}>ออกจากระบบ</MenuItem>
               </Menu>
             </React.Fragment>

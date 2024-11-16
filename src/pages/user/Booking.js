@@ -1,7 +1,5 @@
-/* eslint-disable jsx-a11y/alt-text */
-import { Route, Routes, Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Feet from "../../assets/image/feet.png";
@@ -21,86 +19,12 @@ export default function BookingDashboard() {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [room_overlap, setRoom_overlap] = useState([]);
-  const [camera_overlap, setCamera_overlap] = useState([]); // New state for camera overlap
-  const [loac2, SetLoad2] = useState(false);
-  const [error, setError] = useState("");
   const [modal1Open, setModal1Open] = useState(false);
+  const [loac2, setLoac2] = useState(false);
 
-  useEffect(() => {
-    AOS.init({ duration: 1000 });
-    api.getBooking().then((res) => {
-      setBooking(res.data.body);
-    }).catch((err) => {
-      setError(err.message);
-    }).finally(() => {
-      setLoading(false);
-    });
-    api.getRoom().then((res) => {
-      setData(res.data.body);
-    }).catch((err) => {
-      setError(err.message);
-    }).finally(() => {
-      setLoading(false);
-    });
-  }, []);
-
-  useEffect(() => {
-    const overlapingRooms = booking.filter(({ check_in_date, check_out_date }) => {
-      const checkIn = new Date(check_in_date);
-      const checkOut = new Date(check_out_date);
-      const start = new Date(startDate);
-      const end = new Date(endDate);
-      return (
-        (data.room_name === booking.room_name &&
-          start >= checkIn &&
-          start <= checkOut &&
-          end >= checkIn &&
-          end <= checkOut) ||
-        (start <= checkIn &&
-          start <= checkOut &&
-          end >= checkIn &&
-          end <= checkOut) ||
-        (start >= checkIn &&
-          start <= checkOut &&
-          end >= checkIn &&
-          end >= checkOut) ||
-        (start <= checkIn &&
-          start <= checkOut &&
-          end >= checkIn &&
-          end >= checkOut)
-      );
-    });
-
-    const room_overlap = overlapingRooms.reduce((acc, item) => {
-      const found = acc.find((room) => room.room_name === item.room_name);
-      if (found) {
-        found.len_room += item.total_rooms;
-      } else {
-        acc.push({
-          room_name: item.room_name,
-          len_room: item.total_rooms,
-        });
-      }
-      return acc;
-    }, []);
-
-    // Similar logic for checking camera availability
-    const camera_overlap = overlapingRooms.reduce((acc, item) => {
-      const found = acc.find((camera) => camera.room_name === item.room_name);
-      if (found) {
-        found.len_camera += item.cameras;
-      } else {
-        acc.push({
-          room_name: item.room_name,
-          len_camera: item.cameras,
-        });
-      }
-      return acc;
-    }, []);
-
-    setRoom_overlap(room_overlap);
-    setCamera_overlap(camera_overlap);
-  }, [booking, data, numcat, numcamera, startDate, endDate]);
+  const isLoggedIn = () => {
+    return !!localStorage.getItem("token"); // คืนค่า true หาก token มีอยู่ใน localStorage
+  };
 
   const saveToLocalStorage = (index) => {
     localStorage.setItem("data", JSON.stringify(data[index]));
@@ -115,16 +39,11 @@ export default function BookingDashboard() {
   };
 
   const checkRoomAvailability = (room_name) => {
-    const room = room_overlap.find((r) => r.room_name === room_name);
-    return room ? room.len_room : 0;
+    const overlap = room_overlap.find((room) => room.room_name === room_name);
+    return overlap ? overlap.len_room : 0;
   };
 
-  const checkCameraAvailability = (room_name) => {
-    const camera = camera_overlap.find((c) => c.room_name === room_name);
-    return camera ? camera.len_camera : 0;
-  };
-
-  let handleLogin = (e) => {
+  const handleLogin = (e) => {
     setModal1Open(e);
     if (e) {
       SetLoad2(e);
@@ -144,7 +63,11 @@ export default function BookingDashboard() {
     return <p className="text-red-500">Error: {error}</p>;
   }
 
+  if (error) {
+    return <p className="text-red-500">Error: {error}</p>;
+  }
   return (
+
     <div>
       {/* Appbar และ Modal */}
       <div data-aos="fade-up">
@@ -167,20 +90,19 @@ export default function BookingDashboard() {
           <Login handleAppbar={(e) => handleLogin(e)} />
         </div>
       </Modal>
-  
+
       {/* Mapping Data */}
       {data.map((item, index) => {
-        // คำนวณสถานะห้องและกล้อง
         const availableRooms =
           item.number_of_rooms - checkRoomAvailability(item.room_name) >= 0
             ? item.number_of_rooms - checkRoomAvailability(item.room_name)
             : 0;
-  
+
         const requiredRooms = Math.ceil(numcat / item.number_of_cats);
         const isRoomSufficient = availableRooms >= requiredRooms;
         const isCameraSufficient =
           numcamera <= item.cameras * Math.ceil(numcat / item.number_of_cats);
-  
+
         return (
           <div key={index}>
             {/* Desktop Version */}
@@ -194,7 +116,6 @@ export default function BookingDashboard() {
                   className="rounded-lg px-4 py-5 w-full h-auto ml-72 mr-72"
                   data-aos="fade-up"
                 >
-                  {/* โครงสร้าง Desktop */}
                   <div className="flex">
                     <div className="col-span-2 flex space-x-5 overflow-hidden">
                       <div className="w-96">
@@ -204,7 +125,6 @@ export default function BookingDashboard() {
                           alt={item.room_name}
                         />
                       </div>
-  
                       <div className="w-full">
                         <p className="opacity-45 font-extralight">
                           CoCoCat Hotel
@@ -243,7 +163,6 @@ export default function BookingDashboard() {
                         </div>
                       </div>
                     </div>
-  
                     <div className="bottom-0 justify-end items-end flex h-96">
                       <div>
                         {!isRoomSufficient && !isCameraSufficient ? (
@@ -261,11 +180,20 @@ export default function BookingDashboard() {
                           </button>
                         ) : (
                           <button
-                            className="bg-[#16305C] hover:bg-[#224683] text-white w-40 mt-4 py-2 px-4 rounded-lg"
-                            onClick={() => setModal1Open(true)}
-                          >
-                            จองที่พัก
-                          </button>
+                          className="bg-[#16305C] hover:bg-[#224683] text-white w-40 mt-4 py-2 px-4 rounded-lg"
+                          onClick={() => {
+                            if (isLoggedIn()) {
+                              // หาก login แล้ว ให้ไปที่หน้าจอง
+                              saveToLocalStorage(index);
+                              navigate(`/detail/${item.type}`);
+                            } else {
+                              // หากยังไม่ได้ login ให้เปิด Modal
+                              setModal1Open(true);
+                            }
+                          }}
+                        >
+                          จองที่พัก
+                        </button>
                         )}
                       </div>
                     </div>
@@ -273,7 +201,7 @@ export default function BookingDashboard() {
                 </div>
               </div>
             </div>
-  
+
             {/* Mobile Version */}
             <div className="block md:hidden p-4">
               <div
@@ -335,11 +263,20 @@ export default function BookingDashboard() {
                         </button>
                       ) : (
                         <button
-                          className="bg-[#16305C] hover:bg-[#224683] text-white w-full py-2 rounded-lg"
-                          onClick={() => setModal1Open(true)}
-                        >
-                          จองที่พัก
-                        </button>
+                        className="bg-[#16305C] hover:bg-[#224683] text-white w-40 mt-4 py-2 px-4 rounded-lg"
+                        onClick={() => {
+                          if (isLoggedIn()) {
+                            // หาก login แล้ว ให้ไปที่หน้าจอง
+                            saveToLocalStorage(index);
+                            navigate(`/detail/${item.type}`);
+                          } else {
+                            // หากยังไม่ได้ login ให้เปิด Modal
+                            setModal1Open(true);
+                          }
+                        }}
+                      >
+                        จองที่พัก
+                      </button>
                       )}
                     </div>
                   </div>
@@ -347,9 +284,8 @@ export default function BookingDashboard() {
               </div>
             </div>
           </div>
-        );
-      })}
+        ))}
+      </div>
     </div>
   );
-  
 }
